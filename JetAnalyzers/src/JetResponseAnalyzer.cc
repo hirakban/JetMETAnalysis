@@ -30,6 +30,7 @@ JetResponseAnalyzer::JetResponseAnalyzer(const edm::ParameterSet& iConfig)
   , srcPFCandidates_        (consumes<PFCandidateView>(iConfig.getParameter<edm::InputTag>("srcPFCandidates")))
   , srcPFCandidatesAsFwdPtr_(consumes<std::vector<edm::FwdPtr<reco::PFCandidate> > >(iConfig.getParameter<edm::InputTag>("srcPFCandidates")))
   , srcGenParticles_        (consumes<vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("srcGenParticles")))
+// change header file too
   , jecLabel_      (iConfig.getParameter<std::string>                 ("jecLabel"))
   , doComposition_ (iConfig.getParameter<bool>                   ("doComposition"))
   , doFlavor_      (iConfig.getParameter<bool>                        ("doFlavor"))
@@ -109,11 +110,53 @@ void JetResponseAnalyzer::beginJob()
                  (isCaloJet_*pow(2,5)) + (doComposition_*pow(2,4)) +
                  (doBalancing_*pow(2,3)) + (doFlavor_*pow(2,2)) +
                  (doHLT_*pow(2,1)) + (1);
+
+  //cout << flag_int << endl;
   bitset<8> flags(flag_int);
   tree_=fs->make<TTree>("t","t");
   JRAEvt_ = new JRAEvent(tree_,flags);
 }
 
+//shamelessly taken from JetSpecific.cc
+//this method exists for pfjets (neutralMultiplicity()), but not for genjets
+void getMult( vector<reco::CandidatePtr> const & particles, int* nMult, int* chMult ) {
+
+  vector<reco::CandidatePtr>::const_iterator itParticle;
+  for (itParticle=particles.begin();itParticle!=particles.end();++itParticle){
+    const reco::Candidate* pfCand = itParticle->get();
+
+    switch (std::abs(pfCand->pdgId())) {
+
+      case 211: //PFCandidate::h:       // charged hadron
+        (*chMult)++;
+      break;
+
+      case 130: //PFCandidate::h0 :    // neutral hadron
+        (*nMult)++;
+      break;
+
+      case 22: //PFCandidate::gamma:   // photon
+        (*nMult)++;
+      break;
+
+      case 11: // PFCandidate::e:       // electron 
+        (*chMult)++;
+      break;
+
+      case 13: //PFCandidate::mu:      // muon
+        (*chMult)++;
+      break;
+
+      case 1: // PFCandidate::h_HF :      // hadron in HF
+        (*nMult)++;
+      break;
+
+      case 2: //PFCandidate::egamma_HF :      // electromagnetic in HF
+        (*nMult)++;
+      break;
+    }
+  }
+}
 
 //______________________________________________________________________________
 void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
@@ -257,18 +300,19 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
        JRAEvt_->refdphijt->push_back(reco::deltaPhi(jet->phi(),ref->phi()));
      else
        JRAEvt_->refdrjt->push_back(reco::deltaR(jet->eta(),jet->phi(),ref->eta(),ref->phi()));
- 
+
      if ((!doBalancing_&&JRAEvt_->refdrjt->at(JRAEvt_->nref)>deltaRMax_)||
          (doBalancing_&&std::abs(JRAEvt_->refdphijt->at(JRAEvt_->nref))<deltaPhiMin_)) {
         if(doBalancing_) JRAEvt_->refdphijt->pop_back();
         else JRAEvt_->refdrjt->pop_back();
         continue;
      }
-     
      JRAEvt_->refpdgid->push_back(0);
-     JRAEvt_->refpdgid_algorithmicDef->push_back(0);
-     JRAEvt_->refpdgid_physicsDef->push_back(0);
+
      if (getFlavorFromMap_) {
+        JRAEvt_->refpdgid_algorithmicDef->push_back(0);
+        JRAEvt_->refpdgid_physicsDef->push_back(0);
+
         reco::JetMatchedPartonsCollection::const_iterator itPartonMatch;
         itPartonMatch=refToPartonMap->begin();
         for (;itPartonMatch!=refToPartonMap->end();++itPartonMatch) {
@@ -277,7 +321,7 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
            const reco::Candidate* cand = &(*jetRef);
            if (cand==&(*ref)) break;
         }
-        
+
         if (itPartonMatch!=refToPartonMap->end()&&
             itPartonMatch->second.algoDefinitionParton().get()!=0&&
             itPartonMatch->second.physicsDefinitionParton().get()!=0) {
@@ -314,10 +358,6 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
               }
            }
         }
-     }
-     else {
-        JRAEvt_->refpdgid_algorithmicDef->at(JRAEvt_->nref)=0;
-        JRAEvt_->refpdgid_physicsDef->at(JRAEvt_->nref)=0;
      }
      JRAEvt_->refpdgid->at(JRAEvt_->nref)=ref->pdgId();
 
@@ -439,53 +479,62 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
            JRAEvt_->jtmuf ->push_back(pfJetRef->muonEnergyFraction()         *JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jthfhf->push_back(pfJetRef->HFHadronEnergyFraction()     *JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jthfef->push_back(pfJetRef->HFEMEnergyFraction()         *JRAEvt_->jtjec->at(JRAEvt_->nref));
+
+           int chMult=0, nMult=0;
+           getMult( ref.castTo<reco::GenJetRef>()->getJetConstituents(), &nMult, &chMult );
+           JRAEvt_->refnMult ->push_back( nMult );
+           JRAEvt_->refchMult->push_back( chMult );
+
+           //this method exists for pfjets (neutralMultiplicity()), but not for genjets
+           //original i thought since genjet didn't have it i should make this method
+           chMult=0; nMult=0;
+           getMult( jet.castTo<reco::PFJetRef>()->getJetConstituents(), &nMult, &chMult );
+           JRAEvt_->jtnMult ->push_back( nMult );
+           JRAEvt_->jtchMult->push_back( chMult );
         } 
      }
-     
-    // PFCANDIDATE INFORMATION
-    //Dual handle idea from https://github.com/aperloff/cmssw/blob/CMSSW_7_6_X/RecoJets/JetProducers/plugins/VirtualJetProducer.cc
-    //Random-Cone algo from https://github.com/cihar29/OffsetAnalysis/blob/master/run_offset.py
-    //                  and https://github.com/cihar29/OffsetAnalysis/blob/master/plugins/OffsetAnalysis.cc
-    if (saveCandidates_ && isPFJet_) {
-        bool isView = iEvent.getByToken(srcPFCandidates_, pfCandidates);
-        if ( isView ) {
-            for (auto i_pf=pfCandidates->begin(); i_pf != pfCandidates->end(); ++i_pf) {
-                auto i_pfc = (i_pf);
-                JRAEvent::Flavor pf_id = getFlavor( i_pfc->particleId() );
-                if (pf_id == JRAEvent::X) continue;
-                JRAEvt_->pfcand_px ->push_back(i_pfc->px());
-                JRAEvt_->pfcand_py ->push_back(i_pfc->py());
-                JRAEvt_->pfcand_pt ->push_back(i_pfc->pt());
-                JRAEvt_->pfcand_eta->push_back(i_pfc->eta());
-                JRAEvt_->pfcand_phi->push_back(i_pfc->phi());
-                JRAEvt_->pfcand_e  ->push_back(i_pfc->energy());
-                JRAEvt_->pfcand_id ->push_back(pf_id);
-            }
-        }
-        else {
-            bool isPF = iEvent.getByToken(srcPFCandidatesAsFwdPtr_, pfCandidatesAsFwdPtr);
-            if ( isPF ) {
-                for (auto i_pf=pfCandidatesAsFwdPtr->begin(); i_pf != pfCandidatesAsFwdPtr->end(); ++i_pf) {
-                    auto i_pfc = (*i_pf);
-                    JRAEvent::Flavor pf_id = getFlavor( i_pfc->particleId() );
-                    if (pf_id == JRAEvent::X) continue;
-                    JRAEvt_->pfcand_px ->push_back(i_pfc->px());
-                    JRAEvt_->pfcand_py ->push_back(i_pfc->py());
-                    JRAEvt_->pfcand_pt ->push_back(i_pfc->pt());
-                    JRAEvt_->pfcand_eta->push_back(i_pfc->eta());
-                    JRAEvt_->pfcand_phi->push_back(i_pfc->phi());
-                    JRAEvt_->pfcand_e  ->push_back(i_pfc->energy());
-                    JRAEvt_->pfcand_id ->push_back(pf_id);
-                }
-            }
-        }
-    }
-
      JRAEvt_->nref++;
   }
-  
+  // PFCANDIDATE INFORMATION
+  //Dual handle idea from https://github.com/aperloff/cmssw/blob/CMSSW_7_6_X/RecoJets/JetProducers/plugins/VirtualJetProducer.cc
+  //Random-Cone algo from https://github.com/cihar29/OffsetAnalysis/blob/master/run_offset.py
+  //                  and https://github.com/cihar29/OffsetAnalysis/blob/master/plugins/OffsetAnalysis.cc
+  if (saveCandidates_ && isPFJet_) {
+      bool isView = iEvent.getByToken(srcPFCandidates_, pfCandidates);
+      if ( isView ) {
+          for (auto i_pf=pfCandidates->begin(); i_pf != pfCandidates->end(); ++i_pf) {
+              auto i_pfc = (i_pf);
+              JRAEvent::Flavor pf_id = getFlavor( i_pfc->particleId() );
+              if (pf_id == JRAEvent::X) continue;
+              JRAEvt_->pfcand_px ->push_back(i_pfc->px());
+              JRAEvt_->pfcand_py ->push_back(i_pfc->py());
+              JRAEvt_->pfcand_pt ->push_back(i_pfc->pt());
+              JRAEvt_->pfcand_eta->push_back(i_pfc->eta());
+              JRAEvt_->pfcand_phi->push_back(i_pfc->phi());
+              JRAEvt_->pfcand_e  ->push_back(i_pfc->energy());
+              JRAEvt_->pfcand_id ->push_back(pf_id);
+          }
+      }
+      else {
+          bool isPF = iEvent.getByToken(srcPFCandidatesAsFwdPtr_, pfCandidatesAsFwdPtr);
+          if ( isPF ) {
+              for (auto i_pf=pfCandidatesAsFwdPtr->begin(); i_pf != pfCandidatesAsFwdPtr->end(); ++i_pf) {
+                  auto i_pfc = (*i_pf);
+                  JRAEvent::Flavor pf_id = getFlavor( i_pfc->particleId() );
+                  if (pf_id == JRAEvent::X) continue;
+                  JRAEvt_->pfcand_px ->push_back(i_pfc->px());
+                  JRAEvt_->pfcand_py ->push_back(i_pfc->py());
+                  JRAEvt_->pfcand_pt ->push_back(i_pfc->pt());
+                  JRAEvt_->pfcand_eta->push_back(i_pfc->eta());
+                  JRAEvt_->pfcand_phi->push_back(i_pfc->phi());
+                  JRAEvt_->pfcand_e  ->push_back(i_pfc->energy());
+                  JRAEvt_->pfcand_id ->push_back(pf_id);
+              }
+          }
+      }
+  }
   tree_->Fill();
-  
+
   return;
   }
 
