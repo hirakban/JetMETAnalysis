@@ -261,7 +261,26 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
         correctl2l3 and corrJetsDict.keys().index(alg_size_type_corr)
     except ValueError:
         raise ValueError("Invalid jet correction: " + alg_size_type_corr)
-        
+
+    ### create pat jets with jet tool box
+
+    from JMEAnalysis.JetToolbox.jetToolbox_cff import jetToolbox
+
+    process.load('CommonTools.PileupAlgos.Puppi_cff')
+    process.puppi.useExistingWeights = True
+    process.puppi.candName = "packedPFCandidates"
+    process.puppi.vertexName = "offlineSlimmedPrimaryVertices"
+    #80x change
+    puppiCentral[0].applyLowPUCorr = cms.bool(False)
+    puppiForward[0].applyLowPUCorr = cms.bool(False)
+
+    jetToolbox(process, alg_size, 'dummy', 'out', PUMethod = type, JETCorrPayload = '', JETCorrLevels = ['None'], bTagDiscriminators = None,
+               miniAOD = True, newPFCollection=True, nameNewPFCollection=type.lower())
+
+    #print process.patAlgosToolsTask
+    patjets = 'selectedPatJets' + alg_size.upper() + "PF" + type
+    ###
+
     ## reference (genjet) kinematic selection
     refPtEta = cms.EDFilter('EtaPtMinCandViewRefSelector',
         Defaults.RefPtEta,
@@ -274,7 +293,8 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
     ## reco jet kinematic selection
     jetPtEta = cms.EDFilter('EtaPtMinCandViewRefSelector',
         Defaults.JetPtEta,
-        src = cms.InputTag(recJetsDict[alg_size_type][0])
+        #src = cms.InputTag(recJetsDict[alg_size_type][0])
+        src = cms.InputTag(patjets)
     )
     if not reco:
         jetPtEta.src = stdRecJetsDict[alg_size_type]
@@ -282,6 +302,9 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
     
     ## create the sequence
     sequence = cms.Sequence(refPtEta * jetPtEta)
+    ## put the pat jets in the sequence
+    sequence = cms.Sequence( getattr(process, patjets) * sequence )
+    sequence.associate( process.patAlgosToolsTask )
 
 	#############################
     jetPtEtaUncor = jetPtEta.clone()
@@ -354,7 +377,8 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
             process.kt6PFJets.Ghost_EtaMax = Defaults.kt6PFJetParameters.Ghost_EtaMax.value()
             process.kt6PFJets.Rho_EtaMax   = Defaults.kt6PFJetParameters.Rho_EtaMax
             sequence = cms.Sequence(process.kt6PFJets * sequence)
-    
+    '''
+    ## commented out - i guess move pat toolbox here
     ## reconstruct jets
     if type == 'JPT':
         process.load('Configuration.Geometry.GeometryIdeal_cff')
@@ -453,13 +477,14 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
             process.load("PhysicsTools.JetMCAlgos.TauGenJets_cfi")
 #
             sequence = cms.Sequence(tauRecoSequence * process.tauGenJets * sequence)
-
+    '''
     # reconstruct genjets
     if reco:
         (genLabel, genJets) = genJetsDict[alg_size_type]
         setattr(process, genLabel, genJets)
         
-        sequence.replace(refPtEta, genJets * refPtEta)
+        #sequence.replace(refPtEta, genJets * refPtEta)
+        sequence = cms.Sequence(genJets * sequence )
 
         if type == 'Calo':
             setattr(process, 'genParticlesForJetsNoNu', genParticlesForJetsNoNu) #chaned to NoNu from NoMuNoNu
@@ -468,7 +493,7 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
             setattr(process,'genParticlesForJetsNoNu',genParticlesForJetsNoNu)
             sequence = cms.Sequence(genParticlesForJetsNoNu * sequence)
         refPtEta.src = genJets.label()
-        
+
     ## filter / map partons only if flavor information is requested
     if Defaults.JetResponseParameters.doFlavor.value() :
         setattr(process, 'partons', partons)
@@ -484,7 +509,7 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
         )
         setattr(process, alg_size_type + 'GenToParton', genToParton)
         sequence = cms.Sequence(sequence * partons * genToParton)
-       
+ 
     ## reference to jet matching
     jetToRef = cms.EDProducer('MatchRecToGen',
         srcGen = cms.InputTag(refPtEta.label()),
@@ -594,5 +619,6 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
     setattr(process, alg_size_type_corr + 'Sequence', sequence)
     path = cms.Path( sequence )
     setattr(process, alg_size_type_corr + 'Path', path)
+
     #print process.__dict__
     print alg_size_type_corr

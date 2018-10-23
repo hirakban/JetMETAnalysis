@@ -109,11 +109,58 @@ void JetResponseAnalyzer::beginJob()
                  (isCaloJet_*pow(2,5)) + (doComposition_*pow(2,4)) +
                  (doBalancing_*pow(2,3)) + (doFlavor_*pow(2,2)) +
                  (doHLT_*pow(2,1)) + (1);
+
+  //cout << flag_int << endl;
   bitset<8> flags(flag_int);
   tree_=fs->make<TTree>("t","t");
   JRAEvt_ = new JRAEvent(tree_,flags);
 }
 
+//mostly taken from JetSpecific.cc
+void getMult( vector<reco::CandidatePtr> const & particles, float* nMult, float* chMult, bool applyWeight ) {
+
+  vector<reco::CandidatePtr>::const_iterator itParticle;
+  for (itParticle=particles.begin();itParticle!=particles.end();++itParticle) {
+    const reco::Candidate* pfCand = itParticle->get();
+
+    float weight=1;
+    if (applyWeight) {
+      const pat::PackedCandidate &dau = static_cast<const pat::PackedCandidate &>( *pfCand );
+      weight = dau.puppiWeight();
+    }
+
+    switch ( std::abs(pfCand->pdgId()) ) {
+
+      case 211: //PFCandidate::h:       // charged hadron
+        (*chMult) += weight;
+      break;
+
+      case 130: //PFCandidate::h0 :    // neutral hadron
+        (*nMult) += weight;
+      break;
+
+      case 22: //PFCandidate::gamma:   // photon
+        (*nMult) += weight;
+      break;
+
+      case 11: // PFCandidate::e:       // electron
+        (*chMult) += weight;
+      break;
+
+      case 13: //PFCandidate::mu:      // muon
+        (*chMult) += weight;
+      break;
+
+      case 1: // PFCandidate::h_HF :      // hadron in HF
+        (*nMult) += weight;
+      break;
+
+      case 2: //PFCandidate::egamma_HF :      // electromagnetic in HF
+        (*nMult) += weight;
+      break;
+    }
+  }
+}
 
 //______________________________________________________________________________
 void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
@@ -134,7 +181,7 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
   edm::Handle<reco::VertexCollection>            vtx;
   edm::Handle<PFCandidateView>                   pfCandidates;
   edm::Handle<std::vector<edm::FwdPtr<reco::PFCandidate> > >  pfCandidatesAsFwdPtr;
-  edm::Handle<vector<pat::PackedGenParticle> >        genParticles;
+  edm::Handle<vector<pat::PackedGenParticle> >   genParticles;
 
   // Jet CORRECTOR
   jetCorrector_ = (jecLabel_.empty()) ? 0 : JetCorrector::getJetCorrector(jecLabel_,iSetup);
@@ -386,9 +433,8 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
         JRAEvt_->jtarea->at(JRAEvt_->nref) = rawcalojet->jetArea();
      }
      else if (isPFJet_) {
-        JRAEvt_->jtarea->at(JRAEvt_->nref) = jet.castTo<reco::PFJetRef>()->jetArea();
+        JRAEvt_->jtarea->at(JRAEvt_->nref) = jet.castTo<pat::JetRef>()->jetArea();
      }
-
      if (0!=jetCorrector_) {
         if (!jetCorrector_->vectorialCorrection()) {
            if (jetCorrector_->eventRequired()||isJPTJet_) {
@@ -406,8 +452,8 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
                  reco::CandViewMatchMap::const_iterator jetMatch=jetToUncorJetMap->find(jet);
                  if (jetMatch!=jetToUncorJetMap->end()) {
                     reco::CandidateBaseRef ujet = jetMatch->val;
-                    reco::PFJetRef pfJetRef;
-                    pfJetRef=ujet.castTo<reco::PFJetRef>();
+                    pat::JetRef pfJetRef;
+                    pfJetRef=ujet.castTo<pat::JetRef>();
                     JRAEvt_->jtjec->at(JRAEvt_->nref) = jetCorrector_->correction(*pfJetRef,iEvent,iSetup);
                  }
               }
@@ -427,8 +473,8 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
         }
         
         else if (isPFJet_) {
-           reco::PFJetRef pfJetRef;
-           pfJetRef=jet.castTo<reco::PFJetRef>();
+           pat::JetRef pfJetRef;
+           pfJetRef=jet.castTo<pat::JetRef>();
            JRAEvt_->jtchf ->push_back(pfJetRef->chargedHadronEnergyFraction()*JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jtnhf ->push_back(pfJetRef->neutralHadronEnergyFraction()*JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jtnef ->push_back(pfJetRef->photonEnergyFraction()       *JRAEvt_->jtjec->at(JRAEvt_->nref));
@@ -436,7 +482,31 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
            JRAEvt_->jtmuf ->push_back(pfJetRef->muonEnergyFraction()         *JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jthfhf->push_back(pfJetRef->HFHadronEnergyFraction()     *JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jthfef->push_back(pfJetRef->HFEMEnergyFraction()         *JRAEvt_->jtjec->at(JRAEvt_->nref));
-        } 
+
+           //unweighted multiplicities
+
+           float chMult=0, nMult=0;
+           getMult( ref.castTo<reco::GenJetRef>()->getJetConstituents(), &nMult, &chMult, false );
+           JRAEvt_->refnMult ->push_back( (int) nMult );
+           JRAEvt_->refchMult->push_back( (int) chMult );
+
+           chMult=0; nMult=0;
+           getMult( jet.castTo<pat::JetRef>()->getJetConstituents(), &nMult, &chMult, false );
+           JRAEvt_->jtnMult ->push_back( (int)nMult );
+           JRAEvt_->jtchMult->push_back( (int)chMult );
+
+           //daughter vector instead of jetconstituents (same as far as I can tell)
+           chMult=0; nMult=0;
+           getMult( jet.castTo<pat::JetRef>()->daughterPtrVector(), &nMult, &chMult, false );
+           JRAEvt_->jtnMult_daught ->push_back( (int)nMult );
+           JRAEvt_->jtchMult_daught->push_back( (int)chMult );
+
+           //weighted multiplicities
+           chMult=0; nMult=0;
+           getMult( jet.castTo<pat::JetRef>()->daughterPtrVector(), &nMult, &chMult, true );
+           JRAEvt_->jtnMult_daughtWgt ->push_back( nMult );
+           JRAEvt_->jtchMult_daughtWgt->push_back( chMult );
+        }
      }
      JRAEvt_->nref++;
   }

@@ -84,8 +84,8 @@ void JRAEvent::MakeTree(TTree* tree)
    fChain->Branch("evt", &evt, "evt/L");
    fChain->Branch("nref", &nref, "nref/b");
    fChain->Branch("refrank", "vector<UChar_t>", &refrank);
+   fChain->Branch("refpdgid", "vector<Int_t>", &refpdgid);
    if(!flags.test(0) || (flags.test(0) && flags.test(2))) {
-      fChain->Branch("refpdgid", "vector<Int_t>", &refpdgid);
       fChain->Branch("refpdgid_algorithmicDef", "vector<Int_t>", &refpdgid_algorithmicDef);
       fChain->Branch("refpdgid_physicsDef", "vector<Int_t>", &refpdgid_physicsDef);
    }
@@ -120,6 +120,16 @@ void JRAEvent::MakeTree(TTree* tree)
          fChain->Branch("jtmuf", "vector<Float_t>", &jtmuf);
          fChain->Branch("jthfhf", "vector<Float_t>", &jthfhf);
          fChain->Branch("jthfef", "vector<Float_t>", &jthfef);
+
+         fChain->Branch("refnMult", "vector<Int_t>", &refnMult);
+         fChain->Branch("refchMult", "vector<Int_t>", &refchMult);
+         fChain->Branch("jtnMult", "vector<Int_t>", &jtnMult);
+         fChain->Branch("jtchMult", "vector<Int_t>", &jtchMult);
+
+         fChain->Branch("jtnMult_daught", "vector<Int_t>", &jtnMult_daught);
+         fChain->Branch("jtchMult_daught", "vector<Int_t>", &jtchMult_daught);
+         fChain->Branch("jtnMult_daughtWgt", "vector<Float_t>", &jtnMult_daughtWgt);
+         fChain->Branch("jtchMult_daughtWgt", "vector<Float_t>", &jtchMult_daughtWgt);
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {
@@ -184,8 +194,8 @@ void JRAEvent::Init(TTree *tree)
    fChain->SetBranchAddress("evt", &evt, &b_evt);
    fChain->SetBranchAddress("nref", &nref, &b_nref);
    fChain->SetBranchAddress("refrank", &refrank, &b_refrank);
+   fChain->SetBranchAddress("refpdgid", &refpdgid, &b_refpdgid);
    if(!flags.test(0) || (flags.test(0) && flags.test(2))) {
-      fChain->SetBranchAddress("refpdgid", &refpdgid, &b_refpdgid);
       fChain->SetBranchAddress("refpdgid_algorithmicDef", &refpdgid_algorithmicDef, &b_refpdgid_algorithmicDef);
       fChain->SetBranchAddress("refpdgid_physicsDef", &refpdgid_physicsDef, &b_refpdgid_physicsDef);
    }
@@ -220,6 +230,16 @@ void JRAEvent::Init(TTree *tree)
          fChain->SetBranchAddress("jtmuf", &jtmuf, &b_jtmuf);
          fChain->SetBranchAddress("jthfhf", &jthfhf, &b_jthfhf);
          fChain->SetBranchAddress("jthfef", &jthfef, &b_jthfef);
+
+         fChain->SetBranchAddress("refnMult", &refnMult, &b_refnMult);
+         fChain->SetBranchAddress("refchMult", &refchMult, &b_refchMult);
+         fChain->SetBranchAddress("jtnMult", &jtnMult, &b_jtnMult);
+         fChain->SetBranchAddress("jtchMult", &jtchMult, &b_jtchMult);
+
+         fChain->SetBranchAddress("jtnMult_daught", &jtnMult_daught, &b_jtnMult_daught);
+         fChain->SetBranchAddress("jtchMult_daught", &jtchMult_daught, &b_jtchMult_daught);
+         fChain->SetBranchAddress("jtnMult_daughtWgt", &jtnMult_daughtWgt, &b_jtnMult_daughtWgt);
+         fChain->SetBranchAddress("jtchMult_daughtWgt", &jtchMult_daughtWgt, &b_jtchMult_daughtWgt);
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {
@@ -274,8 +294,8 @@ void JRAEvent::MakeVectors()
    ntrks_highpt            = new vector<int>;
    rhos                    = new vector<float>;
    refrank                 = new vector<UChar_t>;
+   refpdgid                = new vector<int>;
    if(!flags.test(0) || (flags.test(0) && flags.test(2))) {
-      refpdgid                = new vector<int>;
       refpdgid_algorithmicDef = new vector<int>;
       refpdgid_physicsDef     = new vector<int>;
    }
@@ -310,6 +330,16 @@ void JRAEvent::MakeVectors()
          jtmuf                   = new vector<float>;
          jthfhf                  = new vector<float>;
          jthfef                  = new vector<float>;
+
+         refnMult                = new vector<int>;
+         refchMult               = new vector<int>;
+         jtnMult                 = new vector<int>;
+         jtchMult                = new vector<int>;
+
+         jtnMult_daught          = new vector<int>;
+         jtchMult_daught         = new vector<int>;
+         jtnMult_daughtWgt       = new vector<float>;
+         jtchMult_daughtWgt      = new vector<float>;
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {
@@ -336,8 +366,8 @@ void JRAEvent::clear()
    ntrks_highpt->clear();
    rhos->clear();
    refrank->clear();
+   refpdgid->clear();
    if(!flags.test(0) || (flags.test(0) && flags.test(2))) {
-      refpdgid->clear();
       refpdgid_algorithmicDef->clear();
       refpdgid_physicsDef->clear();
    }
@@ -372,6 +402,16 @@ void JRAEvent::clear()
          jtmuf->clear();
          jthfhf->clear();
          jthfef->clear();
+
+         refnMult->clear();
+         refchMult->clear();
+         jtnMult->clear();
+         jtchMult->clear();
+
+         jtnMult_daught->clear();
+         jtchMult_daught->clear();
+         jtnMult_daughtWgt->clear();
+         jtchMult_daughtWgt->clear();
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {
