@@ -126,10 +126,8 @@ void JRAEvent::MakeTree(TTree* tree)
          fChain->Branch("jtnMult", "vector<Int_t>", &jtnMult);
          fChain->Branch("jtchMult", "vector<Int_t>", &jtchMult);
 
-         fChain->Branch("jtnMult_daught", "vector<Int_t>", &jtnMult_daught);
-         fChain->Branch("jtchMult_daught", "vector<Int_t>", &jtchMult_daught);
-         fChain->Branch("jtnMult_daughtWgt", "vector<Float_t>", &jtnMult_daughtWgt);
-         fChain->Branch("jtchMult_daughtWgt", "vector<Float_t>", &jtchMult_daughtWgt);
+         fChain->Branch("jtnMultWgt", "vector<Float_t>", &jtnMultWgt);
+         fChain->Branch("jtchMultWgt", "vector<Float_t>", &jtchMultWgt);
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {
@@ -236,10 +234,8 @@ void JRAEvent::Init(TTree *tree)
          fChain->SetBranchAddress("jtnMult", &jtnMult, &b_jtnMult);
          fChain->SetBranchAddress("jtchMult", &jtchMult, &b_jtchMult);
 
-         fChain->SetBranchAddress("jtnMult_daught", &jtnMult_daught, &b_jtnMult_daught);
-         fChain->SetBranchAddress("jtchMult_daught", &jtchMult_daught, &b_jtchMult_daught);
-         fChain->SetBranchAddress("jtnMult_daughtWgt", &jtnMult_daughtWgt, &b_jtnMult_daughtWgt);
-         fChain->SetBranchAddress("jtchMult_daughtWgt", &jtchMult_daughtWgt, &b_jtchMult_daughtWgt);
+         fChain->SetBranchAddress("jtnMultWgt", &jtnMultWgt, &b_jtnMultWgt);
+         fChain->SetBranchAddress("jtchMultWgt", &jtchMultWgt, &b_jtchMultWgt);
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {
@@ -336,10 +332,8 @@ void JRAEvent::MakeVectors()
          jtnMult                 = new vector<int>;
          jtchMult                = new vector<int>;
 
-         jtnMult_daught          = new vector<int>;
-         jtchMult_daught         = new vector<int>;
-         jtnMult_daughtWgt       = new vector<float>;
-         jtchMult_daughtWgt      = new vector<float>;
+         jtnMultWgt              = new vector<float>;
+         jtchMultWgt             = new vector<float>;
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {
@@ -408,10 +402,8 @@ void JRAEvent::clear()
          jtnMult->clear();
          jtchMult->clear();
 
-         jtnMult_daught->clear();
-         jtchMult_daught->clear();
-         jtnMult_daughtWgt->clear();
-         jtchMult_daughtWgt->clear();
+         jtnMultWgt->clear();
+         jtchMultWgt->clear();
       }
    }
    if (!flags.test(0) || (flags.test(0) && flags.test(6) && flags.test(7))) {

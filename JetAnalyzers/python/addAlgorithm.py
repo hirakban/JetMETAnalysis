@@ -275,10 +275,17 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
     puppiForward[0].applyLowPUCorr = cms.bool(False)
 
     jetToolbox(process, alg_size, 'dummy', 'out', PUMethod = type, JETCorrPayload = '', JETCorrLevels = ['None'], bTagDiscriminators = None,
-               miniAOD = True, newPFCollection=True, nameNewPFCollection=type.lower())
+               miniAOD = True, newPFCollection=True, nameNewPFCollection=type.lower()#,
+               # make id cuts before matching here #
+               #Cut = "neutralMultiplicity > 1"
+              )
 
     #print process.patAlgosToolsTask
     patjets = 'selectedPatJets' + alg_size.upper() + "PF" + type
+
+    #not sure why PFJets are needed - something to do with gen matching
+    getattr( process, alg_size + "PFJets" ).jetPtMin = Defaults.JetPtEta.ptMin
+
     ###
 
     ## reference (genjet) kinematic selection
@@ -404,7 +411,7 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
         if correctl1:
             recJets.doAreaFastjet = True #Should this be on for L1Offset
             recJets.Rho_EtaMax    = cms.double(4.4) # FIX LATER
-        recJets.jetPtMin = cms.double(3.0)
+        #recJets.jetPtMin = cms.double(3.0) #WHY (genjets are by default 3, so maybe this recoptmin was to match that)
         setattr(process, recLabel, recJets)
         sequence = cms.Sequence(recJets * sequence)
         if type == 'PUPPI':
@@ -482,6 +489,7 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
     if reco:
         (genLabel, genJets) = genJetsDict[alg_size_type]
         setattr(process, genLabel, genJets)
+        genJets.jetPtMin = Defaults.RefPtEta.ptMin
         
         #sequence.replace(refPtEta, genJets * refPtEta)
         sequence = cms.Sequence(genJets * sequence )
@@ -582,6 +590,7 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
     elif type == 'PF':
         process.particleFlow = cms.EDFilter("CandPtrSelector", src = cms.InputTag("packedPFCandidates"), cut = cms.string(""))
         process.kt6PFJetsRhos = kt6PFJets.clone(doFastJetNonUniform = cms.bool(True),
+                                                jetPtMin = Defaults.JetPtEta.ptMin,
                                                 puCenters = cms.vdouble(-5,-4,-3,-2,-1,0,1,2,3,4,5),
                                                 puWidth = cms.double(.8), 
                                                 nExclude = cms.uint32(2))
@@ -592,6 +601,7 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
     elif type == 'PUPPI':
         process.particleFlow = cms.EDFilter("CandPtrSelector", src = cms.InputTag("packedPFCandidates"), cut = cms.string(""))
         process.kt6PFJetsRhos = kt6PFJets.clone(doFastJetNonUniform = cms.bool(True),
+                                                jetPtMin = Defaults.JetPtEta.ptMin,
                                                 puCenters = cms.vdouble(-5,-4,-3,-2,-1,0,1,2,3,4,5),
                                                 puWidth = cms.double(.8), nExclude = cms.uint32(2))
         sequence = cms.Sequence(process.particleFlow * process.kt6PFJetsRhos * sequence)

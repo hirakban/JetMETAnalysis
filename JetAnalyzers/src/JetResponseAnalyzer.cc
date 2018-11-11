@@ -490,22 +490,14 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
            JRAEvt_->refnMult ->push_back( (int) nMult );
            JRAEvt_->refchMult->push_back( (int) chMult );
 
-           chMult=0; nMult=0;
-           getMult( jet.castTo<pat::JetRef>()->getJetConstituents(), &nMult, &chMult, false );
-           JRAEvt_->jtnMult ->push_back( (int)nMult );
-           JRAEvt_->jtchMult->push_back( (int)chMult );
-
-           //daughter vector instead of jetconstituents (same as far as I can tell)
-           chMult=0; nMult=0;
-           getMult( jet.castTo<pat::JetRef>()->daughterPtrVector(), &nMult, &chMult, false );
-           JRAEvt_->jtnMult_daught ->push_back( (int)nMult );
-           JRAEvt_->jtchMult_daught->push_back( (int)chMult );
+           JRAEvt_->jtnMult ->push_back( jet.castTo<pat::JetRef>()->neutralMultiplicity() );
+           JRAEvt_->jtchMult->push_back( jet.castTo<pat::JetRef>()->chargedMultiplicity() );
 
            //weighted multiplicities
            chMult=0; nMult=0;
            getMult( jet.castTo<pat::JetRef>()->daughterPtrVector(), &nMult, &chMult, true );
-           JRAEvt_->jtnMult_daughtWgt ->push_back( nMult );
-           JRAEvt_->jtchMult_daughtWgt->push_back( chMult );
+           JRAEvt_->jtnMultWgt ->push_back( nMult );
+           JRAEvt_->jtchMultWgt->push_back( chMult );
         }
      }
      JRAEvt_->nref++;

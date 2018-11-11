@@ -92,10 +92,8 @@ public :
    vector<Float_t>* jtpt;
    vector<Int_t>* jtnMult;
    vector<Int_t>* jtchMult;
-   vector<Int_t>* jtnMult_daught;
-   vector<Int_t>* jtchMult_daught;
-   vector<Float_t>* jtnMult_daughtWgt;
-   vector<Float_t>* jtchMult_daughtWgt;
+   vector<Float_t>* jtnMultWgt;
+   vector<Float_t>* jtchMultWgt;
    vector<Float_t>* jteta;
    vector<Float_t>* jtphi;
    vector<Float_t>* jty;
@@ -160,10 +158,8 @@ public :
    TBranch        *b_jtpt;   //!
    TBranch        *b_jtnMult;   //!
    TBranch        *b_jtchMult;   //!
-   TBranch        *b_jtnMult_daught;   //!
-   TBranch        *b_jtchMult_daught;   //!
-   TBranch        *b_jtnMult_daughtWgt;   //!
-   TBranch        *b_jtchMult_daughtWgt;   //!
+   TBranch        *b_jtnMultWgt;   //!
+   TBranch        *b_jtchMultWgt;   //!
    TBranch        *b_jteta;   //!
    TBranch        *b_jtphi;   //!
    TBranch        *b_jty;   //!
