@@ -4,8 +4,8 @@ import FWCore.ParameterSet.Config as cms
 #! PROCESS
 #!
 # Conditions source options: GT, SQLite, DB
-conditionsSource = "GT"
-era = "Spring16_25nsV1_MC"
+conditionsSource = "SQLite"
+era = "Autumn18_V8_MC"
 doProducer = False
 process = cms.Process("JRA")
 multithread = False
@@ -24,7 +24,7 @@ if doProducer:
 # Correction levels: '' (blank), l1, l2, l3, l2l3, l1l2l3
 algsizetype = {'ak':[4,8]}
 jettype = ['pf','pfchs','puppi']
-corrs = ['']
+corrs = ['l1l2l3']
 
 algorithms = []
 jcr = cms.VPSet()
@@ -48,13 +48,13 @@ for k, v in algsizetype.iteritems():
 #! CONDITIONS (DELIVERING JEC BY DEFAULT!)
 #!
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
-process.GlobalTag.globaltag = cms.string('80X_mcRun2_asymptotic_v5_2016PixDynIneff')
+process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v16')
 
 if conditionsSource != "GT":
     if conditionsSource == "DB":
         conditionsConnect = cms.string("frontier://FrontierPrep/CMS_COND_PHYSICSTOOLS")
     elif conditionsSource == "SQLite":
-	conditionsConnect = cms.string('sqlite_file:'+era+'.db')    
+    	conditionsConnect = cms.string('sqlite_file:'+era+'.db')    
 
     from CondCore.DBCommon.CondDBSetup_cfi import *
     process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
@@ -66,20 +66,17 @@ if conditionsSource != "GT":
 #!
 #! INPUT
 #!
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 
 ##############################################
 # External Input File (most likely from DAS) #
 ##############################################
-try:
-    process.load("JetMETAnalysis.JetAnalyzers.<filename without extension>")
-except ImportError:
-    print "Couldn't open the external list of files from DAS. If you just checkout out the JetResponseAnalyzer package you will need to make this file yourself. Currently Falling back to opening the list hard-coded in run_JRA_cfg.py. This is not a bad action as long as it is what you intended to have happen."
-    inputFiles = cms.untracked.vstring(
-	    'root://cmsxrootd.fnal.gov//store/mc/<path to root file>/<filename>.root',
-	    )
-    process.source = cms.Source("PoolSource", fileNames = inputFiles )
 
+inputFiles = cms.untracked.vstring(
+  '/store/mc/RunIIAutumn18DR/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/AODSIM/FlatPU0to70RAW_102X_upgrade2018_realistic_v15_ext2-v1/100000/009273D9-D9B4-5B4D-A330-33AF28CAAE2F.root'
+)
+
+process.source = cms.Source("PoolSource", fileNames = inputFiles)
 
 #!
 #! SERVICES
@@ -107,7 +104,6 @@ process.pfPileUpJME.checkClosestZVertex = False
 #! JET & REFERENCE KINEMATIC CUTS
 #!
 import JetMETAnalysis.JetAnalyzers.Defaults_cff as Defaults
-
 
 #!
 #! RUN JET RESPONSE ANALYZER

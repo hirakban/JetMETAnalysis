@@ -25,7 +25,7 @@ RefPtEta = cms.PSet(
 JetResponseParameters = cms.PSet(
     # record flavor information, consider both RefPt and JetPt
     doComposition   = cms.bool(True),
-    doFlavor        = cms.bool(True),
+    doFlavor        = cms.bool(False),
     doRefPt         = cms.bool(True),
     doJetPt         = cms.bool(True),
     saveCandidates  = cms.bool(False),
@@ -76,7 +76,7 @@ jet_response_parameters = cms.PSet(
     dobalance         = cms.bool(False),
     doflavor          = cms.bool(False),
     noabsflavors      = cms.bool(False),
-    drmax             = cms.double(0.3),
+    drmax             = cms.double(0.4),
     dphimin           = cms.double(2.7),
     dojetpt           = cms.bool(False),
     dorefpt           = cms.bool(True),
