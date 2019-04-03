@@ -16,11 +16,11 @@ string JetInfo::get_legend_title(const string& alg, bool withSize, bool withAlg,
   else if (alg.find("ak")==0) { title = "Anti-k_{T} R="; tmp = tmp.substr(2); }
   else return alg;
   
-  string reco[10] = { "gen", "caloHLT", "calo", "pfHLT", "pfchsHLT", "pfchs", "pf", "trk", "jpt", "puppi" };
-  string RECO[10] = { "Gen", "Calo@HLT", "Calo", "PF@HLT", "PF+CHS@HLT", "PF+CHS", "PF", "Tracks", "JPT", "PF+PUPPI" };
+  string reco[11] = { "gen", "caloHLT", "calo", "pfHLT", "pfchsHLT", "pfpuppi", "pfchs", "pf", "trk", "jpt", "puppi" };
+  string RECO[11] = { "Gen", "Calo@HLT", "Calo", "PF@HLT", "PF+CHS@HLT", "PF+PUPPI", "PF+CHS", "PF", "Tracks", "JPT", "PF+PUPPI" };
 
   string::size_type pos=string::npos; int ireco=-1;
-  while (pos==string::npos&&ireco<10) { pos = tmp.find(reco[++ireco]); }
+  while (pos==string::npos&&ireco<11) { pos = tmp.find(reco[++ireco]); }
   if (pos==string::npos) return alg;
   
   double jet_size; stringstream ss1; ss1<<tmp.substr(0,pos); ss1>>jet_size;
@@ -52,6 +52,11 @@ string JetInfo::get_legend_title(const string& alg, bool withSize, bool withAlg,
 }
 
 //______________________________________________________________________________
+TString JetInfo::get_legend_title(const TString& alg, bool withSize, bool withAlg, bool parentheses) {
+  return TString(JetInfo::get_legend_title(string(alg),withSize,withAlg,parentheses));
+}
+
+//______________________________________________________________________________
 int JetInfo::vfind(const TString a[], const int size, TString b) {
   for (int i=0; i<size; i++) {
     if (a[i].CompareTo(b,TString::kIgnoreCase)==0)
@@ -67,6 +72,24 @@ int JetInfo::vfind(vector<TString> a, TString b) {
          return i;
    }
    return -1;
+}
+
+//______________________________________________________________________________
+int JetInfo::vfind(vector<double> a, double b) {
+   for (unsigned int i=0; i<a.size(); i++) {
+      if (a[i] == b)
+         return i;
+   }
+   return -1;
+}
+
+//______________________________________________________________________________
+int JetInfo::vfind(const double a[], const int size, double b) {
+  for (int i=0; i<size; i++) {
+    if (a[i] == b)
+      return i;
+  }
+  return -1;
 }
 
 //______________________________________________________________________________
@@ -416,6 +439,19 @@ vector<int> JetInfo::getPDGIDIndecies(int pdgid) {
 
    return res;
 }//getPDGIDIndecies
+
+//______________________________________________________________________________
+string JetInfo::ListToString ( const std::vector<string> &list, string delimiter )
+{
+   string result;
+   for(unsigned int i=0; i<list.size(); i++) {
+      if(i<list.size()-1)
+         result += list[i] + string(delimiter);
+      else
+         result += list[i];
+   }
+   return result;
+}
 
 //______________________________________________________________________________
 TString JetInfo::ListToString ( const std::vector<TString> &list, TString delimiter )

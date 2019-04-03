@@ -1,3 +1,5 @@
+<use   name="CondFormats/JetMETObjects"/>
+<use   name="DataFormats/Provenance"/>
 <use   name="DataFormats/JetReco"/>
 <use   name="DataFormats/Math"/>
 <use   name="root"/>
@@ -5,6 +7,7 @@
 <use   name="rootcore"/>
 <use   name="rootMinuit"/>
 <use   name="rootspectrum"/>
+<use   name="gsl"/>
 <export>
   <lib   name="1"/>
 </export>

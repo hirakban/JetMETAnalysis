@@ -46,6 +46,8 @@ public:
   /// find the index to a specific T in a vector of T
   static int vfind(const TString a[], const int size, TString b);
   static int vfind(std::vector<TString> a, TString b);
+  static int vfind(std::vector<double> a, double b);
+  static int vfind(const double a[], const int size, double b);
 
   /// check if a vector of strings contains a certain element
   static bool contains(const std::vector<std::string>& collection,const std::string& element);
@@ -98,7 +100,8 @@ public:
   static std::string get_level_tag(int level, bool L1FastJet);
 
   /// transform the alg label into a title, e.g.: kt4calo -> k_{T}, D=0.4 (Calo)
-   static std::string get_legend_title(const std::string& alg, bool withSize = true, bool withAlg = true, bool parentheses = false);
+  static std::string get_legend_title(const std::string& alg, bool withSize = true, bool withAlg = true, bool parentheses = false);
+  static TString get_legend_title(const TString& alg, bool withSize = true, bool withAlg = true, bool parentheses = false);
 
   /// Get the abbreviation for each detector section
   static TString get_detector_abbreviation(TString dn);
@@ -126,7 +129,8 @@ public:
   //string s = ListToString(vec_of_strings,"_","ak4pf_ak4pfchs")
   //or
   //TString s = ListToString(vec_of_tstrings,"_","ak4pf_ak4pfchs")
-  static TString ListToString ( const std::vector<TString> &list, TString delimiter = "_" );
+  static std::string ListToString ( const std::vector<std::string> &list, std::string delimiter = "_" );
+  static TString     ListToString ( const std::vector<TString> &list,     TString delimiter = "_" );
   
   /// use like:
   //char buffer [50];

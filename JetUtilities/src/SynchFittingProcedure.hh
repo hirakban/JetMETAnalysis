@@ -15,23 +15,28 @@
 
 using namespace std;
 
-///CMS Preliminary label;
-void cmsPrelim(double intLUMI = 0);
 ///Scan the histogram for bin error being to high and remove points
 void scanHistoBinError(TH1* histo, double maxBinError);
 //Check is any of the bins in the histo are filled
 bool isHistoEmpty(TH1* histo);
 //Divide each bin of a histogram by a certain value and reset its content and error
 void divideHistoBy(TH1* histo, double den, double denE = -1);
+//Find the ymax such that it meets the previous criteria and no histogram overlaps with the legend
+double findNonOverlappingYmax(TCanvas* c, vector<TH1*> hists, TLegend* leg, bool checkerr = true, pair<bool,bool> logxy = make_pair(false,false), bool debug = false);
 
 // Forward decleration
 void setHistoColor(TH1* h, int c);
 void setHistoColorFill(TH1* h, int c);
-TCanvas * getCanvasFromFittingProcedure(TString cname , TProfile2D * prof, TString fname);
+
+//Returns a histogram through some proceedure
 TH1 * getResolutionHistoFromHisto(TString cname, TString title, TH2 * histo_in);
 TH1 * getResolutionHistoFromHisto_v3(TString cname, TString title, TH2 * histo_in);
 TH1 * getResolutionHistoFromHisto_v2(TString cname, TString title, TH2 * histo_in, TH2 *off_in);
 TH1 * getMeanHistoFromHisto(TString cname, TString title, TH2 *off_in,double & miny, double & maxy);
+TH1 * getIntegralHistoFromHisto(TString cname, TString title,TProfile *off_in);
+TH1 * getAverageHistoFromHisto(TString cname, TString title,TProfile *off_in);
+
+//Formats a canvas in a certain fashion
 TCanvas * getCanvasResponseResolution(TString cname, TString algo, TString title, vector<TH2*> prof);
 TCanvas * getCanvasResolution(TString cname, TString algo, TString title, vector<TH2*> prof, int modeNo, vector<pair<int,int> > npvRhoNpuBins);
 TCanvas * getResolutionNumDenom(TString cname, TString ctitle, TString algo, TH2 * prof, TH2 * off);
@@ -43,9 +48,8 @@ TCanvas * getOffsetStack(TString cname, TString ctitle, TString algo, vector<TPr
 TCanvas * getOffsetStackWithSum(TString cname, TString ctitle, TString algo, vector<TProfile*> off, TProfile* sum, bool fixedRange, vector<pair<int,int> > npvRhoNpuBins, pair<int,int> minmaxNpvRhoNpu, double avgMu = 19.41, double avgMuE = 0.00179);
 TCanvas * getCanvasResolution_v2(TString cname, TString algo, TString title, vector<TH2*> prof, vector<TH2*> off, vector<pair<int,int> > npvRhoNpuBins);
 TCanvas * getCanvasIntegral(TString cname, TString algo, TString title, vector<TProfile*> prof, vector<pair<int,int> > npvRhoNpuBins);
-TH1 * getIntegralHistoFromHisto(TString cname, TString title,TProfile *off_in);
 TCanvas * getCanvasAverage(TString cname, TString algo, TString title, vector<TProfile*> prof, vector<pair<int,int> > npvRhoNpuBins);
-TH1 * getAverageHistoFromHisto(TString cname, TString title,TProfile *off_in);
+TCanvas * getCanvasFromFittingProcedure(TString cname , TProfile2D * prof, TString fname);
 
 // ------------------------------------------------------------------
 void setHistoColor(TH1* h, int c){
@@ -65,12 +69,19 @@ TCanvas * getCanvasFromFittingProcedure(TString cname , TProfile2D * prof, TStri
 
    const unsigned int NPARS = 4;
 
-   cout<<"\t Fitting profile named "<<prof->GetName()<<endl;
-
    // Create the canvas and all it's histos
    TCanvas * c = new TCanvas(cname,cname,1600,400);
    c->cd();
    c->Divide(NPARS,1);
+
+
+   if(!prof) {
+      cout << "WARNING::getCanvasFromFittingProcedure histogram prof was not set." << endl
+           << "Returning blank histogram." << endl;
+      return c;
+   }
+   cout<<"\t Fitting profile named "<<prof->GetName()<<endl;
+
    TH1 * aux[NPARS];
    for (unsigned int h=0;h<NPARS;h++){
       TString hname = cname + Form("_Par%i",h);
@@ -509,13 +520,13 @@ TCanvas * getCanvasResolution(TString cname, TString algo, TString title, vector
    hbin->GetXaxis()->SetLimits(10.0,1000.0);
    hbin->GetXaxis()->SetMoreLogLabels();
    hbin->GetXaxis()->SetNoExponent();
-   hbin->GetXaxis()->SetTitle("p_{T}^{ptcl} [GeV]");
+   hbin->GetXaxis()->SetTitle("p_{T}^{ptcl} (GeV)");
    hbin->GetYaxis()->SetTitle(title);
    if (modeNo==0)
       hbin->GetYaxis()->SetRangeUser(0,0.5);
    else
       hbin->GetYaxis()->SetRangeUser(0,20);
-   TCanvas* c = tdrCanvas(cname,hbin,4,0,true);
+   TCanvas* c = tdrCanvas(cname,hbin,14,0,true);
    c->GetPad(0)->SetLogx();
 
    TLegend* leg = tdrLeg(0.38,0.6,0.78,1-gPad->GetTopMargin()-0.045*(1-gPad->GetTopMargin()-gPad->GetBottomMargin())+0.01);
@@ -769,12 +780,12 @@ TCanvas * getGausMeanOffset(TString cname, TString ctitle, TString algo, vector<
       NPV_Rho = 0;
 
    TH1D* hbin = new TH1D(Form("hbin_%s",cname.Data()),Form("hbin_%s",cname.Data()), 10000, 0.,10000.);
-   hbin->GetXaxis()->SetLimits(6.0,4000.0);//10.0->3.0
+   hbin->GetXaxis()->SetLimits(6.0,4000.0);
    hbin->GetXaxis()->SetMoreLogLabels();
    hbin->GetXaxis()->SetNoExponent();
-   hbin->GetXaxis()->SetTitle("p_{T}^{ptcl} [GeV]");
+   hbin->GetXaxis()->SetTitle("p_{T}^{ptcl} (GeV)");
    hbin->GetYaxis()->SetTitle(ctitle);
-   TCanvas* c = tdrCanvas(cname,hbin,4,11,true);
+   TCanvas* c = tdrCanvas(cname,hbin,14,11,true);
    c->GetPad(0)->SetLogx();
 
    vector<TH1*> hh(off.size(),(TH1*)0);
@@ -792,18 +803,8 @@ TCanvas * getGausMeanOffset(TString cname, TString ctitle, TString algo, vector<
       return c;
    }
 
-   if(fixedRange) {
-      hbin->GetYaxis()->SetRangeUser(-3.0,3.0);
-      if(NPV_Rho == 3)
-         hbin->GetYaxis()->SetRangeUser(-0.6,1.4);
-   }
-   else {
-      hbin->GetYaxis()->SetRangeUser(((miny >= 0) - (miny < 0))*1.25*fabs(miny),1.6*maxy);
-      if(NPV_Rho == 0)
-         hbin->GetYaxis()->SetRangeUser(((miny >= 0) - (miny < 0))*1.25*fabs(miny),1.6*maxy);
-   }
-
-   TLegend* leg = tdrLeg(0.38,0.6,0.78,1-gPad->GetTopMargin()-0.045*(1-gPad->GetTopMargin()-gPad->GetBottomMargin())+0.01);
+   //Set up legend here (before resetting yaxis range) so that we can determine ymax such that the histograms and the legend don't overlap
+   TLegend* leg = tdrLeg(0.38,0.55,0.78,1-gPad->GetTopMargin()-0.045*(1-gPad->GetTopMargin()-gPad->GetBottomMargin())+0.005);
    leg->AddEntry((TObject*)0,ji.get_legend_title(string(ji.abbreviation),true).c_str(),"");
    TString eta;
    if(cname.Contains("BB"))
@@ -817,6 +818,19 @@ TCanvas * getGausMeanOffset(TString cname, TString ctitle, TString algo, vector<
    leg->AddEntry((TObject*)0,eta,"");
    leg->SetName(cname+"_leg");
 
+   /*
+   if(fixedRange) {
+      hbin->GetYaxis()->SetRangeUser(-3.0,3.0);
+      if(NPV_Rho == 3)
+         hbin->GetYaxis()->SetRangeUser(-0.6,1.4);
+   }
+   else {
+      hbin->GetYaxis()->SetRangeUser(((miny >= 0) - (miny < 0))*1.25*fabs(miny),1.6*maxy);
+      if(NPV_Rho == 0)
+         hbin->GetYaxis()->SetRangeUser(((miny >= 0) - (miny < 0))*1.25*fabs(miny),1.6*maxy);
+   }
+   */
+
    for (unsigned int j=0;j<hh.size();j++) {
       scanHistoBinError(hh[j],0.4);
       if(isHistoEmpty(hh[j])) {
@@ -824,6 +838,7 @@ TCanvas * getGausMeanOffset(TString cname, TString ctitle, TString algo, vector<
          continue;
       }
       hh[j]->GetXaxis()->SetRangeUser(6.0,4000.0);
+      hh[j]->GetXaxis()->SetLimits(6.0,4000.0);
 
       if(NPV_Rho == 4)
          tdrDraw(hh[j],"E",kFullCircle,colPDGID[j],kSolid,colPDGID[j]);
@@ -857,6 +872,20 @@ TCanvas * getGausMeanOffset(TString cname, TString ctitle, TString algo, vector<
          leg->AddEntry(hh[j],JetInfo::getBinLegendEntry(var,npvRhoNpuBins[j].first),"lep");
    }
    leg->Draw("SAME");
+   //c->Update();
+   if(fixedRange) {
+      hbin->GetYaxis()->SetRangeUser(-3.0,3.0);
+      if(NPV_Rho == 3)
+         hbin->GetYaxis()->SetRangeUser(-0.6,1.4);
+   }
+   else {
+      //Need to call SetRangeUser eat least once to set the minimum. Otherwise findNonOverlappingYmax will not calculate the maximum correctly.
+      hbin->GetYaxis()->SetRangeUser(((miny >= 0) - (miny < 0))*1.25*fabs(miny),1.6*maxy);
+      c->Update();
+      hbin->GetYaxis()->SetRangeUser(((miny >= 0) - (miny < 0))*1.25*fabs(miny),findNonOverlappingYmax(c,hh,leg));
+      cout << "This is the value returned by findNonOverlappingYmax(c,hh,leg): " << findNonOverlappingYmax(c,hh,leg,true,make_pair(false,false),true) << endl;
+   }
+
 
 /*
    //Draw Algo name and detector region eta using TLatex.
@@ -1153,9 +1182,9 @@ TCanvas * getOffsetStack(TString cname, TString ctitle, TString algo, vector<TPr
    hbin->GetYaxis()->SetRangeUser(0.0,1.0);
    hbin->GetXaxis()->SetMoreLogLabels();
    hbin->GetXaxis()->SetNoExponent();
-   hbin->GetXaxis()->SetTitle("p_{T}^{ptcl} [GeV]");
+   hbin->GetXaxis()->SetTitle("p_{T}^{ptcl} (GeV}");
    hbin->GetYaxis()->SetTitle(ctitle);
-   TCanvas* c = tdrCanvas(cname,hbin,2,11,true);
+   TCanvas* c = tdrCanvas(cname,hbin,14,11,true);
    c->GetPad(0)->SetLogx();
 
    //TCanvas * c = new TCanvas(cname,cname);
@@ -1319,7 +1348,7 @@ TCanvas * getOffsetStack(TString cname, TString ctitle, TString algo, vector<TPr
    tdrDraw(background,"HIST",kFullCircle,10,kSolid,kBlack,1001,10);
    tdrDraw(stack,"");
    //stack->Draw();
-   //stack->GetXaxis()->SetTitle("p_{T}^{GEN} [GeV]");
+   //stack->GetXaxis()->SetTitle("p_{T}^{GEN} (GeV)");
    //stack->GetXaxis()->SetRangeUser(10.0,300.0);
    //stack->GetXaxis()->SetMoreLogLabels();
    //stack->GetXaxis()->SetNoExponent();
@@ -1454,7 +1483,7 @@ TCanvas * getCanvasResolution_v2(TString cname, TString algo, TString title, vec
          hh[0]->GetYaxis()->SetLabelSize(0.04);
          hh[0]->GetYaxis()->SetRangeUser(0,30);
          hh[0]->GetXaxis()->SetRangeUser(0,1000);
-         hh[0]->GetXaxis()->SetTitle("p_{T}^{ptcl} [GeV]");
+         hh[0]->GetXaxis()->SetTitle("p_{T}^{ptcl} (GeV)");
          hh[0]->GetXaxis()->SetLabelSize(0.04);
          hh[0]->GetXaxis()->SetMoreLogLabels();
          hh[0]->GetXaxis()->SetNoExponent();
@@ -1521,13 +1550,20 @@ TCanvas * getCanvasIntegral(TString cname, TString algo, TString title, vector<T
    leg->SetFillColor(0);
    leg->SetBorderSize(0);
 
-   vector<TH1*> hh(prof.size(),(TH1*)0);
-  
+   //vector<TH1*> hh(prof.size(),(TH1*)0);
+   vector<TH1*> hh;
    for (unsigned int j=0;j<prof.size();j++){
       TString hname = cname;
       hname += Form("_%i",j);
-      hh[j] = getIntegralHistoFromHisto(hname, title, prof[j]);
-      setHistoColor(hh[j],colNpv[j]);
+      //hh[j] = getIntegralHistoFromHisto(hname, title, prof[j]);
+      hh.push_back(getIntegralHistoFromHisto(hname, title, prof[j]));
+      if(hh.back())
+         setHistoColor(hh[j],colNpv[j]);
+   }
+   if(!hh[0]) {
+      cout << "WARNING::getCanvasIntegral histogram hh[0] was not set by getIntegralHistoFromHisto." << endl
+           << "Returning blank canvas." << endl;
+      return c;
    }
 
    for (unsigned int j=0;j<hh.size();j++) {
@@ -1556,7 +1592,11 @@ TCanvas * getCanvasIntegral(TString cname, TString algo, TString title, vector<T
 TH1 * getIntegralHistoFromHisto(TString cname, TString title,TProfile *off_in){
 
    // make an empty copy to fill and return
-   TH1 * histo = off_in->ProjectionX(cname);
+   TH1 * histo = 0;
+   if(off_in)
+      histo = off_in->ProjectionX(cname);
+   else
+      return histo;
    histo->Reset();
    //histo->Clear();
    histo->GetYaxis()->SetTitle(title);
@@ -1595,13 +1635,20 @@ TCanvas * getCanvasAverage(TString cname, TString algo, TString title, vector<TP
    leg->SetFillColor(0);
    leg->SetBorderSize(0);
 
-   vector<TH1*> hh(prof.size(),(TH1*)0);
-  
+   //vector<TH1*> hh(prof.size(),(TH1*)0);  
+   vector<TH1*> hh;  
    for (unsigned int j=0;j<prof.size();j++){
       TString hname = cname;
       hname += Form("_%i",j);
-      hh[j] = getAverageHistoFromHisto(hname, title, prof[j]);
-      setHistoColor(hh[j],colNpv[j]);
+      //hh[j] = getAverageHistoFromHisto(hname, title, prof[j]);
+      hh.push_back(getAverageHistoFromHisto(hname, title, prof[j]));
+      if(hh.back())
+         setHistoColor(hh[j],colNpv[j]);
+   }
+   if(!hh[0]) {
+      cout << "WARNING::getCanvasAverage histogram hh[0] was not set by getAverageHistoFromHisto." << endl
+           << "Returning blank canvas." << endl;
+      return c;
    }
    for (unsigned int j=0;j<hh.size();j++) {
       if(j==0) {
@@ -1628,7 +1675,12 @@ TCanvas * getCanvasAverage(TString cname, TString algo, TString title, vector<TP
 TH1 * getAverageHistoFromHisto(TString cname, TString title,TProfile *off_in){
 
    // make an empty copy to fill and return
-   TH1 * histo = off_in->ProjectionX(cname);
+   TH1 * histo = 0;
+   if(off_in)
+      histo = off_in->ProjectionX(cname);
+   else
+      return histo;
+
    histo->Reset();
    //histo->Clear();
    histo->GetYaxis()->SetTitle(title);
@@ -1670,25 +1722,6 @@ TH1 * getAverageHistoFromHisto(TString cname, TString title,TProfile *off_in){
 ////////////////////////////////////////////////////////////////////////////////
 
 //______________________________________________________________________________
-void cmsPrelim(double intLUMI)
-{
-   const float LUMINOSITY = intLUMI;
-   TLatex latex;
-   latex.SetNDC();
-   latex.SetTextSize(0.04);
-
-   latex.SetTextAlign(31); // align right
-   latex.DrawLatex(0.93,0.96,"#sqrt{s} = 8 TeV");
-   if (LUMINOSITY > 0.) {
-      latex.SetTextAlign(31); // align right
-      //latex.DrawLatex(0.82,0.7,Form("#int #font[12]{L} dt = %d pb^{-1}", (int) L UMINOSITY)); //Original
-      latex.DrawLatex(0.65,0.85,Form("#int #font[12]{L} dt = %d pb^{-1}", (int) LUMINOSITY)); //29/07/2011
-   }
-   latex.SetTextAlign(11); // align left
-   latex.DrawLatex(0.16,0.96,"CMS Simulation");
-}
-
-//______________________________________________________________________________
 void scanHistoBinError(TH1* histo, double maxBinError) {
    for(int ibin=1; ibin<=histo->GetNbinsX(); ibin++) {
       if(histo->GetBinError(ibin)>=maxBinError) {
@@ -1720,4 +1753,111 @@ void divideHistoBy(TH1* histo, double den, double denE) {
    }
 }
 
+//______________________________________________________________________________
+double findNonOverlappingYmax(TCanvas* c, vector<TH1*> hists, TLegend* leg, bool checkerr, pair<bool,bool> logxy, bool debug) {
+   TVirtualPad* pad = c->GetPad(0);
 
+   //step 3: find highest bin that could overlap with legend, and set ymax to prevent overlap
+   double gy = 1 - (pad->GetBottomMargin() + pad->GetTopMargin());
+   double gx = 1 - (pad->GetLeftMargin() + pad->GetRightMargin());
+   double eps = 0.075;//0.05; //small separation between legend and histos
+   double ytick = (hists.size()>0) ? hists[0]->GetYaxis()->GetTickLength() : 0;
+   double xtick = (hists.size()>0) ? hists[0]->GetXaxis()->GetTickLength() : 0;
+   double lbound = pad->GetLeftMargin() + ytick;
+   //double rbound = 1 - (pad->GetRightMargin() + ytick);
+   double tbound = 1 - (pad->GetTopMargin() + xtick);
+   //double bbound = 1 - (pad->GetTopMargin() + xtick);
+
+   //bounds to check
+   double ucmin[2], ucmax[2], vcmin[2]; //[0] is legend side, [1] is other side
+   ucmin[0] = leg->GetX1NDC();
+   ucmax[0] = leg->GetX2NDC();
+   ucmin[1] = lbound;
+   ucmax[1] = ucmin[0];
+
+   vcmin[0] = leg->GetY1NDC(); //legend always at the bottom
+   vcmin[1] = tbound; //just compare to top of plot (margin + ticks) on the other side
+         
+   //loop over histos
+   double bh[2]; //height of highest bin + error (legend)
+   bh[0] = bh[1] = 0;
+   for(unsigned s = 0; s < hists.size(); s++){
+      TAxis* x1 = hists[s]->GetXaxis();
+      int xomin, xomax; //original xmin and xmax bin #s, to reset range at the end
+      xomin = x1->GetFirst();
+      xomax = x1->GetLast();
+
+      //count bins not shown in this histogram due to a new range
+      int unseenBins = 0;
+      for(int ibin = 1; ibin <= hists[s]->GetNbinsX(); ibin++) {
+         if(hists[s]->GetBinLowEdge(ibin)<x1->GetXmin() || hists[s]->GetBinLowEdge(ibin)>=x1->GetXmax()) unseenBins++;
+      }
+            
+      for(int i = 0; i < 2; i++){ //check each side of plot
+         //new bin #s for limited range
+         int xbmin, xbmax;
+            
+         xbmin = logxy.first
+               ? x1->FindBin(x1->GetXmin()*pow(x1->GetXmax()/x1->GetXmin(), (ucmin[i] - pad->GetLeftMargin())/gx))
+               : x1->FindBin((ucmin[i] - pad->GetLeftMargin())*(x1->GetXmax() - x1->GetXmin())/gx + x1->GetXmin());
+         if(xbmin > 1) xbmin -= 1; //include partial overlap
+         xbmax = logxy.first
+               ? x1->FindBin(x1->GetXmin()*pow(x1->GetXmax()/x1->GetXmin(), (ucmax[i] - pad->GetLeftMargin())/gx))
+               : x1->FindBin((ucmax[i] - pad->GetLeftMargin())*(x1->GetXmax() - x1->GetXmin())/gx + x1->GetXmin());
+         if(xbmax < hists[s]->GetNbinsX()) xbmax += 1; //include partial overlap
+         
+         if(debug) {
+            cout << "hist name = " << hists[s]->GetName() << endl
+                 << "\tucmin[" << i << "] = " << ucmin[i] << endl
+                 << "\tucmax[" << i << "] = " << ucmax[i] << endl
+                 << "\tpad->GetLeftMargin() = " << pad->GetLeftMargin() << endl
+                 << "\tx1->GetXmin() = " << x1->GetXmin() << endl
+                 << "\tx1->GetXmax() = " << x1->GetXmax() << endl
+                 << "\tgx = " << gx << endl
+                 << "\txbmin[" << i << "] = " << xbmin << endl
+                 << "\txbmax[" << i << "] = " << xbmax << endl;
+         }
+
+         //set range for search
+         //might need to remove the -unseenBins from the xbmax. It could be cutting off too many of the bins that need to be checked.
+         x1->SetRange(xbmin-unseenBins,xbmax-unseenBins);
+         int b_ = hists[s]->GetMaximumBin();
+         double bh_ = hists[s]->GetBinContent(b_);
+         if(checkerr) bh_ += hists[s]->GetBinError(b_);
+         //check height
+         if(bh_ > bh[i]) bh[i] = bh_;
+
+         //reset to original range
+         x1->SetRange(xomin,xomax);
+      }
+   }
+
+   double ymin = pad->GetUymin();
+
+   //print out some debugging information
+   if(debug) {
+      cout << "gy = " << gy << endl;
+      cout << "eps = " << eps << endl;
+      cout << "leg->GetY1NDC() = " << leg->GetY1NDC() << "\tvcmin[0] = " << vcmin[0] << endl;
+      cout << "leg->GetY2NDC() = " << leg->GetY2NDC() << "\tvcmin[1] = " << vcmin[1] << endl;
+      cout << "ymin = " << ymin << endl;
+      cout << "pad->GetBottomMargin() = " << pad->GetBottomMargin() << endl;
+   }
+
+   double ymax_[2];
+   for(int i = 0; i < 2; i++){
+      //account for log scale if enabled
+      ymax_[i] = logxy.second ? ymin*pow(bh[i]/ymin, gy/(vcmin[i] - pad->GetBottomMargin() - eps)) : ymin + gy*(bh[i] - ymin)/(vcmin[i] - pad->GetBottomMargin() - eps);
+      if(debug) {
+         cout << "bh[" << i << "] = " << bh[i] << endl;
+         cout << "vcmin[" << i << "] = " << vcmin[i] << endl;
+         cout << "ymax_[" << i << "] = " << ymax_[i] << endl;
+      }
+   }
+
+   if(debug) {
+      cout << "New ymax should be: " << max(ymax_[0],ymax_[1]) << endl;
+   }
+   //return ymax
+   return max(ymax_[0],ymax_[1]);
+}

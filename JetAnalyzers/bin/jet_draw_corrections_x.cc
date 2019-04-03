@@ -15,6 +15,7 @@
 #include "JetMETAnalysis/JetUtilities/interface/Style.h"
 #include "JetMETAnalysis/JetUtilities/interface/CommandLine.h"
 #include "JetMETAnalysis/JetUtilities/interface/JetInfo.hh"
+#include "JetMETAnalysis/JetUtilities/interface/Variogram.hh"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 #include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 
@@ -30,6 +31,7 @@
 #include "TH2.h"
 #include "TH2F.h"
 #include "TH3F.h"
+#include "TGraphErrors.h"
 #include "TF1.h"
 #include "TString.h"
 #include "TPaveText.h"
@@ -37,10 +39,13 @@
 #include "TLatex.h"
 #include "TMath.h"
 #include "TColor.h"
+#include "TLine.h"
 
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -67,22 +72,29 @@ TCanvas * getCorrectionVsPtComparisonCanvasTDR(vector<TString>& algs, vector<pai
 
 TCanvas * getCorrectionMap(TString algo, FactorizedJetCorrector * jetCorr, TString suffix, double CMEnergy);
 
+TCanvas * draw_response(TString algo, FactorizedJetCorrector * jetCorr, TString suffix, bool doATLAS=false);
+
 vector<Int_t> getColors();
 
 vector<Int_t> getMarkerNumbers();
 
-string getAlias(TString s);
+// Move to mu-based mapping, which is better for comparing
+// different PU scenarios as it considers both IT and OOT PU,
+// plus we have a number directly comparable to ATLAS
+double rhoFromMu(double mu);
 
-TString getAlgNameLong(TString algo, int coneSize = 0);
+// Use this for solving ptmeas from ptgen = JEC(ptmeas) * ptmeas
+Double_t fJECPt(Double_t *x, Double_t *p);
 
-///CMS Preliminary label;
-void cmsPrelim(double intLUMI = 0);
+// Response as a function of pTprime (instead of JEC vs pTmeas)
+double getResp(TF1 *_jecpt, double ptgen, double eta, double jeta, double mu);
 
 ////////////////////////////////////////////////////////////////////////////////
 // global variables
 ////////////////////////////////////////////////////////////////////////////////
 vector<pair<FactorizedJetCorrector*,TString> > allJetCorrs;
 double fixedRho;
+FactorizedJetCorrector* _jec;
 
 ////////////////////////////////////////////////////////////////////////////////
 // main
@@ -183,12 +195,14 @@ void analyzeAlgo(TString algo, CommandLine & cl){
   for(unsigned int of=0; of<outputFormat.size(); of++) {
      ove->SaveAs(outputDir+string(ove->GetName())+outputFormat[of]);
   }
+  ove->Write();
+
+  // get the canvas of correction vs eta and pt, write and save to file
   TCanvas * omap = getCorrectionMap(algo, jetCorr,suffix,CMEnergy);
   for(unsigned int of=0; of<outputFormat.size(); of++) {
      omap->SaveAs(outputDir+string(omap->GetName())+outputFormat[of]);
   }
   omap->Write();
-  ove->Write();
 
   // get the canvas of correction vs eta in tdr format, write and save to file
   if(tdr) {
@@ -205,7 +219,20 @@ void analyzeAlgo(TString algo, CommandLine & cl){
      ovp->SaveAs(outputDir+string(ovp->GetName())+outputFormat[of]);
   }
   ovp->Write();
-  
+
+  // get the canvas of response vs pt in the ATLAS style, write and save to file
+  TCanvas * oATLAS = draw_response(algo, jetCorr, suffix, true);
+  for(unsigned int of=0; of<outputFormat.size(); of++) {
+     oATLAS->SaveAs(outputDir+string(oATLAS->GetName())+outputFormat[of]);
+  }
+  oATLAS->Write();
+
+  // get the canvas of response vs pt in the CMS style, write and save to file
+  TCanvas * oCMS = draw_response(algo, jetCorr, suffix, false);
+  for(unsigned int of=0; of<outputFormat.size(); of++) {
+     oCMS->SaveAs(outputDir+string(oCMS->GetName())+outputFormat[of]);
+  }
+  oCMS->Write();
 
 }//analyzeAlgo
 
@@ -388,7 +415,7 @@ TCanvas * getCorrectionVsEtaCanvasTDR(TString algo, FactorizedJetCorrector * jet
   leg->SetFillColor(0);
 
   //Create a pave indicating the algorithm name
-  TString algNameLong = getAlgNameLong(algo);
+  TString algNameLong = JetInfo::get_legend_title(string(algo));
   leg->AddEntry((TObject*)0,algNameLong,"");
   leg->AddEntry((TObject*)0,"","");
 
@@ -551,7 +578,7 @@ vector<TCanvas*> getCorrectionVsEtaComparisonCanvasTDR(vector<TString>& algs, ve
 
     bool allAlgsSame = true;
     for(unsigned int ialg=0; ialg<algs.size(); ialg++) {
-      if(getAlgNameLong(algs[0],1).CompareTo(getAlgNameLong(algs[ialg],1))!=0) {
+      if(JetInfo::get_legend_title(algs[0],false).CompareTo(JetInfo::get_legend_title(algs[ialg],false))!=0) {
         allAlgsSame=false;
         break;
       }
@@ -681,9 +708,9 @@ vector<TCanvas*> getCorrectionVsEtaComparisonCanvasTDR(vector<TString>& algs, ve
       //Create a pave indicating the algorithm name
       if ( (normAlg.IsNull()) || (ialg>0 && !normAlg.IsNull()) ) {
         if(allAlgsSame)
-          legs.back()->AddEntry(cc[hstr],getAlgNameLong(algs[ialg],2),"p");
+          legs.back()->AddEntry(cc[hstr],Form(" R=%.1f",JetInfo(algs[ialg]).coneSize/10.0),"p");
         else
-          legs.back()->AddEntry(cc[hstr],getAlgNameLong(algs[ialg]),"p");
+          legs.back()->AddEntry(cc[hstr],JetInfo::get_legend_title(algs[ialg]),"p");
       }
     }//for alg
 
@@ -873,7 +900,7 @@ TCanvas * getCorrectionVsPtComparisonCanvasTDR(vector<TString>& algs, vector<pai
          cc->Draw("Psame");
 
       //Create a pave indicating the algorithm name
-      TString algNameLong = getAlgNameLong(algs[ialg]);
+      TString algNameLong = JetInfo::get_legend_title(algs[ialg]);
       legs.back()->AddEntry(cc,algNameLong,"p");
     }//for alg
 
@@ -890,34 +917,35 @@ TCanvas * getCorrectionVsPtComparisonCanvasTDR(vector<TString>& algs, vector<pai
 //---------------------------------------------------------------------
 TCanvas * getCorrectionMap(TString algo, FactorizedJetCorrector * jetCorr,
                            TString suffix, double CMEnergy) {
+   //gStyle->SetOptTitle(0);
+   //gStyle->SetOptStat(0);
+
+   TString hstr = "CorrMap";
+   TH2D * cc = new TH2D(hstr,hstr,NPtBins,vpt,NETA,veta);
 
    TString ss("CorrectionMap_Overview_TDR");
    ss += suffix;
+   TH1D* frame = new TH1D();
+   frame->GetXaxis()->SetLimits(1,10000);
+   frame->GetXaxis()->SetTitle("p_{T}^{raw}");
+   frame->GetYaxis()->SetRangeUser(cc->GetYaxis()->GetXmin(),cc->GetYaxis()->GetXmax());
+   frame->GetYaxis()->SetTitle("#eta");
+   TCanvas* ove = tdrCanvas(ss,frame,14,0,true);
+   ove->cd(0);
+   ove->SetLogx();
+   ove->SetLeftMargin(ove->GetLeftMargin()*0.75);
+   ove->SetRightMargin(ove->GetRightMargin()*2.5);
+   frame->GetYaxis()->SetTitleOffset(0.8);
+
+/*
    TCanvas *ove = new TCanvas(ss,ss,900,900);
    ove->cd();
    ove->SetLogx();
-
    ove->SetLeftMargin(0.145089);
    ove->SetRightMargin(0.132812);
    ove->SetTopMargin(0.0860092);
    ove->SetBottomMargin(0.178899);
-
-   gStyle->SetOptTitle(0);
-   gStyle->SetOptStat(0);
-
-   //Create a pave indicating the algorithm name
-   TString algNameLong = getAlgNameLong(algo);
-
-   TPaveText * pave = new TPaveText(0.295,0.93,0.519,0.99,"NDC tr");
-   pave->AddText(algNameLong);
-   pave->SetFillColor(0);
-   pave->SetShadowColor(0);
-   pave->SetTextFont(42);
-   pave->SetTextSize(0.05);
-
-   TString hstr = "CorrMap";
-
-   TH2D * cc = new TH2D(hstr,hstr,NPtBins,vpt,NETA,veta);
+*/
 
    // loop over all pads
    for (unsigned int b = 0; b < NETA; b++){
@@ -951,8 +979,6 @@ TCanvas * getCorrectionMap(TString algo, FactorizedJetCorrector * jetCorr,
 
   }//for loop
 
-   //pave->Draw("same");
-
    cc->GetYaxis()->SetTitle("#eta");
    cc->GetXaxis()->SetRangeUser(1,10000);
    cc->GetXaxis()->SetTitle("p_{T}^{raw}");
@@ -968,16 +994,174 @@ TCanvas * getCorrectionMap(TString algo, FactorizedJetCorrector * jetCorr,
    ove->Update();
    cc->SetContour(20);
    gStyle->SetPalette(55);
-   cc->Draw("colz");
-   //leg->Draw("same");
-   pave->Draw("same");
-   //CMS_lumi(ove,14,11);
-   //cmsPrelim();
+   tdrDraw(cc,"colz",kNone,kNone,kNone,kNone);
+   fixOverlay();
+   //cc->Draw("colz");
+
+   // Draw a subpad with a semi-variogram
+   map<string,double> *variogram_params = new map<string,double>();
+   Variogram v(cc);
+   v.dist_to_vector_from_squareform(false);
+   int tolerance = 1;
+   vector<int> lags(30);
+   int val = 0;
+   for(unsigned int i=0; i<lags.size(); i++, val+=tolerance*1) {
+      lags[i] = val;
+   }
+   v.getSemivariogram(lags,1,true);
+   TCanvas* subcan = v.plotSemivariogram(lags,1,"spherical:6",true,variogram_params);
+   ove->cd();
+   TPad *subpad = new TPad("subpad", "subpad", 0.69, 0.18, 0.85, 0.34);
+   subpad->SetBottomMargin(0);
+   subpad->SetTopMargin(0);
+   subpad->SetLeftMargin(0);
+   subpad->SetRightMargin(0);
+   //subpad->SetFillColor(kRed);
+   subpad->SetFillStyle(1001);
+   //subpad->SetFillStyle(4000);
+   gStyle->SetPalette(55);
+   subpad->Draw("same");
+   subpad->cd();
+   subcan->DrawClonePad();
+
+   ove->cd();
+   //Create a legend indicating the algorithm name
+   TString algNameLong = JetInfo::get_legend_title(algo);
+   TLegend* ll = tdrLeg(0.63,0.87,0.87,0.90);
+   ll->SetTextFont(42);
+   ll->SetTextSize(0.020);
+   ll->SetHeader(algNameLong);
+   ll->Draw("same");
+
+   TLegend* l = tdrLeg(0.63,0.73,0.87,0.87);
+   l->SetTextFont(42);
+   l->SetTextSize(0.020);
+   l->SetHeader("Variogram Parameters:");
+   l->AddEntry((TObject*)0,"Model = Spherical","");
+   l->AddEntry((TObject*)0,Form("%s = %.3f",variogram_params->find("Smp. Var.")->first.c_str(),variogram_params->find("Smp. Var.")->second),"");
+   l->AddEntry((TObject*)0,Form("%s = %.3f",variogram_params->find("a (model)")->first.c_str(),variogram_params->find("a (model)")->second),"");
+   l->AddEntry((TObject*)0,Form("%s = %.3f",variogram_params->find("sill (model)")->first.c_str(),variogram_params->find("sill (model)")->second),"");
+   l->Draw("same");
 
    // return the canvas
    return ove;
 
 }//getCorrectionMap()
+
+//---------------------------------------------------------------------
+TCanvas * draw_response(TString algo, FactorizedJetCorrector * jetCorr, TString suffix, bool doATLAS) {
+    _jec = jetCorr;
+    TF1 *_jecpt = new TF1("jecpt",fJECPt,0,4000,3);
+
+  // doATLAS:
+  // If true, these values represent energies
+  // If false, these values represent pt
+  double vars[] = {30, 60, 110, 400, 2000};
+  const int nvar = sizeof(vars)/sizeof(vars[0]);
+  const int neta = 48;//52;
+  const int jeta = TMath::Pi()*0.5*0.5;
+  const int mu = 0;
+
+  TGraph *gs[nvar];
+  for (int ivar = 0; ivar != nvar; ++ivar) {
+
+    double independent_variable = vars[ivar];
+
+    TGraph *g = new TGraph(0); gs[ivar] = g;
+    for (int ieta = 0; ieta != neta; ++ieta) {
+      
+      double eta = (ieta+0.5)*0.1;
+      double dependent_variable;
+      if(doATLAS) dependent_variable = independent_variable / cosh(eta);
+      else dependent_variable = independent_variable * cosh(eta);
+      if ((doATLAS && dependent_variable > 10. && independent_variable < 4000.) ||
+          (independent_variable > 10. && dependent_variable < 4000.)) {
+        double jes;
+        if(doATLAS) jes = getResp(_jecpt, dependent_variable, eta, jeta, mu);
+        else jes = getResp(_jecpt, independent_variable, eta, jeta, mu);
+        int n = g->GetN();
+        g->SetPoint(n, eta, jes);
+      }
+    } // for ie
+  } // for ieta
+
+  // Draw results
+  //TCanvas *c1 = new TCanvas("c1","c1",600,600);
+  //TCanvas *c1 = new TCanvas("c1","c1",800,600); // ATLAS shape
+  TH1D *h;
+  if(doATLAS) h = new TH1D("h",";Jet |#eta|;Jet response at PF scale",40,0,4.8);
+  else h = new TH1D("h",";Jet |#eta|;Simulated jet response",40,0,4.8);
+  h->SetMaximum(1.25);
+  h->SetMinimum(0.5);
+  //h->Draw("AXIS");
+  TString ss;
+  if(doATLAS) ss+="ATLASresponse";
+  else ss+="CMSresponse";
+  ss += suffix;
+  TCanvas *c1 = tdrCanvas(ss.Data(),h,14,0,doATLAS ? kRectangular : kSquare);
+
+  TLegend *leg1 = tdrLeg(0.25,0.25,0.55,0.30);
+  TLegend *leg2 = tdrLeg(0.25,0.20,0.55,0.25);
+  TLegend *leg3 = tdrLeg(0.25,0.15,0.55,0.20);
+  TLegend *leg4 = tdrLeg(0.55,0.25,0.85,0.30);
+  TLegend *leg5 = tdrLeg(0.55,0.20,0.85,0.25);
+  TLegend *legs[nvar] = {leg1, leg2, leg3, leg4, leg5};
+
+  int colors[] = {kGreen+2, kBlack, kOrange+1, kBlue, kRed+1};
+  int markers[] = {kFullCircle, kOpenCircle, kFullSquare, kOpenSquare,
+       kFullTriangleUp};
+
+  for (int ivar = 0; ivar != nvar; ++ivar) {
+    
+    TGraph *g = gs[ivar];
+    g->SetMarkerColor(colors[ivar]);
+    g->SetMarkerStyle(markers[ivar]);
+    g->Draw("SAMEP");
+
+    //TLegend *leg = (ie<3 ? leg1 : leg2);
+    TLegend *leg = legs[ivar];
+    leg->SetTextColor(colors[ivar]);
+    TString var_name;
+    if(doATLAS) var_name = "E";
+    else var_name = "p_{T}";
+    leg->AddEntry(g, Form("%s = %1.0f GeV",var_name.Data(),vars[ivar]), "P");
+  }
+
+
+  TLatex *tex = new TLatex();
+  tex->SetNDC();
+  tex->SetTextSize(0.045);
+  
+  TLine *l = new TLine();
+  l->DrawLine(1.3,0.7,1.3,1.1);
+  l->DrawLine(2.5,0.7,2.5,1.1);
+  l->DrawLine(3.0,0.7,3.0,1.1);
+  l->DrawLine(4.5,0.7,4.5,1.1);
+  l->SetLineStyle(kDashed);
+  l->DrawLine(3.2,0.7,3.2,1.1);
+
+  TLatex* tex_tmp = tex->DrawLatex(0.35,0.86,"2016 JES: "+JetInfo::get_legend_title(algo));
+  //The size of the x-axis in axis coordinates
+  double x_axis_width = c1->GetUxmax()-c1->GetUxmin();
+  //The width of the pad in x-axis coordinates = x-axis width/percentage that the x-axis takes up in NDC coordinates
+  double total_width = x_axis_width/(1.0-c1->GetRightMargin()-c1->GetLeftMargin());
+  //The blank space on either size of the text in NDC coordinates starting from the left margin (i.e. in the frame)
+  double side_padding = (1.0-c1->GetRightMargin()-c1->GetLeftMargin()-(tex_tmp->GetXsize()/total_width))/2.0;
+  //Add back in the left margin so that the text is centered in the frame and not the pad
+  tex_tmp->SetX(c1->GetLeftMargin()+side_padding);
+  tex_tmp->Draw("same");
+
+  tex->DrawLatex(0.19,0.78,"Barrel");
+  tex->DrawLatex(0.47,0.78,"Endcap"); //0.42
+  tex->DrawLatex(0.73,0.78,"Forward");
+
+  tex->DrawLatex(0.21,0.73,"BB");
+  tex->DrawLatex(0.43,0.73,"EC1");
+  tex->DrawLatex(0.57,0.73,"EC2");
+  tex->DrawLatex(0.77,0.73,"HF");
+
+  return c1;
+}
 
 //---------------------------------------------------------------------
 FactorizedJetCorrector * getFactorizedCorrector(TString algo, CommandLine & cl, TString & label) {
@@ -1055,235 +1239,6 @@ FactorizedJetCorrector * getFactorizedCorrector(TString algo, CommandLine & cl, 
 
 }//getFactorizedCorrector
 
-
-//______________________________________________________________________________
-string getAlias(TString s)
-{
-   if (s=="ic5calo")
-      return "IC5Calo";
-   else if (s=="ic5pf")
-      return "IC5PF";
-   else if (s=="ak5calo")
-      return "AK5Calo";  
-   else if (s=="ak5calol1")
-      return "AK5Calol1";
-   else if (s=="ak5calol1off")
-      return "AK5Calol1off";
-   else if (s=="ak5calol1offl2l3")
-      return "AK5Calol1off";
-   else if (s=="ak7calo")
-      return "AK7Calo";
-   else if (s=="ak7calol1")
-      return "AK7Calol1";
-   else if (s=="ak7calol1off")
-      return "AK7Calol1off";
-   else if (s=="ak5caloHLT")
-      return "AK5CaloHLT";
-   else if (s=="ak5caloHLTl1")
-      return "AK5CaloHLTl1";
-   else if (s=="ak1pf")
-      return "AK1PF";
-   else if (s=="ak1pfl1")
-      return "AK1PFl1";
-   else if (s=="ak2pf")
-      return "AK2PF";
-   else if (s=="ak2pfl1")
-      return "AK2PFl1";
-   else if (s=="ak3pf")
-      return "AK3PF";
-   else if (s=="ak3pfl1")
-      return "AK3PFl1";
-   else if (s=="ak4pf")
-      return "AK4PF";
-   else if (s=="ak4pfl1")
-      return "AK4PFl1";
-   else if (s=="ak5pf")
-      return "AK5PF";
-   else if (s=="ak5pfl1")
-      return "AK5PFl1";
-   else if (s=="ak5pfl1l2l3")
-      return "AK5PFl1";
-   else if (s=="ak5pfl1off")
-      return "AK5PFl1off";
-   else if (s=="ak6pf")
-      return "AK6PF";
-   else if (s=="ak6pfl1")
-      return "AK6PFl1";
-   else if (s=="ak7pf")
-      return "AK7PF";
-   else if (s=="ak7pfl1")
-      return "AK7PFl1";
-   else if (s=="ak7pfl1off")
-      return "AK7PFl1off";
-   else if (s=="ak8pf")
-      return "AK8PF";
-   else if (s=="ak8pfl1")
-      return "AK8PFl1";
-   else if (s=="ak9pf")
-      return "AK9PF";
-   else if (s=="ak9pfl1")
-      return "AK9PFl1";
-   else if (s=="ak10pf")
-      return "AK10PF";
-   else if (s=="ak10pfl1")
-      return "AK10PFl1";
-   else if (s=="ak1pfchs")
-      return "AK1PFchs";
-   else if (s=="ak1pfchsl1")
-      return "AK1PFchsl1";
-   else if (s=="ak2pfchs")
-      return "AK2PFchs";
-   else if (s=="ak2pfchsl1")
-      return "AK2PFchsl1";
-   else if (s=="ak3pfchs")
-      return "AK3PFchs";
-   else if (s=="ak3pfchsl1")
-      return "AK3PFchsl1";
-   else if (s=="ak4pfchs")
-      return "AK4PFchs";
-   else if (s=="ak4pfchsl1")
-      return "AK4PFchsl1";
-   else if (s=="ak5pfchs")
-      return "AK5PFchs";
-   else if (s=="ak5pfchsl1")
-      return "AK5PFchsl1";
-   else if (s=="ak5pfchsl1l2l3")
-      return "AK5PFchsl1";
-   else if (s=="ak5pfchsl1off")
-      return "AK5PFchsl1off";
-   else if (s=="ak6pfchs")
-      return "AK6PFchs";
-   else if (s=="ak6pfchsl1")
-      return "AK6PFchsl1";
-   else if (s=="ak7pfchs")
-      return "AK7PFchs";
-   else if (s=="ak7pfchsl1")
-      return "AK7PFchsl1";
-   else if (s=="ak7pfchsl1off")
-      return "AK7PFchsl1off";
-   else if (s=="ak8pfchs")
-      return "AK8PFchs";
-   else if (s=="ak8pfchsl1")
-      return "AK8PFchsl1";
-   else if (s=="ak9pfchs")
-      return "AK9PFchs";
-   else if (s=="ak9pfchsl1")
-      return "AK9PFchsl1";
-   else if (s=="ak10pfchs")
-      return "AK10PFchs";
-   else if (s=="ak10pfchsl1")
-      return "AK10PFchsl1";
-   else if (s=="ak5pfHLT")
-      return "AK5PFHLT";
-  else if (s=="ak5pfHLTl1")
-      return "AK5PFHLTl1";
-   else if (s=="ak5pfchsHLT")
-      return "AK5PFchsHLT";
-   else if (s=="ak5pfchsHLTl1")
-      return "AK5PFchsHLTl1";
-   else if (s=="ak5jpt")
-      return "AK5JPT";
-   else if (s=="ak5jptl1")
-      return "AK5JPTl1";
-   else if (s=="ak5jptl1off")
-      return "AK5JPTl1off";
-   else if (s=="ak5jptl1l2l3")
-      return "AK5JPTl1";
-   else if (s=="ak5jptl1offl2l3")
-      return "AK5JPTl1off";
-   else if (s=="ak7jpt")
-      return "AK7JPT";
-   else if (s=="ak7jptl1")
-      return "AK7JPTl1";
-   else if (s=="ak7jptl1off")
-      return "AK7JPTl1off";
-   else if (s=="sc5calo")
-      return "SC5Calo";
-   else if (s=="sc5pf")
-      return "SC5PF";
-   else if (s=="sc7calo")
-      return "SC5Calo";
-   else if (s=="sc7pf")
-      return "SC5PF";
-   else if (s=="kt4calo")
-      return "KT4Calo";
-   else if (s=="kt4pf")
-      return "KT4PF";
-   else if (s=="kt6calo")
-      return "KT6Calo";
-   else if (s=="kt6pf")
-      return "KT6PF";
-   else if (s=="ak5calordl1")
-      return "AK5CaloRDl1";
-   else if (s=="ak5pfrdl1")
-      return "AK5PFRDl1";
-   else if (s=="ak5pfchsrdl1")
-      return "AK5PFchsRDl1";
-   else if (s=="ak7calordl1")
-      return "AK7CaloRDl1";
-   else if (s=="ak7pfrdl1")
-      return "AK7PFRDl1";
-   else if (s=="ak7pfchsrdl1")
-      return "AK7PFchsRDl1";
-   else if (s=="ak1puppi")
-      return "AK1PUPPI";
-   else if (s=="ak2puppi")
-      return "AK2PUPPI";
-   else if (s=="ak3puppi")
-      return "AK3PUPPI";
-   else if (s=="ak4puppi")
-      return "AK4PUPPI";
-   else if (s=="ak5puppi")
-      return "AK5PUPPI";
-   else if (s=="ak6puppi")
-      return "AK6PUPPI";
-   else if (s=="ak7puppi")
-      return "AK7PUPPI";
-   else if (s=="ak8puppi")
-      return "AK8PUPPI";
-   else if (s=="ak9puppi")
-      return "AK9PUPPI";
-   else if (s=="ak10puppi")
-      return "AK10PUPPI";
-   else
-      return "unknown";
-}
-
-//______________________________________________________________________________
-//coneSize = 0 the entire name
-//coneSize = 1 no cone size
-//coneSize = 2 only cone size
-TString getAlgNameLong(TString algo, int coneSize) {
-  TString algNameLong;
-
-  if (coneSize<2)
-    if(algo.Contains("ak"))        algNameLong += "Anti-kT";
-  if(coneSize==0 || coneSize==2) {
-     if(algo.Contains("ak1") && !algo.Contains("ak10")) algNameLong += " R=0.1";
-    else if(algo.Contains("2"))    algNameLong += " R=0.2";
-    else if(algo.Contains("3"))    algNameLong += " R=0.3";
-    else if(algo.Contains("4"))    algNameLong += " R=0.4";
-    else if(algo.Contains("5"))    algNameLong += " R=0.5";
-    else if(algo.Contains("6"))    algNameLong += " R=0.6";
-    else if(algo.Contains("7"))    algNameLong += " R=0.7";
-    else if(algo.Contains("8"))    algNameLong += " R=0.8";
-    else if(algo.Contains("9"))    algNameLong += " R=0.9";
-    else if(algo.Contains("10"))   algNameLong += " R=1.0";
-  }
-  if(coneSize<2) {
-    if(algo.Contains("pfchs"))     algNameLong += ", PF+CHS";
-    //else if(algo.Contains("pf"))   algNameLong += ", PFlow";
-    else if(algo.Contains("pf"))   algNameLong += ", Particle-Flow Jets";
-    else if(algo.Contains("calo")) algNameLong += ", Calo";
-    else if(algo.Contains("jpt"))  algNameLong += ", JPT";
-    else if(algo.Contains("puppi"))  algNameLong += ", PUPPI";
-
-    if(algo.Contains("rd")) algNameLong += ", (RD)";
-  }
-
-  return algNameLong;
-}
-
 //______________________________________________________________________________
 vector<Int_t> getColors() {
   vector<Int_t> ret;
@@ -1317,21 +1272,40 @@ vector<Int_t> getMarkerNumbers() {
 }
 
 //______________________________________________________________________________
-void cmsPrelim(double intLUMI)
-{
-   const float LUMINOSITY = intLUMI;
-   TLatex latex;
-   latex.SetNDC();
-   latex.SetTextSize(0.045);
+// Move to mu-based mapping, which is better for comparing
+// different PU scenarios as it considers both IT and OOT PU,
+// plus we have a number directly comparable to ATLAS
+double rhoFromMu(double mu) {
+  // Eta_0.0-1.3, jt320
+  return (1.01272 + 0.551183*mu + 0.000362936*mu*mu);
+}
 
-   latex.SetTextAlign(31); // align right
-   latex.DrawLatex(0.93,0.96,"#sqrt{s} = 13 TeV");
-   if (LUMINOSITY > 0.) {
-      latex.SetTextAlign(31); // align right
-      //latex.DrawLatex(0.82,0.7,Form("#int #font[12]{L} dt = %d pb^{-1}", (int) LUMINOSITY)); //Original
-      latex.DrawLatex(0.65,0.85,Form("#int #font[12]{L} dt = %d pb^{-1}", (int) LUMINOSITY)); //29/07/2011
-   }
-   latex.SetTextAlign(11); // align left
-   //latex.DrawLatex(0.16,0.96,"CMS preliminary");// 2012");
-   latex.DrawLatex(0.16,0.96,"CMS Simulation");// 2012");
+//______________________________________________________________________________
+// Use this for solving ptmeas from ptgen = JEC(ptmeas) * ptmeas
+Double_t fJECPt(Double_t *x, Double_t *p) {
+
+  double ptmeas = x[0];
+  double eta = p[0];
+  double jeta = p[1];
+  double rho = p[2];
+
+  _jec->setJetPt(ptmeas);
+  _jec->setJetEta(eta);
+  _jec->setJetA(jeta);
+  _jec->setRho(rho);
+
+  double jec = _jec->getCorrection();
+  
+  return (ptmeas * jec);
+}
+
+//______________________________________________________________________________
+// Response as a function of pTprime (instead of JEC vs pTmeas)
+double getResp(TF1 *_jecpt, double ptgen, double eta, double jeta, double mu) {
+
+  _jecpt->SetParameters(eta, jeta, rhoFromMu(mu));
+  double ptmeas = _jecpt->GetX(ptgen, 1, 4000);
+  double resp = ptmeas / _jecpt->Eval(ptmeas); // 1/jec
+
+  return resp;
 }

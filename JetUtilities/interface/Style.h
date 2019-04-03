@@ -127,7 +127,7 @@ inline void fixOverlay() {
 // CMS_lumi.h //
 ////////////////
 
-inline void CMS_lumi( TPad* pad, int iPeriod=3, int iPosX=10 );
+inline void CMS_lumi( TPad* pad, int iPeriod=3, int iPosX=10, bool verbose=false );
 //inline void reset_globals();
 
 
@@ -138,7 +138,7 @@ inline void CMS_lumi( TPad* pad, int iPeriod=3, int iPosX=10 );
 //#include "CMS_lumi.h"
 
 inline void 
-CMS_lumi( TPad* pad, int iPeriod, int iPosX )
+CMS_lumi( TPad* pad, int iPeriod, int iPosX, bool verbose )
 {            
 
   //
@@ -148,8 +148,16 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   float cmsTextFont   = 61;  // default is helvetic-bold
 
   bool writeExtraText = true;//false;
-  TString extraText   = "Simulation";
-  TString extraText2   = "Preliminary"; // For Simulation Preliminary on two lines
+  TString extraText, extraText2, extraText3;
+  if(iPeriod==15) {
+     extraText   = "Phase-2";
+     extraText2  = "Simulation"; // For Simulation Preliminary on two lines
+     extraText3  = "Preliminary";
+  }
+  else {
+     extraText   = "Simulation";
+     extraText2   = "Preliminary"; // For Simulation Preliminary on two lines
+  }
   float extraTextFont = 52;  // default is helvetica-italics
 
   // text sizes and text offsets with respect to the top frame
@@ -237,16 +245,28 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
       lumiText += " (7 TeV)";
       if( outOfFrame) lumiText += "}";
     }
+  else if ( iPeriod==11 )
+    {
+      lumiText += "7 TeV";
+    }
   else if ( iPeriod==12 )
     {
-      lumiText += "(8 TeV)";
+      lumiText += "8 TeV";
+    }
+  else if ( iPeriod==13 )
+    {
+      lumiText += "7 TeV + 8 TeV";
     }
   else if ( iPeriod==14 )
     {
-      lumiText += "(13 TeV)";
+      lumiText += "13 TeV";
+    }
+  else if ( iPeriod==15 )
+    {
+      lumiText += "14 TeV";
     }
    
-  cout << lumiText << endl;
+  if(verbose) cout << lumiText << endl;
 
   TLatex latex;
   latex.SetNDC();
@@ -317,6 +337,9 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
           if (extraText2!="") // For Simulation Preliminary
             latex.DrawLatex(posX_, posY_-relExtraDY*cmsTextSize*t
                             - relExtraDY*extraTextSize*t, extraText2);
+          if (extraText3!="") // For Simulation Preliminary
+             latex.DrawLatex(posX_, posY_-relExtraDY*cmsTextSize*t
+                             - 2*relExtraDY*extraTextSize*t, extraText3);
         }
      }
   }
@@ -331,7 +354,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
      latex.SetTextSize(extraTextSize*t);
      latex.SetTextAlign(align_);
      if(extraText2!="") {
-       latex.DrawLatex(posX_, posY_, extraText+" "+extraText2);
+       latex.DrawLatex(posX_, posY_, extraText+" "+extraText2+" "+extraText3);
      }
      else {
        latex.DrawLatex(posX_, posY_, extraText);
@@ -348,7 +371,8 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 // Create h after calling setTDRStyle to get all the settings right
 inline TCanvas* tdrCanvas(const char* canvName, TH1D *h,
                           int iPeriod = 2, int iPos = 11,
-                          bool square = kRectangular) {
+                          bool square = kRectangular,
+                          bool verbose = false) {
 
   setTDRStyle();
   //reset_globals();
@@ -411,7 +435,7 @@ inline TCanvas* tdrCanvas(const char* canvName, TH1D *h,
   h->Draw("AXIS");
 
   // writing the lumi information and the CMS "logo"
-  CMS_lumi( canv, iPeriod, iPos );
+  CMS_lumi( canv, iPeriod, iPos, verbose );
   
   canv->Update();
   canv->RedrawAxis();
@@ -424,7 +448,8 @@ inline TCanvas* tdrCanvas(const char* canvName, TH1D *h,
 // Create h after calling setTDRStyle to get all the settings right
 // Created by: Mikko Voutilainen (HIP)
 inline TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
-                            int iPeriod = 2, int iPos = 11) {
+                            int iPeriod = 2, int iPos = 11,
+                            bool verbose = false) {
 
   setTDRStyle();
   //reset_globals();
@@ -492,7 +517,7 @@ inline TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
   hup->Draw("AXIS");
 
   // writing the lumi information and the CMS "logo"
-  CMS_lumi( (TCanvas*)gPad, iPeriod, iPos );
+  CMS_lumi( (TCanvas*)gPad, iPeriod, iPos, verbose );
 
   canv->cd(2);
   gPad->SetPad(0, 0, 1, Hdw / H);
@@ -542,18 +567,31 @@ inline void cmsPrel(int energy = 8, double intLumi=-1, bool wide = false) {
   if (intLumi > 0.) {
     latex->SetTextAlign(11); // align left
     latex->DrawLatex(wide ? 0.06 : 0.15, 0.96,
-         Form("CMS preliminary, L = %.3g fb^{-1}",intLumi*0.001));
-  }
-  else if (intLumi==0) { // simulation
-    latex->SetTextAlign(11); // align left
-    //latex->DrawLatex(wide ? 0.06 : 0.15, 0.96, "CMS simulation (Summer12)");
-    latex->DrawLatex(wide ? 0.06 : 0.15, 0.96, "CMS Simulation");
+         Form("CMS simulation preliminary, L = %.3g fb^{-1}",intLumi*0.001));
   }
   else {
     latex->SetTextAlign(11); // align left
-    latex->DrawLatex(0.15,0.96,"CMS preliminary 2014");
+    latex->DrawLatex(0.15,0.96,"CMS simulation preliminary");
   }
 } // cmsPrel
+
+///CMS Preliminary label;
+inline void cmsPrelim(double intLUMI = 0) {
+   const float LUMINOSITY = intLUMI;
+   TLatex latex;
+   latex.SetNDC();
+   latex.SetTextSize(0.045);
+
+   latex.SetTextAlign(31); // align right
+   latex.DrawLatex(0.93,0.96,"#sqrt{s} = 13 TeV");
+   if (LUMINOSITY > 0.) {
+      latex.SetTextAlign(31); // align right
+      //latex.DrawLatex(0.82,0.7,Form("#int #font[12]{L} dt = %d pb^{-1}", (int) LUMINOSITY)); //Original
+      latex.DrawLatex(0.65,0.85,Form("#int #font[12]{L} dt = %d pb^{-1}", (int) LUMINOSITY)); //29/07/2011
+   }
+   latex.SetTextAlign(11); // align left
+   latex.DrawLatex(0.16,0.96,"CMS simulation preliminary");
+}
 
 inline void cmsFinal(double intLumi=-1, bool wide = false) {
 

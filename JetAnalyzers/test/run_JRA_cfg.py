@@ -5,11 +5,13 @@ import FWCore.ParameterSet.Config as cms
 #!
 # Conditions source options: GT, SQLite, DB
 conditionsSource = "GT"
-era = "Fall15_25nsV1_MC"
+era = "Spring16_25nsV1_MC"
 doProducer = False
 process = cms.Process("JRA")
+multithread = False
 if doProducer:
 	process = cms.Process("JRAP")
+	multithread = True
 
 
 #!
@@ -46,13 +48,13 @@ for k, v in algsizetype.iteritems():
 #! CONDITIONS (DELIVERING JEC BY DEFAULT!)
 #!
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
-process.GlobalTag.globaltag = cms.string('74X_mcRun2_asymptotic_v2')
+process.GlobalTag.globaltag = cms.string('80X_mcRun2_asymptotic_v5_2016PixDynIneff')
 
 if conditionsSource != "GT":
     if conditionsSource == "DB":
         conditionsConnect = cms.string("frontier://FrontierPrep/CMS_COND_PHYSICSTOOLS")
     elif conditionsSource == "SQLite":
-	conditionsConnect = cms.string('sqlite_file:DBFiles/'+era+'.db')    
+	conditionsConnect = cms.string('sqlite_file:'+era+'.db')    
 
     from CondCore.DBCommon.CondDBSetup_cfi import *
     process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
@@ -64,29 +66,32 @@ if conditionsSource != "GT":
 #!
 #! INPUT
 #!
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(2000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 
-########################################
-# QCD_PY8_RunIIFall15DR76_Asympt_25ns #
-########################################
-#process.load("JetMETAnalysis.JetAnalyzers.QCD_PY8_RunIIFall15DR76_Asympt_25ns_cff")
-#############################################
-# QCD_PY8_RunIIFall15DR76_AsymptNoPU_25ns #
-#############################################
-process.load("JetMETAnalysis.JetAnalyzers.QCD_PY8_RunIIFall15DR76_AsymptNoPU_25ns_cff")
-
-qcdFiles = cms.untracked.vstring(
-	'root://cmsxrootd.fnal.gov//store/mc/RunIIFall15DR76/QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8/AODSIM/PU25nsData2015v1_magnetOn_76X_mcRun2_asymptotic_v12-v1/20000/022F2CE9-6FA3-E511-BA9D-D4AE5269DC07.root',
-    )
-#process.source = cms.Source("PoolSource", fileNames = qcdFiles )
+##############################################
+# External Input File (most likely from DAS) #
+##############################################
+try:
+    process.load("JetMETAnalysis.JetAnalyzers.<filename without extension>")
+except ImportError:
+    print "Couldn't open the external list of files from DAS. If you just checkout out the JetResponseAnalyzer package you will need to make this file yourself. Currently Falling back to opening the list hard-coded in run_JRA_cfg.py. This is not a bad action as long as it is what you intended to have happen."
+    inputFiles = cms.untracked.vstring(
+	    'root://cmsxrootd.fnal.gov//store/mc/<path to root file>/<filename>.root',
+	    )
+    process.source = cms.Source("PoolSource", fileNames = inputFiles )
 
 
 #!
 #! SERVICES
 #!
 process.load('FWCore.MessageLogger.MessageLogger_cfi')
-process.MessageLogger.cerr.FwkReport.reportEvery = 5000
-if not doProducer:
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
+process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
+if doProducer:
+    process.add_(cms.Service("Tracer"))
+    process.options.numberOfThreads = cms.untracked.uint32(8)
+    process.options.numberOfStreams = cms.untracked.uint32(0)
+else:
     process.load('CommonTools.UtilAlgos.TFileService_cfi')
     process.TFileService.fileName=cms.string('JRA.root')
 
@@ -95,7 +100,7 @@ if not doProducer:
 #! NEEDED FOR PFCHS
 #!
 process.load('CommonTools.ParticleFlow.pfNoPileUpJME_cff')
-process.pfPileUp.checkClosestZVertex = False
+process.pfPileUpJME.checkClosestZVertex = False
 
 
 #!
@@ -150,3 +155,4 @@ if doProducer:
 #processDumpFile = open('runJRA.dump' , 'w')
 #print >> processDumpFile, process.dumpPython()
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
+process.options.allowUnscheduled = cms.untracked.bool(True)

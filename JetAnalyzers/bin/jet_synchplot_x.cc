@@ -67,14 +67,14 @@ void clearHistograms(vector<TH2*>& hResRho, vector<TH2*>& hOffRho, vector<TH2*>&
    }
 }
 
-void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = "./images", bool fixedRange = true){
+void SynchPlots(TString inputDir="./",TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = "./images", bool fixedRange = true){
    TString algo1(calgo1);
    TString algo2(calgo2);
    TString algo12 = algo1+"_"+algo2;
    if (algo1.EqualTo(algo2)) 
       algo12 = algo1;
    TString algo(algo12);
-   TString filename=Form("output_%s.root",algo.Data());
+   TString filename=Form("%s/output_%s.root",inputDir.Data(),algo.Data());
    cout<<"Producing plots from file "<<filename<<endl;
    TFile *fin = new TFile(filename);
 
@@ -115,102 +115,123 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    */
 
    // Event-Matching performance 
-   c = new TCanvas("RefPtDiff","RefPtDiff");
-   c->SetLogy();
-   histograms["m_refpt_diff"]->Draw();
+   if(histograms.find("m_refpt_diff")!=histograms.end()) {
+      c = new TCanvas("RefPtDiff","RefPtDiff");
+      c->SetLogy();
+      histograms["m_refpt_diff"]->Draw();
+   }
   
    // Event-Matching performance 
-   c = new TCanvas("RefPdgidDiff","RefPdgidDiff");
-   c->SetLogy();
-   histograms["m_refpdgid_diff"]->Draw();
+   if(histograms.find("m_refpdgid_diff")!=histograms.end()) {
+      c = new TCanvas("RefPdgidDiff","RefPdgidDiff");
+      c->SetLogy();
+      histograms["m_refpdgid_diff"]->Draw();
+   }
   
    // Sanity check: g_pthat
-   c = new TCanvas("PthatDiff","PthatDiff");
-   histograms["m_deltaPthat"]->Draw();
-   histograms["m_deltaPthat"]->GetYaxis()->SetRangeUser(-1,1);
-   histograms["m_deltaPthat"]->Draw();
+   if(histograms.find("m_deltaPthat")!=histograms.end()) {
+      c = new TCanvas("PthatDiff","PthatDiff");
+      histograms["m_deltaPthat"]->Draw();
+      histograms["m_deltaPthat"]->GetYaxis()->SetRangeUser(-1,1);
+      histograms["m_deltaPthat"]->Draw();
+   }
 
    // Number of Jets vs PT in both samples
-   c = new TCanvas("NJetsVsPt","NJetsVsPt");
-   c->SetLogx();
-   setHistoColor(histograms["m_njet_pt_pu"], colPU);
-   setHistoColor(histograms["m_njet_pt_nopu"], colNoPU);
-   histograms["m_njet_pt_pu"]->GetYaxis()->SetRangeUser(0,4.5e6);
-   histograms["m_njet_pt_pu"]->Draw("E");
-   histograms["m_njet_pt_nopu"]->Draw("sameE");
+   if(histograms.find("m_njet_pt_pu")!=histograms.end() &&
+      histograms.find("m_njet_pt_nopu")!=histograms.end()) {
+      c = new TCanvas("NJetsVsPt","NJetsVsPt");
+      c->SetLogx();
+      setHistoColor(histograms["m_njet_pt_pu"], colPU);
+      setHistoColor(histograms["m_njet_pt_nopu"], colNoPU);
+      histograms["m_njet_pt_pu"]->GetYaxis()->SetRangeUser(0,4.5e6);
+      histograms["m_njet_pt_pu"]->Draw("E");
+      histograms["m_njet_pt_nopu"]->Draw("sameE");
   
-   leg = new TLegend(0.7,0.4,0.9,0.6);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["m_njet_pt_pu"], "PU sample","lep");
-   leg->AddEntry(histograms["m_njet_pt_nopu"], "NoPU sample","lep");
-   leg->Draw();
+      leg = new TLegend(0.7,0.4,0.9,0.6);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["m_njet_pt_pu"], "PU sample","lep");
+      leg->AddEntry(histograms["m_njet_pt_nopu"], "NoPU sample","lep");
+      leg->Draw();
+   }
 
    // Ratio of number of Jets vs PT in both samples
-   c = new TCanvas("NJetsVsPt_Ratio","NJetsVsPt_Ratio");
-   c->SetLogx();
-   TH1D* ratio = (TH1D*)histograms["m_njet_pt_pu"]->Clone("NJetsVsPt_Ratio");
-   ratio->Sumw2();
-   ratio->GetYaxis()->SetRangeUser(0,10);
-   ratio->Divide(histograms["m_njet_pt_nopu"]);
-   ratio->Draw("E");
-  
-   leg = new TLegend(0.7,0.4,0.9,0.6);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(ratio, "#frac{PU sample}{NoPU sample}","lep");
-   leg->Draw();
+   if(histograms.find("m_njet_pt_pu")!=histograms.end()) {
+      c = new TCanvas("NJetsVsPt_Ratio","NJetsVsPt_Ratio");
+      c->SetLogx();
+      TH1D* ratio = (TH1D*)histograms["m_njet_pt_pu"]->Clone("NJetsVsPt_Ratio");
+      ratio->Sumw2();
+      ratio->GetYaxis()->SetRangeUser(0,10);
+      ratio->Divide(histograms["m_njet_pt_nopu"]);
+      ratio->Draw("E");
+      
+      leg = new TLegend(0.7,0.4,0.9,0.6);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(ratio, "#frac{PU sample}{NoPU sample}","lep");
+      leg->Draw();
+   }
 
    // Ratio of number of Jets vs PT in both samples (with 10 GeV pT^{GEN} cut)
-   c = new TCanvas("NJetsVsPt_Ratio_GenPtCut","NJetsVsPt_Ratio_GenPtCut");
-   c->SetLogx();
-   TH1D* ratio_GenPtCut = (TH1D*)histograms["m_njet_pthigh_pu"]->Clone("NJetsVsPt_Ratio_GenPtCut");
-   ratio_GenPtCut->Sumw2();
-   ratio_GenPtCut->GetYaxis()->SetRangeUser(0,10);
-   ratio_GenPtCut->Divide(histograms["m_njet_pthigh_nopu"]);
-   ratio_GenPtCut->Draw("E");
-  
-   leg = new TLegend(0.7,0.4,0.9,0.6);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(ratio_GenPtCut, "#frac{PU sample}{NoPU sample}","lep");
-   leg->Draw();
+   if(histograms.find("m_njet_pthigh_pu")!=histograms.end()) {
+      c = new TCanvas("NJetsVsPt_Ratio_GenPtCut","NJetsVsPt_Ratio_GenPtCut");
+      c->SetLogx();
+      TH1D* ratio_GenPtCut = (TH1D*)histograms["m_njet_pthigh_pu"]->Clone("NJetsVsPt_Ratio_GenPtCut");
+      ratio_GenPtCut->Sumw2();
+      ratio_GenPtCut->GetYaxis()->SetRangeUser(0,10);
+      ratio_GenPtCut->Divide(histograms["m_njet_pthigh_nopu"]);
+      ratio_GenPtCut->Draw("E");
+      
+      leg = new TLegend(0.7,0.4,0.9,0.6);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(ratio_GenPtCut, "#frac{PU sample}{NoPU sample}","lep");
+      leg->Draw();
+   }
   
    // njet vs npv
-   c = new TCanvas("NJetsVsNPV","NJetsVsNPV");
-   setHistoColor(histograms["m_all_nj_npv"],       colDetRegions[0]);
-   setHistoColor(histograms["m_matched_nj_npv"],   colDetRegions[1]);
-   setHistoColor(histograms["m_unmatched_nj_npv"], colDetRegions[2]);
-   histograms["m_all_nj_npv"]->GetYaxis()->SetRangeUser(0,20);
-   histograms["m_all_nj_npv"]->Draw("E");
-   histograms["m_matched_nj_npv"]->Draw("sameE");
-   histograms["m_unmatched_nj_npv"]->Draw("sameE");
-
-   leg = new TLegend(0.7,0.75,0.9,0.95);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["m_all_nj_npv"], "All jets","lep");
-   leg->AddEntry(histograms["m_matched_nj_npv"], "Matched jets","lep");
-   leg->AddEntry(histograms["m_unmatched_nj_npv"], "UnMatched jets","lep");
-   leg->Draw();
+   if(histograms.find("m_all_nj_npv")!=histograms.end() &&
+      histograms.find("m_matched_nj_npv")!=histograms.end() &&
+      histograms.find("m_unmatched_nj_npv")!=histograms.end()) {
+      c = new TCanvas("NJetsVsNPV","NJetsVsNPV");
+      setHistoColor(histograms["m_all_nj_npv"],       colDetRegions[0]);
+      setHistoColor(histograms["m_matched_nj_npv"],   colDetRegions[1]);
+      setHistoColor(histograms["m_unmatched_nj_npv"], colDetRegions[2]);
+      histograms["m_all_nj_npv"]->GetYaxis()->SetRangeUser(0,20);
+      histograms["m_all_nj_npv"]->Draw("E");
+      histograms["m_matched_nj_npv"]->Draw("sameE");
+      histograms["m_unmatched_nj_npv"]->Draw("sameE");
+      
+      leg = new TLegend(0.7,0.75,0.9,0.95);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["m_all_nj_npv"], "All jets","lep");
+      leg->AddEntry(histograms["m_matched_nj_npv"], "Matched jets","lep");
+      leg->AddEntry(histograms["m_unmatched_nj_npv"], "UnMatched jets","lep");
+      leg->Draw();
+   }
 
    // jetpt vs npv
-   c = new TCanvas("JtptVsNPV","JtptVsNPV");
-   setHistoColor(histograms["m_all_jtpt_npv"],       colDetRegions[0]);
-   setHistoColor(histograms["m_matched_jtpt_npv"],   colDetRegions[1]);
-   setHistoColor(histograms["m_unmatched_jtpt_npv"], colDetRegions[2]);
-   histograms["m_all_jtpt_npv"]->GetYaxis()->SetRangeUser(0,100);
-   histograms["m_all_jtpt_npv"]->Draw("E");
-   histograms["m_matched_jtpt_npv"]->Draw("sameE");
-   histograms["m_unmatched_jtpt_npv"]->Draw("sameE");
-
-   leg = new TLegend(0.7,0.75,0.9,0.95);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["m_all_jtpt_npv"], "All jets","lep");
-   leg->AddEntry(histograms["m_matched_jtpt_npv"], "Matched jets","lep");
-   leg->AddEntry(histograms["m_unmatched_jtpt_npv"], "UnMatched jets","lep");
-   leg->Draw();
+   if(histograms.find("m_all_jtpt_npv")!=histograms.end() &&
+      histograms.find("m_matched_jtpt_npv")!=histograms.end() &&
+      histograms.find("m_unmatched_jtpt_npv")!=histograms.end()) {
+      c = new TCanvas("JtptVsNPV","JtptVsNPV");
+      setHistoColor(histograms["m_all_jtpt_npv"],       colDetRegions[0]);
+      setHistoColor(histograms["m_matched_jtpt_npv"],   colDetRegions[1]);
+      setHistoColor(histograms["m_unmatched_jtpt_npv"], colDetRegions[2]);
+      histograms["m_all_jtpt_npv"]->GetYaxis()->SetRangeUser(0,100);
+      histograms["m_all_jtpt_npv"]->Draw("E");
+      histograms["m_matched_jtpt_npv"]->Draw("sameE");
+      histograms["m_unmatched_jtpt_npv"]->Draw("sameE");
+      
+      leg = new TLegend(0.7,0.75,0.9,0.95);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["m_all_jtpt_npv"], "All jets","lep");
+      leg->AddEntry(histograms["m_matched_jtpt_npv"], "Matched jets","lep");
+      leg->AddEntry(histograms["m_unmatched_jtpt_npv"], "UnMatched jets","lep");
+      leg->Draw();
+   }
   
 
    // Fraction of Matched Jets
@@ -224,13 +245,13 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname.ToLower();
       hname = hname(0,1);
       hname = Form("m_frac_nj_pt_%s_match_nopu",hname.Data());
+      if(histograms.find(hname)==histograms.end()) continue;
       setHistoColor(histograms[hname], colDetRegions[det]);
-      if(det==0) {
+      if(det==0)
          histograms[hname]->Draw();
-         histograms[hname]->GetYaxis()->SetRangeUser(0.3,1.1);
-      }
       else
          histograms[hname]->Draw("same");
+      histograms[hname]->GetYaxis()->SetRangeUser(0.3,1.1);
       leg->AddEntry(histograms[hname],detector_regions[det],"lep");
    }
    leg->Draw();
@@ -247,13 +268,13 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname.ToLower();
       hname = hname(0,1);
       hname = Form("m_frac_nj_pt_%s_match_pu",hname.Data());
+      if(histograms.find(hname)==histograms.end()) continue;
       setHistoColor(histograms[hname], colDetRegions[det]);
-      if(det==0) {
+      if(det==0)
          histograms[hname]->Draw();
-         histograms[hname]->GetYaxis()->SetRangeUser(0.3,1.1);
-      }
       else
          histograms[hname]->Draw("same");
+      histograms[hname]->GetYaxis()->SetRangeUser(0.3,1.1);
       leg->AddEntry(histograms[hname],detector_regions[det],"lep");
    }
    leg->Draw();
@@ -270,13 +291,13 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname.ToLower();
       hname = hname(0,1);
       hname = Form("m_frac_nj_pt_%s_match_RG_nopu",hname.Data());
+      if(histograms.find(hname)==histograms.end()) continue;
       setHistoColor(histograms[hname], colDetRegions[det]);
-      if(det==0) {
+      if(det==0)
          histograms[hname]->Draw();
-         histograms[hname]->GetYaxis()->SetRangeUser(0.5,1.1);
-      }
       else
          histograms[hname]->Draw("same");
+      histograms[hname]->GetYaxis()->SetRangeUser(0.5,1.1);
       leg->AddEntry(histograms[hname],detector_regions[det],"lep");
    }
    leg->Draw();      
@@ -292,85 +313,99 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname.ToLower();
       hname = hname(0,1);
       hname = Form("m_frac_nj_pt_%s_match_RG_pu",hname.Data());
+      if(histograms.find(hname)==histograms.end()) continue;
       setHistoColor(histograms[hname], colDetRegions[det]);
       if(det==0) {
          histograms[hname]->Draw();
-         histograms[hname]->GetYaxis()->SetRangeUser(0.5,1.1);
       }
       else
          histograms[hname]->Draw("same");
+      histograms[hname]->GetYaxis()->SetRangeUser(0.5,1.1);
       leg->AddEntry(histograms[hname],detector_regions[det],"lep");
    }
    leg->Draw();
 
    // Fraction of Matched Jets-PU-NPV
-   c = new TCanvas("FractionMatchedJetsPU_NPV","FractionMatchedJets vs. npv PU Sample");
-   c->SetLogx();
-   setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npv10"], colNpv[0]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npv20"], colNpv[2]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npv30"], colNpv[3]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npvO"], colNpv[5]);
-   histograms["m_frac_nj_pt_b_match_pu_npv10"]->GetYaxis()->SetTitle("fraction of matched jets (Barrel)");
-   histograms["m_frac_nj_pt_b_match_pu_npv10"]->Draw();
-   histograms["m_frac_nj_pt_b_match_pu_npv10"]->GetYaxis()->SetRangeUser(0.3,1.1);
-   histograms["m_frac_nj_pt_b_match_pu_npv20"]->Draw("same");
-   histograms["m_frac_nj_pt_b_match_pu_npv30"]->Draw("same");
-   histograms["m_frac_nj_pt_b_match_pu_npvO"]->Draw("same");
-  
-   leg = new TLegend(0.7,0.4,0.9,0.6);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npv10"],"0 < N_{PV}^{PU}<=10","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npv20"],"10< N_{PV}^{PU}<=20","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npv30"],"20< N_{PV}^{PU}<=30","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npvO"], "30< N_{PV}^{PU}    ","lep");
-   leg->Draw();
-  
+   if(histograms.find("m_frac_nj_pt_b_match_pu_npv10")!=histograms.end() && 
+      histograms.find("m_frac_nj_pt_b_match_pu_npv20")!=histograms.end() && 
+      histograms.find("m_frac_nj_pt_b_match_pu_npv30")!=histograms.end() && 
+      histograms.find("m_frac_nj_pt_b_match_pu_npvO")!=histograms.end()) {
+      c = new TCanvas("FractionMatchedJetsPU_NPV","FractionMatchedJets vs. npv PU Sample");
+      c->SetLogx();
+      setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npv10"], colNpv[0]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npv20"], colNpv[2]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npv30"], colNpv[3]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_pu_npvO"], colNpv[5]);
+      histograms["m_frac_nj_pt_b_match_pu_npv10"]->GetYaxis()->SetTitle("fraction of matched jets (Barrel)");
+      histograms["m_frac_nj_pt_b_match_pu_npv10"]->Draw();
+      histograms["m_frac_nj_pt_b_match_pu_npv10"]->GetYaxis()->SetRangeUser(0.3,1.1);
+      histograms["m_frac_nj_pt_b_match_pu_npv20"]->Draw("same");
+      histograms["m_frac_nj_pt_b_match_pu_npv30"]->Draw("same");
+      histograms["m_frac_nj_pt_b_match_pu_npvO"]->Draw("same");
+      
+      leg = new TLegend(0.7,0.4,0.9,0.6);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npv10"],"0 < N_{PV}^{PU}<=10","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npv20"],"10< N_{PV}^{PU}<=20","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npv30"],"20< N_{PV}^{PU}<=30","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_pu_npvO"], "30< N_{PV}^{PU}    ","lep");
+      leg->Draw();
+   }
+
    // Fraction of RG-Matched Jets-PU-NPV
-   c = new TCanvas("FractionRGMatchedJetsPU_NPV","FractionRGMatchedJets vs. npv PU Sample");
-   c->SetLogx();
-   setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npv10"], colNpv[0]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npv20"], colNpv[2]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npv30"], colNpv[3]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npvO"], colNpv[5]);
-   histograms["m_frac_nj_pt_b_match_RG_pu_npv10"]->Draw();
-   histograms["m_frac_nj_pt_b_match_RG_pu_npv10"]->GetYaxis()->SetRangeUser(0.1,1.1);
-   histograms["m_frac_nj_pt_b_match_RG_pu_npv20"]->Draw("same");
-   histograms["m_frac_nj_pt_b_match_RG_pu_npv30"]->Draw("same");
-   histograms["m_frac_nj_pt_b_match_RG_pu_npvO"]->Draw("same");
-  
-   leg = new TLegend(0.7,0.4,0.9,0.6);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npv10"],"0 < N_{PV}^{PU}<=10","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npv20"],"10< N_{PV}^{PU}<=20","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npv30"],"20< N_{PV}^{PU}<=30","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npvO"], "30< N_{PV}^{PU}    ","lep");
-   leg->Draw();
-  
-  
+   if(histograms.find("m_frac_nj_pt_b_match_RG_pu_npv10")!=histograms.end() &&
+      histograms.find("m_frac_nj_pt_b_match_RG_pu_npv20")!=histograms.end() &&
+      histograms.find("m_frac_nj_pt_b_match_RG_pu_npv30")!=histograms.end() &&
+      histograms.find("m_frac_nj_pt_b_match_RG_pu_npvO")!=histograms.end()) {
+      c = new TCanvas("FractionRGMatchedJetsPU_NPV","FractionRGMatchedJets vs. npv PU Sample");
+      c->SetLogx();
+      setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npv10"], colNpv[0]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npv20"], colNpv[2]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npv30"], colNpv[3]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_RG_pu_npvO"], colNpv[5]);
+      histograms["m_frac_nj_pt_b_match_RG_pu_npv10"]->Draw();
+      histograms["m_frac_nj_pt_b_match_RG_pu_npv10"]->GetYaxis()->SetRangeUser(0.1,1.1);
+      histograms["m_frac_nj_pt_b_match_RG_pu_npv20"]->Draw("same");
+      histograms["m_frac_nj_pt_b_match_RG_pu_npv30"]->Draw("same");
+      histograms["m_frac_nj_pt_b_match_RG_pu_npvO"]->Draw("same");
+      
+      leg = new TLegend(0.7,0.4,0.9,0.6);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npv10"],"0 < N_{PV}^{PU}<=10","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npv20"],"10< N_{PV}^{PU}<=20","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npv30"],"20< N_{PV}^{PU}<=30","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_RG_pu_npvO"], "30< N_{PV}^{PU}    ","lep");
+      leg->Draw();
+   }
 
    // Fraction of Matched Jets-NOPU-NPV
-   c = new TCanvas("FractionMatchedJetsNoPU_NPV","FractionMatchedJets vs. npv NoPU Sample");
-   c->SetLogx();
-   setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npv1"], colNpv[0]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npv2"], colNpv[2]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npv3"], colNpv[3]);
-   setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npvO"], colNpv[5]);
-   histograms["m_frac_nj_pt_b_match_nopu_npv1"]->Draw();
-   histograms["m_frac_nj_pt_b_match_nopu_npv1"]->GetYaxis()->SetRangeUser(0.3,1.1);
-   histograms["m_frac_nj_pt_b_match_nopu_npv2"]->Draw("same");
-   histograms["m_frac_nj_pt_b_match_nopu_npv3"]->Draw("same");
-   histograms["m_frac_nj_pt_b_match_nopu_npvO"]->Draw("same");
-  
-   leg = new TLegend(0.7,0.4,0.9,0.6);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npv1"],"0 < N_{PV}^{PU}<=10","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npv2"],"10< N_{PV}^{PU}<=20","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npv3"],"20< N_{PV}^{PU}<=30","lep");
-   leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npvO"],"30< N_{PV}^{PU}    ","lep");
-   leg->Draw();
+   if(histograms.find("m_frac_nj_pt_b_match_nopu_npv1")!=histograms.end() &&
+      histograms.find("m_frac_nj_pt_b_match_nopu_npv2")!=histograms.end() &&
+      histograms.find("m_frac_nj_pt_b_match_nopu_npv3")!=histograms.end() &&
+      histograms.find("m_frac_nj_pt_b_match_nopu_npvO")!=histograms.end()) {
+      c = new TCanvas("FractionMatchedJetsNoPU_NPV","FractionMatchedJets vs. npv NoPU Sample");
+      c->SetLogx();
+      setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npv1"], colNpv[0]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npv2"], colNpv[2]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npv3"], colNpv[3]);
+      setHistoColor(histograms["m_frac_nj_pt_b_match_nopu_npvO"], colNpv[5]);
+      histograms["m_frac_nj_pt_b_match_nopu_npv1"]->Draw();
+      histograms["m_frac_nj_pt_b_match_nopu_npv1"]->GetYaxis()->SetRangeUser(0.3,1.1);
+      histograms["m_frac_nj_pt_b_match_nopu_npv2"]->Draw("same");
+      histograms["m_frac_nj_pt_b_match_nopu_npv3"]->Draw("same");
+      histograms["m_frac_nj_pt_b_match_nopu_npvO"]->Draw("same");
+      
+      leg = new TLegend(0.7,0.4,0.9,0.6);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npv1"],"0 < N_{PV}^{PU}<=10","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npv2"],"10< N_{PV}^{PU}<=20","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npv3"],"20< N_{PV}^{PU}<=30","lep");
+      leg->AddEntry(histograms["m_frac_nj_pt_b_match_nopu_npvO"],"30< N_{PV}^{PU}    ","lep");
+      leg->Draw();
+   }
 
 
    // PU distribution of jets per event per NPv
@@ -382,6 +417,7 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    leg->SetBorderSize(0);
    for(unsigned int ibin=0; ibin<npvRhoNpuBins.size(); ibin++) {
       hname = Form("m_njet_pt_npv%i_%i_unmatch",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
+      if(histograms.find(hname)==histograms.end()) continue;
       setHistoColor(histograms[hname],colNpv[ibin]);
       if(ibin==0) {
          histograms[hname]->Draw("E");
@@ -415,205 +451,212 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    //
    //	2D histogram of jtarea diff. vs. refpt	
    //
-   c = new TCanvas("areaVsrefpt","areaVsrefpt");
-   histograms["p_areaVsrefpt"]->Draw("colZ");
-   c->SetLogx();  
-  
-   TProfile *p_areaVsrefpt_prof = dynamic_cast<TH2F*>(histograms["p_areaVsrefpt"])->ProfileX();
-   c = new TCanvas("areaVsrefptProf","areaVsrefptProf");
-   p_areaVsrefpt_prof->GetYaxis()->SetTitle("<jtarea^{PU}-jtarea^{noPU}>");
-   p_areaVsrefpt_prof->GetYaxis()->SetRangeUser(-0.006,0.006);
-   TGaxis::SetMaxDigits(3);
-   c->SetLogx();
-   p_areaVsrefpt_prof->Draw("");
+   if(histograms.find("p_areaVsrefpt")!=histograms.end()) {
+      c = new TCanvas("areaVsrefpt","areaVsrefpt");
+      histograms["p_areaVsrefpt"]->Draw("colZ");
+      c->SetLogx();  
+      
+      TProfile *p_areaVsrefpt_prof = dynamic_cast<TH2F*>(histograms["p_areaVsrefpt"])->ProfileX();
+      c = new TCanvas("areaVsrefptProf","areaVsrefptProf");
+      p_areaVsrefpt_prof->GetYaxis()->SetTitle("<jtarea^{PU}-jtarea^{noPU}>");
+      p_areaVsrefpt_prof->GetYaxis()->SetRangeUser(-0.006,0.006);
+      TGaxis::SetMaxDigits(3);
+      c->SetLogx();
+      p_areaVsrefpt_prof->Draw("");
+   }
 
    //
    //	2D histogram of jtarea diff. vs. refpt	
    //
-   c = new TCanvas("areaVsOffset_1000","areaVsOffset_1000");
-   histograms["p_areaVsoffset_1000"]->GetXaxis()->SetRangeUser(-100,100);
-   histograms["p_areaVsoffset_1000"]->Draw("colZ");
-   TProfile *p_areaVsoffset_1000_prof = dynamic_cast<TH2F*>(histograms["p_areaVsoffset_1000"])->ProfileX();
-   c = new TCanvas("areaVsOffset_1000Prof","areaVsOffset_1000Prof");
-   p_areaVsoffset_1000_prof->GetYaxis()->SetTitle("<jtarea^{PU}-jtarea^{noPU}>");
-   p_areaVsoffset_1000_prof->GetXaxis()->SetRangeUser(-100,100);
-   p_areaVsoffset_1000_prof->GetYaxis()->SetRangeUser(-0.3,0.3);
-   p_areaVsoffset_1000_prof->Draw("");
+   if(histograms.find("p_areaVsoffset_1000")!=histograms.end()) {
+      c = new TCanvas("areaVsOffset_1000","areaVsOffset_1000");
+      histograms["p_areaVsoffset_1000"]->GetXaxis()->SetRangeUser(-100,100);
+      histograms["p_areaVsoffset_1000"]->Draw("colZ");
+      TProfile *p_areaVsoffset_1000_prof = dynamic_cast<TH2F*>(histograms["p_areaVsoffset_1000"])->ProfileX();
+      c = new TCanvas("areaVsOffset_1000Prof","areaVsOffset_1000Prof");
+      p_areaVsoffset_1000_prof->GetYaxis()->SetTitle("<jtarea^{PU}-jtarea^{noPU}>");
+      p_areaVsoffset_1000_prof->GetXaxis()->SetRangeUser(-100,100);
+      p_areaVsoffset_1000_prof->GetYaxis()->SetRangeUser(-0.3,0.3);
+      p_areaVsoffset_1000_prof->Draw("");
+   }
   
   
    //
    //	2D histogram of jtarea diff. vs. refpt	
    //
-   c = new TCanvas("areaVsOffset_30_50","areaVsOffset_30_50");
-   histograms["p_areaVsoffset_30_50"]->GetXaxis()->SetRangeUser(-100,100);
-   histograms["p_areaVsoffset_30_50"]->Draw("colZ");
-   TProfile *p_areaVsoffset_30_50_prof = dynamic_cast<TH2F*>(histograms["p_areaVsoffset_30_50"])->ProfileX();
-   c = new TCanvas("areaVsOffset_30_50Prof","areaVsOffset_30_50Prof");
-   p_areaVsoffset_30_50_prof->GetYaxis()->SetTitle("<jtarea^{PU}-jtarea^{noPU}>");
-   p_areaVsoffset_30_50_prof->GetXaxis()->SetRangeUser(-100,100);
-   p_areaVsoffset_30_50_prof->GetYaxis()->SetRangeUser(-0.3,0.3);
-   p_areaVsoffset_30_50_prof->Draw("");
-  
+   if(histograms.find("p_areaVsoffset_30_50")!=histograms.end()) {
+      c = new TCanvas("areaVsOffset_30_50","areaVsOffset_30_50");
+      histograms["p_areaVsoffset_30_50"]->GetXaxis()->SetRangeUser(-100,100);
+      histograms["p_areaVsoffset_30_50"]->Draw("colZ");
+      TProfile *p_areaVsoffset_30_50_prof = dynamic_cast<TH2F*>(histograms["p_areaVsoffset_30_50"])->ProfileX();
+      c = new TCanvas("areaVsOffset_30_50Prof","areaVsOffset_30_50Prof");
+      p_areaVsoffset_30_50_prof->GetYaxis()->SetTitle("<jtarea^{PU}-jtarea^{noPU}>");
+      p_areaVsoffset_30_50_prof->GetXaxis()->SetRangeUser(-100,100);
+      p_areaVsoffset_30_50_prof->GetYaxis()->SetRangeUser(-0.3,0.3);
+      p_areaVsoffset_30_50_prof->Draw("");
+   }
 
   
    //	
    //	2D histogram of NPV vs Rho with 15<offset<20 PU
    //
-  
-   c = new TCanvas("npvVsRhoOffset1515h","npvVsRhoOffset1515h"); 
-   histograms["p_npvVsRho_offset_15_15h"]->Draw("COLZ"); 
+   if(histograms.find("p_npvVsRho_offset_15_15h")!=histograms.end()) {
+      c = new TCanvas("npvVsRhoOffset1515h","npvVsRhoOffset1515h"); 
+      histograms["p_npvVsRho_offset_15_15h"]->Draw("COLZ"); 
+   }
   
   
    //	
    //	2D histogram of NPV vs Rho with 15<offset<20 PU
    //
-  
-  
-   c = new TCanvas("npvVsRhoOffset1515hPeak","npvVsRhoOffset1515hPeak"); 
-   histograms["p_npvVsRho_offset_15_15h"]->Draw("COLZ"); 
-   //p_npvVsRho_offset_15_15h->ShowPeaks(2,"nodraw",0.2);
-   //TList *functions = p_npvVsRho_offset_15_15h->GetListOfFunctions();
-   //TPolyMarker *pm = (TPolyMarker*)functions->FindObject("TPolyMarker");
-   Double_t peakX,peakY;
-   //peakX = *(pm->GetX());peakY = *(pm->GetY());
-   //cout <<peakX<<" "<<peakY<<endl;
-   peakX = 14.5; peakY = 16.5;
-   TH1F *p_npvVsRho_offset_15_15h_x = new TH1F("p_npvVsRho_offset_15_15h_x","p_npvVsRho_offset_15_15h_x;Rho;Events/Bin",80,0,80);
-   for (int it=0;it<= histograms["p_npvVsRho_offset_15_15h"]->GetXaxis()->GetNbins() ; it++)
-   {
-      p_npvVsRho_offset_15_15h_x->SetBinContent(it,histograms["p_npvVsRho_offset_15_15h"]->GetBinContent(it,(int)peakY));
+   if(histograms.find("p_npvVsRho_offset_15_15h")!=histograms.end()) {
+      c = new TCanvas("npvVsRhoOffset1515hPeak","npvVsRhoOffset1515hPeak"); 
+      histograms["p_npvVsRho_offset_15_15h"]->Draw("COLZ"); 
+      //p_npvVsRho_offset_15_15h->ShowPeaks(2,"nodraw",0.2);
+      //TList *functions = p_npvVsRho_offset_15_15h->GetListOfFunctions();
+      //TPolyMarker *pm = (TPolyMarker*)functions->FindObject("TPolyMarker");
+      Double_t peakX,peakY;
+      //peakX = *(pm->GetX());peakY = *(pm->GetY());
+      //cout <<peakX<<" "<<peakY<<endl;
+      peakX = 14.5; peakY = 16.5;
+      TH1F *p_npvVsRho_offset_15_15h_x = new TH1F("p_npvVsRho_offset_15_15h_x","p_npvVsRho_offset_15_15h_x;Rho;Events/Bin",80,0,80);
+      for (int it=0;it<= histograms["p_npvVsRho_offset_15_15h"]->GetXaxis()->GetNbins() ; it++)
+      {
+         p_npvVsRho_offset_15_15h_x->SetBinContent(it,histograms["p_npvVsRho_offset_15_15h"]->GetBinContent(it,(int)peakY));
+      }
+      TH1F *p_npvVsRho_offset_15_15h_y = new TH1F("p_npvVsRho_offset_15_15h_y","p_npvVsRho_offset_15_15h_y;N_{PV};Events/Bin",80,0,80);
+      for (int it=0;it<= histograms["p_npvVsRho_offset_15_15h"]->GetYaxis()->GetNbins() ; it++)
+      {
+         p_npvVsRho_offset_15_15h_y->SetBinContent(it,histograms["p_npvVsRho_offset_15_15h"]->GetBinContent((int)peakX,it));
+      }
+      c = new TCanvas("npvVsRhoOffset1515hX","npvVsRhoOffset1515hX"); 
+      p_npvVsRho_offset_15_15h_x->Draw();
+      p_npvVsRho_offset_15_15h_x->Fit("gaus");
+      c = new TCanvas("npvVsRhoOffset1515hY","npvVsRhoOffset1515hY"); 
+      p_npvVsRho_offset_15_15h_y->Draw();
+      p_npvVsRho_offset_15_15h_y->Fit("gaus");
    }
-   TH1F *p_npvVsRho_offset_15_15h_y = new TH1F("p_npvVsRho_offset_15_15h_y","p_npvVsRho_offset_15_15h_y;N_{PV};Events/Bin",80,0,80);
-   for (int it=0;it<= histograms["p_npvVsRho_offset_15_15h"]->GetYaxis()->GetNbins() ; it++)
-   {
-      p_npvVsRho_offset_15_15h_y->SetBinContent(it,histograms["p_npvVsRho_offset_15_15h"]->GetBinContent((int)peakX,it));
-   }
-   c = new TCanvas("npvVsRhoOffset1515hX","npvVsRhoOffset1515hX"); 
-   p_npvVsRho_offset_15_15h_x->Draw();
-   p_npvVsRho_offset_15_15h_x->Fit("gaus");
-   c = new TCanvas("npvVsRhoOffset1515hY","npvVsRhoOffset1515hY"); 
-   p_npvVsRho_offset_15_15h_y->Draw();
-   p_npvVsRho_offset_15_15h_y->Fit("gaus");
-  
-  
   
    //
    //	Profile of dr vs. refpt for the matched jets 
    //
-  
-   c = new TCanvas("drVsrefptMatchedJets","drVsrefptMatchedJets"); 
-   dynamic_cast<TProfile*>(histograms["p_drVsrefpt"])->SetErrorOption("s");
-   c->SetLogx();
-   histograms["p_drVsrefpt"]->Draw();
-   histograms["p_drVsrefpt"]->GetYaxis()->SetRangeUser(0,0.3);
-   histograms["p_drVsrefpt"]->GetYaxis()->SetTitle("<#DeltaR> #pm #sigma(#DeltaR)");
-
-  
+   if(histograms.find("p_drVsrefpt")!=histograms.end()) {
+      c = new TCanvas("drVsrefptMatchedJets","drVsrefptMatchedJets"); 
+      dynamic_cast<TProfile*>(histograms["p_drVsrefpt"])->SetErrorOption("s");
+      c->SetLogx();
+      histograms["p_drVsrefpt"]->Draw();
+      histograms["p_drVsrefpt"]->GetYaxis()->SetRangeUser(0,0.3);
+      histograms["p_drVsrefpt"]->GetYaxis()->SetTitle("<#DeltaR> #pm #sigma(#DeltaR)");
+   }
   
    //
    //	Profile of npv and rho vs offset PU
    //
-   c = new TCanvas("npvrhoVsOffset","npvrhoVsOffset"); 
-  
-  
-   TProfile *p_npvVsOff_prof = dynamic_cast<TH2F*>(histograms["p_npvVsOff"])->ProfileX();
-   TProfile *p_rhoVsOff_prof = dynamic_cast<TH2F*>(histograms["p_rhoVsOff"])->ProfileX();
-   p_npvVsOff_prof->SetErrorOption("s");  
-   setHistoColor(p_npvVsOff_prof,colPU);
-   p_npvVsOff_prof->Draw("E1");
-   p_npvVsOff_prof->GetYaxis()->SetRangeUser(0,45);
-   p_npvVsOff_prof->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
-   setHistoColor(p_rhoVsOff_prof,colNoPU);
-   p_rhoVsOff_prof->SetErrorOption("s");  
-   p_rhoVsOff_prof->Draw("sameE1");
-
-   leg = new TLegend(0.2,0.72,0.4,0.92);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(p_npvVsOff_prof," N_{PV}","lep");
-   leg->AddEntry(p_rhoVsOff_prof," Rho ","lep");
-   leg->Draw();
+   if(histograms.find("p_npvVsOff")!=histograms.end()) {
+      c = new TCanvas("npvrhoVsOffset","npvrhoVsOffset");
+      TProfile *p_npvVsOff_prof = dynamic_cast<TH2F*>(histograms["p_npvVsOff"])->ProfileX();
+      TProfile *p_rhoVsOff_prof = dynamic_cast<TH2F*>(histograms["p_rhoVsOff"])->ProfileX();
+      p_npvVsOff_prof->SetErrorOption("s");  
+      setHistoColor(p_npvVsOff_prof,colPU);
+      p_npvVsOff_prof->Draw("E1");
+      p_npvVsOff_prof->GetYaxis()->SetRangeUser(0,45);
+      p_npvVsOff_prof->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
+      setHistoColor(p_rhoVsOff_prof,colNoPU);
+      p_rhoVsOff_prof->SetErrorOption("s");  
+      p_rhoVsOff_prof->Draw("sameE1");
+      
+      leg = new TLegend(0.2,0.72,0.4,0.92);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(p_npvVsOff_prof," N_{PV}","lep");
+      leg->AddEntry(p_rhoVsOff_prof," Rho ","lep");
+      leg->Draw();
+   }
   
    // Profiles of npv, rho, tnpu vs themselves
-   c = new TCanvas("XVsX","XVsX {x=N_{PV},#rho,TNPU}",1600,400);
-   c->Divide(4,1);
-   c->cd(1);
-   dynamic_cast<TProfile*>(histograms["p_npvVsNpv"])->SetErrorOption("s");
-   setHistoColor(histograms["p_npvVsNpv"],colPU);
-   histograms["p_npvVsNpv"]->Draw("E1");
-   histograms["p_npvVsNpv"]->GetYaxis()->SetRangeUser(0,45);
-   //p_npvVsNpv->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
-   leg = new TLegend(0.2,0.72,0.4,0.92);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["p_npvVsNpv"]," N_{PV}","lep");
-   leg->Draw();
-   c->cd(2);
-   dynamic_cast<TProfile*>(histograms["p_rhoVsRho"])->SetErrorOption("s");
-   setHistoColor(histograms["p_rhoVsRho"],colPU);
-   histograms["p_rhoVsRho"]->Draw("E1");
-   histograms["p_rhoVsRho"]->GetYaxis()->SetRangeUser(0,45);
-   //p_rhoVsRho->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
-   leg = new TLegend(0.2,0.72,0.4,0.92);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["p_rhoVsRho"]," #rho","lep");
-   leg->Draw();
-   c->cd(3);
-   dynamic_cast<TProfile*>(histograms["p_tnpuVsTnpu"])->SetErrorOption("s");
-   setHistoColor(histograms["p_tnpuVsTnpu"],colPU);
-   histograms["p_tnpuVsTnpu"]->Draw("E1");
-   histograms["p_tnpuVsTnpu"]->GetYaxis()->SetRangeUser(0,45);
-   //p_tnpuVsTnpu->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
-   leg = new TLegend(0.2,0.72,0.4,0.92);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["p_tnpuVsTnpu"]," TNPU","lep");
-   leg->Draw();
-   c->cd(4);
-   dynamic_cast<TProfile*>(histograms["p_npuVsNpu"])->SetErrorOption("s");
-   setHistoColor(histograms["p_npuVsNpu"],colPU);
-   histograms["p_npuVsNpu"]->Draw("E1");
-   histograms["p_npuVsNpu"]->GetYaxis()->SetRangeUser(0,45);
-   //p_tnpuVsTnpu->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
-   leg = new TLegend(0.2,0.72,0.4,0.92);
-   leg->SetFillColor(0);
-   leg->SetBorderSize(0);
-   leg->AddEntry(histograms["p_npuVsNpu"]," NPU","lep");
-   leg->Draw();
+   if(histograms.find("p_npvVsNpv")!=histograms.end() &&
+      histograms.find("p_rhoVsRho")!=histograms.end() &&
+      histograms.find("p_tnpuVsTnpu")!=histograms.end() &&
+      histograms.find("p_npuVsNpu")!=histograms.end()) {
+      c = new TCanvas("XVsX","XVsX {x=N_{PV},#rho,TNPU}",1600,400);
+      c->Divide(4,1);
+      c->cd(1);
+      dynamic_cast<TProfile*>(histograms["p_npvVsNpv"])->SetErrorOption("s");
+      setHistoColor(histograms["p_npvVsNpv"],colPU);
+      histograms["p_npvVsNpv"]->Draw("E1");
+      histograms["p_npvVsNpv"]->GetYaxis()->SetRangeUser(0,45);
+      //p_npvVsNpv->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
+      leg = new TLegend(0.2,0.72,0.4,0.92);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["p_npvVsNpv"]," N_{PV}","lep");
+      leg->Draw();
+      c->cd(2);
+      dynamic_cast<TProfile*>(histograms["p_rhoVsRho"])->SetErrorOption("s");
+      setHistoColor(histograms["p_rhoVsRho"],colPU);
+      histograms["p_rhoVsRho"]->Draw("E1");
+      histograms["p_rhoVsRho"]->GetYaxis()->SetRangeUser(0,45);
+      //p_rhoVsRho->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
+      leg = new TLegend(0.2,0.72,0.4,0.92);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["p_rhoVsRho"]," #rho","lep");
+      leg->Draw();
+      c->cd(3);
+      dynamic_cast<TProfile*>(histograms["p_tnpuVsTnpu"])->SetErrorOption("s");
+      setHistoColor(histograms["p_tnpuVsTnpu"],colPU);
+      histograms["p_tnpuVsTnpu"]->Draw("E1");
+      histograms["p_tnpuVsTnpu"]->GetYaxis()->SetRangeUser(0,45);
+      //p_tnpuVsTnpu->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
+      leg = new TLegend(0.2,0.72,0.4,0.92);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["p_tnpuVsTnpu"]," TNPU","lep");
+      leg->Draw();
+      c->cd(4);
+      dynamic_cast<TProfile*>(histograms["p_npuVsNpu"])->SetErrorOption("s");
+      setHistoColor(histograms["p_npuVsNpu"],colPU);
+      histograms["p_npuVsNpu"]->Draw("E1");
+      histograms["p_npuVsNpu"]->GetYaxis()->SetRangeUser(0,45);
+      //p_tnpuVsTnpu->GetYaxis()->SetTitle("<X> #pm #sigma(X)");
+      leg = new TLegend(0.2,0.72,0.4,0.92);
+      leg->SetFillColor(0);
+      leg->SetBorderSize(0);
+      leg->AddEntry(histograms["p_npuVsNpu"]," NPU","lep");
+      leg->Draw();
+   }
 
    //
    //	2D plot of npv vs offset PU
    //
-   c = new TCanvas("npvVsOffset2D","npvVsOffset2D"); 
-  
-   histograms["p_npvVsOff"]->SetTitle("2D Histogram of N_{PV} and <p_{T} Offset>_{jets}, LogZ");
-   histograms["p_npvVsOff"]->GetYaxis()->SetRangeUser(0,45);
-//  p_npvVsOff->GetXaxis()->SetRangeUser(0,45);
-   histograms["p_npvVsOff"]->GetYaxis()->SetTitle("N_{PV}");
-   histograms["p_npvVsOff"]->GetXaxis()->SetTitle("<p_{T} Offset>_{jets}");
-   histograms["p_npvVsOff"]->Draw("CONTZ");
-   c->SetLogz();
+   if(histograms.find("p_npvVsOff")!=histograms.end()) {
+      c = new TCanvas("npvVsOffset2D","npvVsOffset2D"); 
+      histograms["p_npvVsOff"]->SetTitle("2D Histogram of N_{PV} and <p_{T} Offset>_{jets}, LogZ");
+      histograms["p_npvVsOff"]->GetYaxis()->SetRangeUser(0,45);
+     //p_npvVsOff->GetXaxis()->SetRangeUser(0,45);
+      histograms["p_npvVsOff"]->GetYaxis()->SetTitle("N_{PV}");
+      histograms["p_npvVsOff"]->GetXaxis()->SetTitle("<p_{T} Offset>_{jets}");
+      histograms["p_npvVsOff"]->Draw("CONTZ");
+      c->SetLogz();
+   }
   
    //
    //	2D plot of rho vs offset PU
    //
-   c = new TCanvas("rhoVsOffset2D","rhoVsOffset2D"); 
-  
-   histograms["p_rhoVsOff"]->SetTitle("2D Histogram of N_{PV} and <p_{T} Offset>_{jets}, LogZ");
-   histograms["p_rhoVsOff"]->GetYaxis()->SetRangeUser(0,45);
-//  p_rhoVsOff->GetXaxis()->SetRangeUser(0,45);
-   histograms["p_rhoVsOff"]->GetYaxis()->SetTitle("Rho");
-   histograms["p_rhoVsOff"]->GetXaxis()->SetTitle("<p_{T} Offset>_{jets}");
-   histograms["p_rhoVsOff"]->Draw("CONTZ");
-   c->SetLogz();
-  
+   if(histograms.find("p_rhoVsOff")!=histograms.end()) {
+      c = new TCanvas("rhoVsOffset2D","rhoVsOffset2D"); 
+      histograms["p_rhoVsOff"]->SetTitle("2D Histogram of N_{PV} and <p_{T} Offset>_{jets}, LogZ");
+      histograms["p_rhoVsOff"]->GetYaxis()->SetRangeUser(0,45);
+      //p_rhoVsOff->GetXaxis()->SetRangeUser(0,45);
+      histograms["p_rhoVsOff"]->GetYaxis()->SetTitle("Rho");
+      histograms["p_rhoVsOff"]->GetXaxis()->SetTitle("<p_{T} Offset>_{jets}");
+      histograms["p_rhoVsOff"]->Draw("CONTZ");
+      c->SetLogz();
+   }
   
    //
    //	Profile of npv vs offset PU  breakdown into detector parts
    //
-  
-  
    c = new TCanvas("npvVsOffset","npvVsOffset"); 
    TProfile * hnpvOff_prof[NDetectorNames];
    for (int det=0;det<NDetectorNames;det++)
@@ -645,8 +688,6 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    //
    //	Profile of rho vs offset PU  breakdown into detector parts
    //
-  
-  
    c = new TCanvas("rhoVsOffset","rhoVsOffset"); 
    TProfile * hrhoOff_prof[4];
    for (int det=0;det<NDetectorNames;det++)
@@ -673,8 +714,6 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       leg->AddEntry(hrhoOff_prof[det],detector_names[det],"lep");
    }
    leg->Draw();
-  
-  
   
    //
    //	Jet Energy Resolution (sigma(pt/ptref)/mean(pt/ptref) vs. ptref) PU  breakdown into detector parts
@@ -704,54 +743,62 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    //
    //	profile # of matchedjet vs offset
    //
- 
-   c = new TCanvas("MatchedJetOffset","MatchedJetOffset"); 
-   dynamic_cast<TProfile*>(histograms["p_matchedjet_off"])->SetErrorOption("s"); 
-   histograms["p_matchedjet_off"]->Draw();
+   if(histograms.find("p_matchedjet_off")!=histograms.end()) { 
+      c = new TCanvas("MatchedJetOffset","MatchedJetOffset"); 
+      dynamic_cast<TProfile*>(histograms["p_matchedjet_off"])->SetErrorOption("s"); 
+      histograms["p_matchedjet_off"]->Draw();
+   }
 
 
 
    // Offset PT energy distribution, constructed from  pt(pu)-pt(nopu) VS NPV
-   c = new TCanvas("OffsetDistributionVsNPV","OffsetDistributionVsNPV");
-   histograms["p_off_etaVsNpv"]->GetYaxis()->SetNdivisions(6);
-   histograms["p_off_etaVsNpv"]->Draw("lego2");
-   histograms["p_off_etaVsNpv"]->GetZaxis()->SetRangeUser(-10,50);
+   if(histograms.find("p_off_etaVsNpv")!=histograms.end()) { 
+      c = new TCanvas("OffsetDistributionVsNPV","OffsetDistributionVsNPV");
+      histograms["p_off_etaVsNpv"]->GetYaxis()->SetNdivisions(6);
+      histograms["p_off_etaVsNpv"]->Draw("lego2");
+      histograms["p_off_etaVsNpv"]->GetZaxis()->SetRangeUser(-10,50);
+   }
 
    // Offset PT energy distribution, constructed from  pt(pu)-pt(nopu) VS Rho
-   c = new TCanvas("OffsetDistributionVsRho","OffsetDistributionVsRho");
-   histograms["p_off_etaVsRho"]->GetYaxis()->SetNdivisions(6);
-   histograms["p_off_etaVsRho"]->Draw("lego2");
-   histograms["p_off_etaVsRho"]->GetZaxis()->SetRangeUser(-10,50);
-  
+   if(histograms.find("p_off_etaVsRho")!=histograms.end()) { 
+      c = new TCanvas("OffsetDistributionVsRho","OffsetDistributionVsRho");
+      histograms["p_off_etaVsRho"]->GetYaxis()->SetNdivisions(6);
+      histograms["p_off_etaVsRho"]->Draw("lego2");
+      histograms["p_off_etaVsRho"]->GetZaxis()->SetRangeUser(-10,50);
+   }
   
    // Offset PT energy distribution, constructed from  pt(pu)-pt(nopu) VS PUEff
-   c = new TCanvas("OffsetDistributionVsPUEff","OffsetDistributionVsPUEff");
-   histograms["p_off_etaVsPUEff"]->Draw("lego2");
-   histograms["p_off_etaVsPUEff"]->GetZaxis()->SetRangeUser(-10,50);
-
+   if(histograms.find("p_off_etaVsPUEff")!=histograms.end()) { 
+      c = new TCanvas("OffsetDistributionVsPUEff","OffsetDistributionVsPUEff");
+      histograms["p_off_etaVsPUEff"]->Draw("lego2");
+      histograms["p_off_etaVsPUEff"]->GetZaxis()->SetRangeUser(-10,50);
+   }
 
    // Offset PT energy distribution, constructed from  pt(pu)-pt(nopu) VS GenSumPtOA
-   c = new TCanvas("OffsetDistributionVsGenSumPtOA","OffsetDistributionVsGenSumPtOA");
-   histograms["p_off_etaVsGenSumPtOA"]->GetYaxis()->SetTitle("SumPt/jetArea");
-   histograms["p_off_etaVsGenSumPtOA"]->GetYaxis()->SetNdivisions(6);
-   histograms["p_off_etaVsGenSumPtOA"]->GetYaxis()->SetTitleOffset(1.3);
-   histograms["p_off_etaVsGenSumPtOA"]->Draw("lego2");
-   histograms["p_off_etaVsGenSumPtOA"]->GetZaxis()->SetRangeUser(-10,30);
+   if(histograms.find("p_off_etaVsGenSumPtOA")!=histograms.end()) { 
+      c = new TCanvas("OffsetDistributionVsGenSumPtOA","OffsetDistributionVsGenSumPtOA");
+      histograms["p_off_etaVsGenSumPtOA"]->GetYaxis()->SetTitle("SumPt/jetArea");
+      histograms["p_off_etaVsGenSumPtOA"]->GetYaxis()->SetNdivisions(6);
+      histograms["p_off_etaVsGenSumPtOA"]->GetYaxis()->SetTitleOffset(1.3);
+      histograms["p_off_etaVsGenSumPtOA"]->Draw("lego2");
+      histograms["p_off_etaVsGenSumPtOA"]->GetZaxis()->SetRangeUser(-10,30);
+   }
 
    // Offset PT energy distribution, constructed from  pt(pu)-pt(nopu) VS JetPt
-   c = new TCanvas("OffsetDistributionVsJetPt","OffsetDistributionVsJetPt");
-   histograms["p_off_etaVsJetPt"]->Draw("lego2");
-   c->SetLogy();
-   histograms["p_off_etaVsJetPt"]->GetZaxis()->SetRangeUser(-40,100);
+   if(histograms.find("p_off_etaVsJetPt")!=histograms.end()) { 
+      c = new TCanvas("OffsetDistributionVsJetPt","OffsetDistributionVsJetPt");
+      histograms["p_off_etaVsJetPt"]->Draw("lego2");
+      c->SetLogy();
+      histograms["p_off_etaVsJetPt"]->GetZaxis()->SetRangeUser(-40,100);
+   }
 
    // OffsetOverArea PT energy distribution, constructed from  (pt(pu)-pt(nopu))/area(pu) VS JetPt
-   c = new TCanvas("OffsetOverAreaDistributionVsJetPt","OffsetOverAreaDistributionVsJetPt");
-   histograms["p_offOverA_etaVsJetPt"]->Draw("lego2");
-   c->SetLogy();
-   histograms["p_offOverA_etaVsJetPt"]->GetZaxis()->SetRangeUser(-40,100);
-
-
-
+   if(histograms.find("p_offOverA_etaVsJetPt")!=histograms.end()) { 
+      c = new TCanvas("OffsetOverAreaDistributionVsJetPt","OffsetOverAreaDistributionVsJetPt");
+      histograms["p_offOverA_etaVsJetPt"]->Draw("lego2");
+      c->SetLogy();
+      histograms["p_offOverA_etaVsJetPt"]->GetZaxis()->SetRangeUser(-40,100);
+   }
 
    // do the fitting in each eta range and return the parameters. 
    // the last parameter is the name of the file name with which all functions are saved to.
@@ -994,7 +1041,7 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    c->Draw();
    c = getGausMeanOffsetWithSum("MeanOffRefPFWithSum_BB","<p_{T}^{PU}-p_{T}^{noPU}>",algo,hResRho,dynamic_cast<TH2D*>(histograms["p_offResVsrefpt_bb_all"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
-   TString unassociatedCHF = "output_ak5pf.root";
+   TString unassociatedCHF = inputDir+"/output_ak5pf.root";
    if(!unassociatedCHF.IsNull()) {
       pOffPF.back()->SetNameTitle("prof_offResVsrefpt_bb_unassociatedchf","prof_offResVsrefpt_bb_unassociatedchf");
       TDirectory* cdir = gDirectory;
@@ -1024,9 +1071,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    }
    c = getCanvasResolution_v2("OffResolutionRhoRef_BB",algo,"#sigma(p_{T}^{PU}-p_{T}^{noPU})/<p_{T}^{noPU}/p_{T}^{GEN}>",hResRho,hOffRho,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffset("OffMeanrhoRef_BB","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeanrhoRef_BB","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_BB","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_bb_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_BB","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_bb_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
    c = getGausMeanOffsetOverPtref("OffMeanOverPtrhoRef_BB","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
@@ -1036,9 +1083,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname = Form("p_offresVsrefpt_bb_tnpu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
       hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
    }
-   c = getGausMeanOffset("OffMeantnpuRef_BB","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeantnpuRef_BB","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_BB","#LTp_{T,offset}#GT [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_bb_tnpu0_49"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_BB","#LTp_{T,offset}#GT (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_bb_tnpu0_49"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
    c = getGausMeanOffsetOverPtref("OffMeanOverPttnpuRef_BB","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
@@ -1065,11 +1112,47 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname = Form("p_offresVsrefpt_bb_npu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
       hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
    }
-   c = getGausMeanOffset("OffMeannpuRef_BB","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeannpuRef_BB","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeannpuRefWithSum_BB","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_bb_npu0_49"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeannpuRefWithSum_BB","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_bb_npu0_49"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
    c = getGausMeanOffsetOverPtref("OffMeanOverPtnpuRef_BB","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c->Draw();
+	clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());
+
+   for(unsigned int ibin=0; ibin<npvRhoNpuBins.size(); ibin++) {
+      hname = Form("p_offresVsrefpt_ei_npu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
+      hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
+   }
+   c = getGausMeanOffset("OffMeannpuRef_EI","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c->Draw();
+   c = getGausMeanOffsetWithSum("OffMeannpuRefWithSum_EI","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_ei_npu0_49"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c->Draw();
+   c = getGausMeanOffsetOverPtref("OffMeanOverPtnpuRef_EI","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c->Draw();
+	clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());
+
+   for(unsigned int ibin=0; ibin<npvRhoNpuBins.size(); ibin++) {
+      hname = Form("p_offresVsrefpt_eo_npu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
+      hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
+   }
+   c = getGausMeanOffset("OffMeannpuRef_EO","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c->Draw();
+   c = getGausMeanOffsetWithSum("OffMeannpuRefWithSum_EO","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_eo_npu0_49"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c->Draw();
+   c = getGausMeanOffsetOverPtref("OffMeanOverPtnpuRef_EO","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c->Draw();
+	clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());
+
+   for(unsigned int ibin=0; ibin<npvRhoNpuBins.size(); ibin++) {
+      hname = Form("p_offresVsrefpt_ff_npu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
+      hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
+   }
+   c = getGausMeanOffset("OffMeannpuRef_FF","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c->Draw();
+   c = getGausMeanOffsetWithSum("OffMeannpuRefWithSum_FF","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_ff_npu0_49"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c->Draw();
+   c = getGausMeanOffsetOverPtref("OffMeanOverPtnpuRef_FF","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
 	clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());
 
@@ -1096,9 +1179,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    }
    c = getCanvasResolution_v2("OffResolutionRhoRef_EI",algo,"#sigma(p_{T}^{PU}-p_{T}^{noPU})/<p_{T}^{noPU}/p_{T}^{GEN}>",hResRho,hOffRho,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffset("OffMeanrhoRef_EI","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeanrhoRef_EI","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_EI","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_ei_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_EI","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_ei_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
 	clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());
 
@@ -1106,9 +1189,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname = Form("p_offresVsrefpt_ei_tnpu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
       hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
    }
-   c = getGausMeanOffset("OffMeantnpuRef_EI","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeantnpuRef_EI","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_EI","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_ei_tnpu0_29"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_EI","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_ei_tnpu0_29"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
    c = getGausMeanOffsetOverPtref("OffMeanOverPttnpuRef_EI","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
@@ -1122,9 +1205,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    }
    c = getCanvasResolution_v2("OffResolutionRhoRef_EO",algo,"#sigma(p_{T}^{PU}-p_{T}^{noPU})/<p_{T}^{noPU}/p_{T}^{GEN}>",hResRho,hOffRho,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffset("OffMeanrhoRef_EO","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeanrhoRef_EO","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_EO","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_eo_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_EO","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_eo_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
 	clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());  
   
@@ -1132,9 +1215,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname = Form("p_offresVsrefpt_eo_tnpu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
       hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
    }
-   c = getGausMeanOffset("OffMeantnpuRef_EO","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeantnpuRef_EO","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_EO","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_eo_tnpu0_29"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_EO","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_eo_tnpu0_29"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
    c = getGausMeanOffsetOverPtref("OffMeanOverPttnpuRef_EO","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
@@ -1148,9 +1231,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    }
    c = getCanvasResolution_v2("OffResolutionRhoRef_FF",algo,"#sigma(p_{T}^{PU}-p_{T}^{noPU})/<p_{T}^{noPU}/p_{T}^{GEN}>",hResRho,hOffRho,npvRhoNpuBins);
    c->Draw(); 
-   c = getGausMeanOffset("OffMeanrhoRef_FF","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeanrhoRef_FF","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_FF","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_ff_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeanrhoRefWithSum_FF","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms[Form("p_offresVsrefpt_ff_rho%i_%i",minNpvRhoNpu,maxNpvRhoNpu)]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
 	clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());
 
@@ -1158,9 +1241,9 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname = Form("p_offresVsrefpt_ff_tnpu%i_%i",npvRhoNpuBins[ibin].first,npvRhoNpuBins[ibin].second);
       hOffRho[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
    }
-   c = getGausMeanOffset("OffMeantnpuRef_FF","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeantnpuRef_FF","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_FF","<offset> [GeV]",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_ff_tnpu0_29"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
+   c = getGausMeanOffsetWithSum("OffMeantnpuRefWithSum_FF","<offset> (GeV)",algo,hOffRho,dynamic_cast<TH2D*>(histograms["p_offresVsrefpt_ff_tnpu0_29"]),fixedRange,npvRhoNpuBins,make_pair(minNpvRhoNpu,maxNpvRhoNpu));
    c->Draw();
    c = getGausMeanOffsetOverPtref("OffMeanOverPttnpuRef_FF","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
@@ -1216,7 +1299,7 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    //c = getResolutionNumDenom("OffResolutionnpvRef_BB_N_D","bb_npv15_19",algo, hResRho[3], hOffRho[3]);
    c->Draw();
 
-   c = getGausMeanOffset("OffMeannpvRef_BB","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeannpvRef_BB","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
    c = getGausMeanOffsetOverPtref("OffMeanOverPtnpvRef_BB","<offset>/p_{T}^{GEN}",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
@@ -1238,7 +1321,7 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    c = getCanvasResolution_v2("OffResolutionnpvRef_EI",algo,"#sigma(p_{T}^{PU}-p_{T}^{noPU})/<p_{T}^{noPU}/p_{T}^{GEN}>",hResRho,hOffRho,npvRhoNpuBins);
    c->Draw();
   
-   c = getGausMeanOffset("OffMeannpvRef_EI","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeannpvRef_EI","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
   
    c = getGausMeanOffsetScale("OffMeannpvRef_EI_3035","<offset>/<offset(30<pt<35)>",algo,hOffRho,binNum3035,fixedRange,npvRhoNpuBins);
@@ -1257,7 +1340,7 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
   
    c = getCanvasResolution_v2("OffResolutionnpvRef_EO",algo,"#sigma(p_{T}^{PU}-p_{T}^{noPU})/<p_{T}^{noPU}/p_{T}^{GEN}>",hResRho,hOffRho,npvRhoNpuBins);
    c->Draw();
-   c = getGausMeanOffset("OffMeannpvRef_EO","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeannpvRef_EO","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();  
   
    c = getGausMeanOffsetScale("OffMeannpvRef_EO_3035","<offset>/<offset(30<pt<35)>",algo,hOffRho,binNum3035,fixedRange,npvRhoNpuBins);
@@ -1276,7 +1359,7 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
    }
    c = getCanvasResolution_v2("OffResolutionnpvRef_FF",algo,"#sigma(p_{T}^{PU}-p_{T}^{noPU})/<p_{T}^{noPU}/p_{T}^{GEN}>",hResRho,hOffRho,npvRhoNpuBins);
    c->Draw(); 
-   c = getGausMeanOffset("OffMeannpvRef_FF","<offset> [GeV]",algo,hOffRho,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeannpvRef_FF","<offset> (GeV)",algo,hOffRho,fixedRange,npvRhoNpuBins);
    c->Draw();
   
    c = getGausMeanOffsetScale("OffMeannpvRef_FF_3035","<offset>/<offset(30<pt<35)>",algo,hOffRho,binNum3035,fixedRange,npvRhoNpuBins);
@@ -1290,7 +1373,7 @@ void SynchPlots(TString calgo1="ak5pf",TString calgo2="ak5pf", TString outDir = 
       hname = Form("p_offresVsrefpt_bb_pdgid_%s",pdgidstr[ibin].Data());
       hOffPdgid[ibin] = dynamic_cast<TH2D*>(histograms[hname]);
    }
-   c = getGausMeanOffset("OffMeanpdgidRef_BB","<offset> [GeV]",algo,hOffPdgid,fixedRange,npvRhoNpuBins);
+   c = getGausMeanOffset("OffMeanpdgidRef_BB","<offset> (GeV)",algo,hOffPdgid,fixedRange,npvRhoNpuBins);
    c->Draw();
    clearHistograms(hResRho,hOffRho,hOffPdgid,pOffPF,npvRhoNpuBins.size());
 
@@ -1343,6 +1426,7 @@ int main(int argc,char**argv)
 {
    CommandLine cl;
    if (!cl.parse(argc,argv)) return 0;
+   string         inputDir          = cl.getValue<string>   ("inputDir",       "./");
    string         algo1             = cl.getValue<string>   ("algo1",       "ak5pf");
    string         algo2             = cl.getValue<string>   ("algo2",       "ak5pf");
    string         outDir            = cl.getValue<string>   ("outDir",   "./images");
@@ -1369,5 +1453,5 @@ int main(int argc,char**argv)
          npvRhoNpuBins.push_back(make_pair(ibin*npvRhoNpuBinWidth+binOffset,ibin*npvRhoNpuBinWidth+npvRhoNpuBinWidth-1+binOffset));
    }
 
-   SynchPlots(algo1, algo2, outDir, fixedRange);
+   SynchPlots(inputDir, algo1, algo2, outDir, fixedRange);
 }

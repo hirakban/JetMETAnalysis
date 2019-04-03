@@ -24,19 +24,27 @@ using namespace std;
 //the file result.root will contain 4 subdirectories:
 // "tot100.root", "hsimple.root", "hs1.root","hs2.root"
       
-void CopyDir(TDirectory *source, bool algs_to_skip, vector<TString> ati, bool isSubdir) {
+void CopyDir(TDirectory *source, bool algs_to_skip, vector<TString> ati, int nentries, TString selection, vector<TString>& suffix, bool isSubdir) {
    //copy all objects and subdirs of directory source as a subdir of the current directory   
    for (unsigned int iati=0; iati<ati.size(); iati++) {
       if (algs_to_skip && TString(source->GetName()).CompareTo(ati[iati])==0)
          return;
    }
+
    source->ls();
    TDirectory *savdir = gDirectory;
    TDirectory *adir;
    if (!isSubdir)
       adir = savdir;
-   else
-      adir = savdir->mkdir(source->GetName());
+   else {
+      TString new_dirname = source->GetName();
+      if(suffix.size()>0) {
+         new_dirname += suffix.front();
+         suffix.erase(suffix.begin());
+      }
+      cout << source->GetName() << " ==> " << new_dirname << endl;
+      adir = savdir->mkdir(new_dirname);
+   }
    adir->cd();
    //loop on all entries of this directory
    TKey *key;
@@ -49,12 +57,12 @@ void CopyDir(TDirectory *source, bool algs_to_skip, vector<TString> ati, bool is
          source->cd(key->GetName());
          TDirectory *subdir = gDirectory;
          adir->cd();
-         CopyDir(subdir,algs_to_skip,ati,true);
+         CopyDir(subdir,algs_to_skip,ati,nentries,selection,suffix,true);
          adir->cd();
       } else if (cl->InheritsFrom(TTree::Class())) {
          TTree *T = (TTree*)source->Get(key->GetName());
          adir->cd();
-         TTree *newT = T->CloneTree(-1,"fast");
+         TTree *newT = (selection.IsNull()) ? T->CloneTree(nentries,"fast") : T->CopyTree(selection,"",nentries,0);
          newT->Write();
       } else {
          source->cd();
@@ -67,7 +75,7 @@ void CopyDir(TDirectory *source, bool algs_to_skip, vector<TString> ati, bool is
    adir->SaveSelf(kTRUE);
    savdir->cd();
 }
-void CopyFile(const char *fname, bool algs_to_skip, vector<TString> ati) {
+void CopyFile(const char *fname, bool algs_to_skip, vector<TString> ati, int nentries, TString selection, vector<TString>& suffix) {
    //Copy all objects and subdirs of file fname as a subdir of the current directory
    TDirectory *target = gDirectory;
    TFile *f = TFile::Open(fname);
@@ -77,7 +85,7 @@ void CopyFile(const char *fname, bool algs_to_skip, vector<TString> ati) {
       return;
    }
    target->cd();
-   CopyDir(f,algs_to_skip,ati,false);
+   CopyDir(f,algs_to_skip,ati,nentries,selection,suffix,false);
    delete f;
    target->cd();
 }  
@@ -89,23 +97,28 @@ int main(int argc,char**argv)
    
    vector<TString>      input     = cl.getVector<TString>      ("input");
    TString              output    = cl.getValue<TString>       ("output",       "");
-   vector<TString>      ati       = cl.getVector<TString>      ("ati",          "");
-   vector<unsigned int> fati      = cl.getVector<unsigned int> ("fati",         "");
-   
+   vector<TString>      ati       = cl.getVector<TString>      ("ati",          ""); //alg_to_ignore
+   vector<unsigned int> fati      = cl.getVector<unsigned int> ("fati",         ""); //file containing alg_to_ignore
+   vector<TString>      suffix    = cl.getVector<TString>      ("suffix",       "");
+   int                  nentries  = cl.getValue<int>           ("nentries",     -1); //number of entries to take from each tree
+   TString              selection = cl.getValue<TString>       ("selection",    ""); //selection to apply to the copied entries of the TTrees
+   bool                 help      = cl.getValue<bool>          ("help",      false);
+
+   if (help) {cl.print(); return 0;}
    if(!cl.check()) return 0;
    cl.print();
    
    
    //main function copying 4 files as subdirectories of a new file
    if (output.IsNull()) output = "JRA_combined.root";
-   TFile *f = new TFile(output,"recreate");
+   TFile *f = TFile::Open(output,"RECREATE");
    for (unsigned int ifile=0; ifile<input.size(); ifile++) {
       bool algs_to_skip = false;
       for (unsigned int i=0; i<fati.size(); i++) {
          if (fati[i]==ifile)
             algs_to_skip=true;
       }
-      CopyFile(input[ifile],algs_to_skip,ati);
+      CopyFile(input[ifile],algs_to_skip,ati,nentries,selection,suffix);
    }
    f->ls();
    delete f;
