@@ -51,13 +51,13 @@ int main(int argc,char**argv)
 
   string         input         = cl.getValue<string> ("input");
   string         output        = cl.getValue<string> ("output",               "");
-  bool           dorelrsp      = cl.getValue<bool>   ("dorelrsp",           true);
+  bool           fitRMS        = cl.getValue<bool>   ("fitRMS",            false);
+  bool           dorelrsp      = cl.getValue<bool>   ("dorelrsp",          false);
   bool           doabsrsp      = cl.getValue<bool>   ("doabsrsp",          false);
   bool           doetarsp      = cl.getValue<bool>   ("doetarsp",          false);
   bool           dophirsp      = cl.getValue<bool>   ("dophirsp",          false);
   bool           domu          = cl.getValue<bool>   ("domu",              false);
   bool           dorho         = cl.getValue<bool>   ("dorho",             false);
-  bool           dopudensity   = cl.getValue<bool>   ("dopudensity",       false);
   vector<string> flavors       = cl.getVector<string>("flavors",              "");
   vector<string> algs          = cl.getVector<string>("algs",                 "");
   bool           fitres        = cl.getValue<bool>   ("fitres",             true);
@@ -84,8 +84,8 @@ int main(int argc,char**argv)
 
   float          calofitmin    = cl.getValue<float>  ("calofitmin",          -1.);
   float          jptfitmin     = cl.getValue<float>  ("jptfitmin",           -1.);
-  float          pffitmin      = cl.getValue<float>  ("pffitmin",            -1.);
-  float          pfchsfitmin   = cl.getValue<float>  ("pfchsfitmin",         -1.);
+  float          ak4fitmin     = cl.getValue<float>  ("ak4fitmin",           -1.);
+  float          ak8fitmin     = cl.getValue<float>  ("ak8fitmin",           -1.);
   float          puppifitmin   = cl.getValue<float>  ("puppifitmin",         -1.);
 
   float          calofitmax    = cl.getValue<float>  ("calofitmax",          -1.);
@@ -110,10 +110,9 @@ int main(int argc,char**argv)
   //
   //const string s_sigma_calo="sqrt([0]*[0]/(x*x) + [1]*[1]/x + [2]*[2])";
   //const string s_sigma="sqrt([0]*abs([0])/(x*x) + [1]*[1]/x + [2]*[2])";
-  const string s_sigma="sqrt([0]*abs([0])/(x*x) + [1]*[1]*pow(x,[3]) + [2]*[2])";
-  const string s_sigma_calo="sqrt([0]*[0]/(x*x) + [1]*[1]*pow(x,[3]) + [2]*[2])";
+  const string s_sigma="sqrt([0]*abs([0])/(x*x)+[1]*[1]*pow(x,[3])+[2]*[2])";
+  const string s_sigma_calo="sqrt([0]*[0]/(x*x)+[1]*[1]*pow(x,[3])+[2]*[2])";
   const string s_sigma_angle="[0]+[1]*exp(-x/[2])";
-  const string s_sigma_density="[0]+([1]*x)";
   //const string s_sigma="sqrt(((TMath::Sign(1,[0])*sq([0]/x))+(sq([1])*(x^([3]-1))))+sq([2]))";
   const string s_aone ="[0]";
   const string s_atwo ="[0]*x**[1]";
@@ -126,27 +125,8 @@ int main(int argc,char**argv)
   //
   vector<string> variables;
   if (dorelrsp) {
-    if (domu) {
-        variables.push_back("RelRsp:JetEta:Mu:RefPt");
-        variables.push_back("RelRsp:JetEta@0:Mu#2:RefPt");
-        variables.push_back("RelRsp:JetEta@1.3:Mu#2:RefPt");
-        variables.push_back("RelRsp:JetEta@2.5:Mu#2:RefPt");
-        variables.push_back("RelRsp:JetEta@3:Mu#2:RefPt");
-    }
-    else if (dorho) {
-       variables.push_back("RelRsp:JetEta:Rho:RefPt");
-       variables.push_back("RelRsp:JetEta@0:Rho#2:RefPt");
-       variables.push_back("RelRsp:JetEta@1.3:Rho#2:RefPt");
-       variables.push_back("RelRsp:JetEta@2.5:Rho#2:RefPt");
-       variables.push_back("RelRsp:JetEta@3:Rho#2:RefPt");
-    }
-    else if (dopudensity) {
-       variables.push_back("RelRsp:JetEta:RhoPU:RefPt");
-       variables.push_back("RelRsp:JetEta@0:RhoPU#2:RefPt");
-       variables.push_back("RelRsp:JetEta@1.3:RhoPU#2:RefPt");
-       variables.push_back("RelRsp:JetEta@2.5:RhoPU#2:RefPt");
-       variables.push_back("RelRsp:JetEta@3:RhoPU#2:RefPt");
-    }
+    if (domu) variables.push_back("RelRsp:JetEta:Mu:RefPt");
+    else if (dorho) variables.push_back("RelRsp:JetEta:Rho:RefPt");
     else{
       variables.push_back("RelRsp:RefPt");
       variables.push_back("RelRsp:JetEta");
@@ -173,16 +153,22 @@ int main(int argc,char**argv)
     variables.push_back("AbsRsp:JetY#1:RefPt");
   }
   if (doetarsp) {
+    if (domu) variables.push_back("EtaRsp:JetEta:Mu:RefPt");
+    else {
     variables.push_back("EtaRsp:RefPt");
     variables.push_back("EtaRsp:JetEta");
     variables.push_back("EtaRsp:JetEta:RefPt");
     variables.push_back("EtaRsp:JetEta#1:RefPt");
+    }
   }
   if (dophirsp) {
+    if (domu) variables.push_back("PhiRsp:JetEta:Mu:RefPt");
+    else {
     variables.push_back("PhiRsp:RefPt");
     variables.push_back("PhiRsp:JetEta");
     variables.push_back("PhiRsp:JetEta:RefPt");
     variables.push_back("PhiRsp:JetEta#1:RefPt");
+    }
   }
 
   if (flavors.size()>0) {
@@ -212,6 +198,9 @@ int main(int argc,char**argv)
   if (output.empty()) {
     size_t pos=input.find(".root");
     output=input.substr(0,pos)+"_g.root";
+    if      (dorelrsp) output = "relrsp.root";
+    else if (dophirsp) output = "phirsp.root";
+    else if (doetarsp) output = "etarsp.root";
     cout<<"*** write output to "<<output<<endl;
   }
   
@@ -259,7 +248,9 @@ int main(int argc,char**argv)
     }
 
     // for each algorithm use a JERWriter (PtResolution=true)
-    JERWriter resolutions(alg,fera,fprefix,true, domu || dorho || dopudensity, writeHeader, indirectProf);
+    string rsptype = variables[0].substr(0,3);
+    // "Rel", "Eta", "Phi", etc.
+    JERWriter resolutions(alg,fera,fprefix,true, domu || dorho, writeHeader, indirectProf, rsptype);
 
     TDirectory* idir = (TDirectory*)ifile->Get(alg.c_str());
     if (0==idir) { cout<<"No dir "<<alg<<" found"<<endl; return 0; }
@@ -351,12 +342,14 @@ int main(int argc,char**argv)
     }
     
     // add new points to current response & resolution graphs
+
     if (hrsp->Integral()==0) continue;
     
     double x(0.0),ex(0.0);
     if (hlvar.nobjects()>0) {
       TH1F*  hvar = hlvar.object(indices);
       assert(hvar->GetEntries()>0);
+
       x  = hvar->GetMean();
       ex = hvar->GetMeanError();
     }
@@ -386,6 +379,14 @@ int main(int argc,char**argv)
     double ey = (frsp==0 || (semifitted && x<40.0)) ? hrsp->GetMeanError() : frsp->GetParError(1);
     double e  = (frsp==0 || (semifitted && x<40.0)) ? hrsp->GetRMS()       : frsp->GetParameter(2);
     double ee = (frsp==0 || (semifitted && x<40.0)) ? hrsp->GetRMSError()  : frsp->GetParError(2);
+
+    if (fitRMS) {
+      y = hrsp->GetMean();
+      ey = hrsp->GetMeanError();
+      e = hrsp->GetRMS();
+      //e = hrsp->GetBinCenter( hrsp->FindLastBinAbove(hrsp->GetMaximum()/2) ) - hrsp->GetBinCenter( hrsp->FindFirstBinAbove(hrsp->GetMaximum()/2) );
+      ee = hrsp->GetRMSError();
+    }
 
     // declare the addtional pars for the CB function
 
@@ -435,13 +436,13 @@ int main(int argc,char**argv)
     }
     if(addUnc>0.0) {
         // add an additional uncertainty in quadrature to each point
-        addUnc *= e;
-        ee  = std::sqrt(ee*ee+addUnc*addUnc);
+        ee  = std::sqrt(ee*ee+addUnc*e*addUnc*e);
     }
 
     int n = grsp->GetN();
     grsp->SetPoint(n,x,y);
     grsp->SetPointError(n,ex,ey);
+
     gres->SetPoint(n,x,e);
     gres->SetPointError(n,ex,ee);
 
@@ -477,22 +478,19 @@ int main(int argc,char**argv)
     double fitmin(0.0);
     double fitmax(0.0);
 
-    if (calofitmin!=-1. && alg.find("calo")!=string::npos)   fitmin = calofitmin;
-    if (jptfitmin!=-1. && alg.find("jpt")!=string::npos)     fitmin = jptfitmin;    
-    if (pfchsfitmin!=-1. && alg.find("pfchs")!=string::npos) fitmin = pfchsfitmin;
-    else if (pffitmin!=-1. && alg.find("pf")!=string::npos)  fitmin = pffitmin;
-    if (puppifitmin!=-1. && alg.find("puppi")!=string::npos) fitmin = puppifitmin;
-
-    if (calofitmax!=-1. && alg.find("calo")!=string::npos)   fitmax = calofitmax;
-    if (jptfitmax!=-1. && alg.find("jpt")!=string::npos)     fitmax = jptfitmax;
-    if (pffitmax!=-1. && alg.find("pf")!=string::npos)       fitmax = pffitmax;
+    if (calofitmin !=-1. && alg.find("calo") !=string::npos) fitmin = calofitmin;
+    if (jptfitmin  !=-1. && alg.find("jpt")  !=string::npos) fitmin = jptfitmin;
+    if (ak4fitmin  !=-1. && alg.find("ak4")  !=string::npos) fitmin = ak4fitmin;
+    if (puppifitmin!=-1  && alg.find("puppi")!=string::npos) fitmin = puppifitmin;
+    if (ak8fitmin  !=-1. && alg.find("ak8")  !=string::npos) fitmin = ak8fitmin;
+    if (calofitmax !=-1. && alg.find("calo") !=string::npos) fitmax = calofitmax;
+    if (jptfitmax  !=-1. && alg.find("jpt")  !=string::npos) fitmax = jptfitmax;
+    if (pffitmax   !=-1. && alg.find("pf")   !=string::npos) fitmax = pffitmax;
     if (puppifitmax!=-1. && alg.find("puppi")!=string::npos) fitmax = puppifitmax;
 
     // SIGMA
     for (unsigned int igraph=0;igraph<vres.size();igraph++) {
-      
       TGraphErrors* g = vres[igraph];
-      //cout << g->GetName() << endl;
 
       if (g->GetN()==0) continue;
       double xmin(g->GetX()[0]);
@@ -512,16 +510,13 @@ int main(int argc,char**argv)
          hlrsp.quantity().find("PhiRsp")!=string::npos) {
          fnc = new TF1("fit",s_sigma_angle.c_str(),xmin,xmax);
       }
-      else if(xvar.find("RhoPU")!=string::npos) {
-         fnc = new TF1("fit",s_sigma_density.c_str(),xmin,xmax);
-      }
       else if(alg.find("calo")!=string::npos) {
          fnc = new TF1("fit",s_sigma_calo.c_str(),xmin,xmax);
       }
       else {
          fnc = new TF1("fit",s_sigma.c_str(),xmin,xmax);
       }
-               
+
       fnc->SetLineWidth(2);
       fnc->SetLineColor(g->GetLineColor());
       //fnc->SetParameter(0,2.0);
@@ -558,9 +553,9 @@ int main(int argc,char**argv)
       if(unweighted) fit_options = "W" + fit_options;
       //int fitstatus = g->Fit(fnc,fit_options);
       int fitstatus = -1;
+      nfititer=10;
       for(int i=0; i<nfititer; i++) {
-        if(fitstatus==0)
-            i=nfititer+1;
+        if(fitstatus==0) break;
         else {
             if(g->GetListOfFunctions()->Last())
                 g->GetListOfFunctions()->Last()->Delete();

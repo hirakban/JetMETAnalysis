@@ -43,6 +43,7 @@ struct JERWriter
     bool                  do2ndBins;
     bool                  writeHeader;
     string                profstr;
+    string                rsptype;
     map<string,TF1*>      name2func;
     set<string>           binisabs;
 
@@ -61,14 +62,14 @@ struct JERWriter
 
     // constructors
     JERWriter(){init();}
-    JERWriter(const string& n,const string& e,const string& p, const bool b,const bool b2,const bool b3,string s)
-    : alg(n),era(e),prefix(p),isptres(b),do2ndBins(b2),writeHeader(b3),profstr(s){init();}
+    JERWriter(const string& n,const string& e,const string& p, const bool b,const bool b2,const bool b3,string s,string s2)
+    : alg(n),era(e),prefix(p),isptres(b),do2ndBins(b2),writeHeader(b3),profstr(s),rsptype(s2){init();}
 
     // write the resolution file
 
     void writeJER()
     {
-        if (alg.find("l2l3")==string::npos) return;
+        //if (alg.find("l2l3")==string::npos) return;
         if (0==name2func.size()) {cout<<"Fill all entries first!"<<endl;return;}
 
         decodeEntries();
@@ -90,6 +91,7 @@ struct JERWriter
 
             string filename = profstr + ".root";
             proffile = TFile::Open(filename.c_str());
+            if (proffile == 0) return;
             prof = (TProfile*) proffile->Get(profstr.c_str());
             proffit = new TF1("proffit", "1++x");
             prof->Fit(proffit, "Q");
@@ -174,6 +176,7 @@ struct JERWriter
 
                     vector<TF1*> fhistory;
                     bool         fskip = false;
+                    float xmin = 15, xmax = 3000;
 
                     if (binisabs.end()!=binisabs.find((*itbins).first)) {
 	                    // absolute binning!!!
@@ -204,28 +207,32 @@ struct JERWriter
                                     ss2ndVar<<var2nd2;
                                     it2ndVars--;
 
-                                    string name = ssfunc.str()+ss2ndVar.str();
-                                    itfunc = name2func.find( name );
-
-                                    TF1* f = (itfunc==name2func.end()) ? 0 : (*itfunc).second;
-                                    if (0==f) {
-                                        if (name.find("4.7to0") == string::npos && name.find("5.191to0") == string::npos && name.find("0to0") == string::npos)
-                                            cout << name << " did not fit" << endl;
-                                        continue;
-                                    }
-
                                     if (profy != "") {
                                         var2nd1 = roundf(proffit->Eval(var2nd1) * 100) / 100;
                                         if (var2nd1 < 2) var2nd1 = 0;
                                         var2nd2 = roundf(proffit->Eval(var2nd2) * 100) / 100;
                                     }
 
-                                    ssfile<<var1<<setw(8)<<(abs(var2)<0.001 ? 0 : var2)<<setw(8)<<var2nd1<<setw(8)<<var2nd2<<setw(8)<<(2+f->GetNpar())
-                                    <<setw(8)<< f->GetXmin()<<setw(8)<< f->GetXmax();
-                                    for (int itf=0;itf<f->GetNpar()-1;itf++)
-                                        ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(itf);
-                                    ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(f->GetNpar()-1);
-                                    ssfile<<endl;
+                                    string name = ssfunc.str()+ss2ndVar.str();
+                                    if ( name.find("4.7to0") != string::npos || name.find("5.191to0") != string::npos ||
+                                       (name.find("0to0") != string::npos && name.find("0to0.5") == string::npos) )
+                                        continue;
+
+                                    itfunc = name2func.find( name );
+                                    TF1* f = (itfunc==name2func.end()) ? 0 : (*itfunc).second;
+                                    if (0==f) {
+                                        cout << name << " DID NOT FIT!!!" << endl;
+                                        ssfile<<var1<<setw(8)<<(abs(var2)<0.001 ? 0 : var2)<<setw(8)<<var2nd1<<setw(8)<<var2nd2<<setw(8)<<6
+                                        <<setw(8)<< xmin<<setw(8)<< xmax <<setw(15)<<1<<setw(15)<<1<<setw(15)<<1<<setw(15) <<1 << endl;
+                                    }
+                                    else {
+                                        ssfile<<var1<<setw(8)<<(abs(var2)<0.001 ? 0 : var2)<<setw(8)<<var2nd1<<setw(8)<<var2nd2<<setw(8)<<(2+f->GetNpar())
+                                        <<setw(8)<< xmin<<setw(8)<< xmax;
+                                        for (int itf=0;itf<f->GetNpar()-1;itf++)
+                                            ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(itf);
+                                        ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(f->GetNpar()-1);
+                                        ssfile<<endl;
+                                    }
                                 }
                             }
                             else{
@@ -244,7 +251,7 @@ struct JERWriter
 
                                 ssfile<<" "<<var2<<" "<<(2+f->GetNpar())
                                     //<<" 0. 99999. ";
-                                      << " " << f->GetXmin() << " " << f->GetXmax() << " ";
+                                      << " " << xmin << " " << xmax << " ";
                                 for (int itf=0;itf<f->GetNpar()-1;itf++) 
                                     ssfile<<f->GetParameter(itf)<<" ";
                                 ssfile<<f->GetParameter(f->GetNpar()-1);
@@ -278,28 +285,32 @@ struct JERWriter
                                 ss2ndVar<<var2nd2;
                                 it2ndVars--;
 
-                                string name = ssfunc.str()+ss2ndVar.str();
-                                itfunc = name2func.find( name );
-
-                                TF1* f = (itfunc==name2func.end()) ? 0 : (*itfunc).second;
-                                if (0==f) {
-                                    if (name.find("4.7to0") == string::npos && name.find("0to4.7") == string::npos && name.find("5.191to0") == string::npos && name.find("0to0") == string::npos)
-                                        cout << name << " did not fit" << endl;
-                                    continue;
-                                }
-
                                 if (profy != "") {
                                     var2nd1 = roundf(proffit->Eval(var2nd1) * 100) / 100;
                                     if (var2nd1 < 2) var2nd1 = 0;
-                                    var2nd2 = roundf(proffit->Eval(var2nd2) * 100) / 100; 
+                                    var2nd2 = roundf(proffit->Eval(var2nd2) * 100) / 100;
                                 }
 
-                                ssfile<<var1<<setw(8)<<var2<<setw(8)<<var2nd1<<setw(8)<<var2nd2<<setw(8)<<(2+f->GetNpar())
-                                      <<setw(8)<< f->GetXmin()<<setw(8)<< f->GetXmax();
-                                for (int itf=0;itf<f->GetNpar()-1;itf++)
-                                    ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(itf);
-                                ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(f->GetNpar()-1);
-                                ssfile<<endl;
+                                string name = ssfunc.str()+ss2ndVar.str();
+                                if ( name.find("4.7to0") != string::npos || name.find("5.191to0") != string::npos ||
+                                   (name.find("0to0") != string::npos && name.find("0to0.5") == string::npos) )
+                                    continue;
+
+                                itfunc = name2func.find( name );
+                                TF1* f = (itfunc==name2func.end()) ? 0 : (*itfunc).second;
+                                if (0==f) {
+                                    cout << name << " DID NOT FIT!!!" << endl;
+                                    ssfile<<var1<<setw(8)<<(abs(var2)<0.001 ? 0 : var2)<<setw(8)<<var2nd1<<setw(8)<<var2nd2<<setw(8)<<6               
+                                    <<setw(8)<< xmin<<setw(8)<< xmax <<setw(15)<<1<<setw(15)<<1<<setw(15)<<1<<setw(15) <<1 << endl;
+                                }
+                                else {
+                                    ssfile<<var1<<setw(8)<<(abs(var2)<0.001 ? 0 : var2)<<setw(8)<<var2nd1<<setw(8)<<var2nd2<<setw(8)<<(2+f->GetNpar())
+                                    <<setw(8)<< xmin<<setw(8)<< xmax;
+                                    for (int itf=0;itf<f->GetNpar()-1;itf++)
+                                        ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(itf);
+                                    ssfile<<setw(15)<<setprecision(4)<<f->GetParameter(f->GetNpar()-1);
+                                    ssfile<<endl;
+                                }
                             }
                         }
                         else{
@@ -319,7 +330,7 @@ struct JERWriter
 
                             ssfile<<" "<<var2<<" "<<(2+f->GetNpar())
                                 //<<" 0. 99999. ";
-                                  << " " << f->GetXmin() << " " << f->GetXmax() << " ";
+                                  << " " << xmin << " " << xmax << " ";
                             for (int itf=0;itf<f->GetNpar()-1;itf++) 
                                 ssfile<<f->GetParameter(itf)<<" ";
                             ssfile<<f->GetParameter(f->GetNpar()-1);
@@ -356,7 +367,11 @@ struct JERWriter
             if (!prefix.empty()) ssfilename<<prefix<<"_";
             if (!era.empty()) ssfilename<<era<<"_";
 
-            ssfilename<<"PtResolution_"<<algname;
+            if (rsptype.find("Rel")==string::npos)
+              ssfilename<<rsptype<<"Resolution_"<<algname;
+            else
+              ssfilename<<"PtResolution_"<<algname;
+
             if ((*itbins).first.find("JetEta")==string::npos)
                 ssfilename<<"_"<<(*itbins).first;
 
@@ -405,7 +420,7 @@ struct JERWriter
     // decode entries
     void decodeEntries()
     {
-        if (alg.find("l2l3")==string::npos) return;
+        //if (alg.find("l2l3")==string::npos) return;
         if (0==name2func.size()) {cout<<"Fill all entries first!"<<endl;return;}
 
         map<string,TF1*>::iterator itg;
@@ -493,7 +508,7 @@ struct JERWriter
     // add a new graph / fit pair
     void addEntry(const string& graphname,TF1* func)
     {
-        if (alg.find("l2l3")==string::npos) return;
+        //if (alg.find("l2l3")==string::npos) return;
         if (isptres && graphname.find("VsRefPt_")==string::npos &&
             graphname.find("VsJetPt_")==string::npos) return;
 
@@ -529,8 +544,8 @@ struct JERWriter
         //dscb.push_back("atwo");
         //dscb.push_back("ptwo");
 
-        dscb2pars["mean"]  =string("RelRsp");
-        dscb2pars["sigma"] =string("RelRes");
+        dscb2pars["mean"]  =string(rsptype+"Rsp");
+        dscb2pars["sigma"] =string(rsptype+"Res");
         dscb2pars["aone"]  =string("Aone");
         dscb2pars["atwo"]  =string("Atwo");
         dscb2pars["pone"]  =string("Pone");

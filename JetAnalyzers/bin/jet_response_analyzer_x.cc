@@ -41,7 +41,6 @@
 
 using namespace std;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // define local functions
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +71,11 @@ void fill_histo(float value,float weight,float x,float y,
                 const vector<float>& binsx,const vector<float>& binsy,
                 const vector<TH1F***>& histos);
 
+/// fill the appropriate 2D histogram (histos), based on x, y, binsx, and binsy
+void fill_histo(float value1,float value2,float weight,float x,float y,
+                const vector<float>& binsx,const vector<float>& binsy,
+                const vector<TH2F***>& histos);
+
 /// fill the appropriate histogram (histos), based on pdgid, x, y, binsx, and binsy
 void fill_histo(int pdgid,float value,float weight,float x,float y,
                 const vector<float>& binsx,const vector<float>& binsy,
@@ -81,6 +85,11 @@ void fill_histo(int pdgid,float value,float weight,float x,float y,
 void fill_histo(float value,float weight,float x,float y, float z,
                 const vector<float>& binsx,const vector<float>& binsy,const vector<float>& binsz,
                 const vector<TH1F****>& histos);
+
+/// fill the appropriate 2D histogram (histos), based on x, y, z, binsx, binsy, and binsz
+void fill_histo(float value1,float value2,float weight,float x,float y, float z,
+                const vector<float>& binsx,const vector<float>& binsy,const vector<float>& binsz,
+                const vector<TH2F****>& histos);
 
 /// fill the appropriate histogram (histos), based on pdgid, x, y, z, binsx, binsy, and binsz
 void fill_histo(int pdgid,float value,float weight,float x,float y,float z,
@@ -123,19 +132,17 @@ int main(int argc,char**argv)
   CommandLine cl;
   if (!cl.parse(argc,argv)) return 0;
 
-  string         input             = cl.getValue<string> ("input");
+  TString        input             = cl.getValue<TString>("input");
   vector<float>  binspt            = cl.getVector<float> ("binspt",                     "");
   vector<float>  binseta           = cl.getVector<float> ("binseta",                    "");
   vector<float>  binsphi           = cl.getVector<float> ("binsphi",                    "");
   vector<float>  binsy             = cl.getVector<float> ("binsy",                      "");
   vector<float>  binsmu            = cl.getVector<float> ("binsmu",                     "");
   vector<float>  binsrho           = cl.getVector<float> ("binsrho",                    "");
-  vector<float>  binspudensity     = cl.getVector<float> ("binspudensity",              "");
   string         treename          = cl.getValue<string> ("treename",                  "t");
   string         output            = cl.getValue<string> ("output",             "jra.root");
   bool           useweight         = cl.getValue<bool>   ("useweight",               false);
   float          xsection          = cl.getValue<float>  ("xsection",                  0.0);
-  float          luminosity        = cl.getValue<float>  ("luminosity",                1.0);
   int            nrefmax           = cl.getValue<int>    ("nrefmax",                     0);
   int            nbinspt           = cl.getValue<int>    ("nbinspt",                    50);
   int            nbinseta          = cl.getValue<int>    ("nbinseta",                   25);
@@ -151,7 +158,6 @@ int main(int argc,char**argv)
   float          etaforwardmax     = cl.getValue<float>  ("etaforwardmax",            +5.0);
   bool           dobalance         = cl.getValue<bool>   ("dobalance",               false);
   bool           doflavor          = cl.getValue<bool>   ("doflavor",                false);
-  vector<string> flavors           = cl.getVector<string>("flavors",                    "");
   TString        flavorDefinition  = cl.getValue<TString>("flavorDefinition",       "phys");
   bool           noabsflavors      = cl.getValue<bool>   ("noabsflavors",            false);
   float          drmax             = cl.getValue<float>  ("drmax",                     0.3);
@@ -160,9 +166,8 @@ int main(int argc,char**argv)
   bool           dorefpt           = cl.getValue<bool>   ("dorefpt",                  true);
   bool           domu              = cl.getValue<bool>   ("domu",                    false);
   bool           dorho             = cl.getValue<bool>   ("dorho",                   false);
-  bool           dopudensity       = cl.getValue<bool>   ("dopudensity",             false);
-  bool           NpuNotMu          = cl.getValue<bool>   ("NpuNotMu",                false);
-  bool           GRhoPU            = cl.getValue<bool>   ("GRhoPU",                  false);
+  int            nbinsmult         = cl.getValue<int>    ("nbinsmult",                 100);
+  int            nbinsfraction     = cl.getValue<int>    ("nbinsfraction",             100);
   int            nbinsrelrsp       = cl.getValue<int>    ("nbinsrelrsp",                50);
   float          relrspmin         = cl.getValue<float>  ("relrspmin",                 0.0);
   float          relrspmax         = cl.getValue<float>  ("relrspmax",                 2.0);
@@ -170,43 +175,41 @@ int main(int argc,char**argv)
   float          absrspmin         = cl.getValue<float>  ("absrspmin",              -250.0);
   float          absrspmax         = cl.getValue<float>  ("absrspmax",               100.0);
   int            nbinsetarsp       = cl.getValue<int>    ("nbinsetarsp",               100);
-  float          etarspmin         = cl.getValue<float>  ("etarspmin",                -1.0);
-  float          etarspmax         = cl.getValue<float>  ("etarspmax",                 1.0);
+  float          etarspmin         = cl.getValue<float>  ("etarspmin",                -0.5);
+  float          etarspmax         = cl.getValue<float>  ("etarspmax",                 0.5);
   int            nbinsphirsp       = cl.getValue<int>    ("nbinsphirsp",               100);
-  float          phirspmin         = cl.getValue<float>  ("phirspmin",                -1.0);
-  float          phirspmax         = cl.getValue<float>  ("phirspmax",                 1.0);
+  float          phirspmin         = cl.getValue<float>  ("phirspmin",                -0.5);
+  float          phirspmax         = cl.getValue<float>  ("phirspmax",                 0.5);
   float          jtptmin           = cl.getValue<float>  ("jtptmin",                   1.0);
-  float          pthatmin          = cl.getValue<float>  ("pthatmin",                  0.0);
-  float          pthatmax          = cl.getValue<float>  ("pthatmax",                 -1.0);
   vector<string> algs              = cl.getVector<string>("algs",                       "");
   vector<string> presel            = cl.getVector<string>("presel",                     "");
   int            itlow             = cl.getValue<int>    ("itlow",                       0);
-  int            ithigh            = cl.getValue<int>    ("ithigh",                 100000);
+  int            ithigh            = cl.getValue<int>    ("ithigh",                   1000);
   int            earlyootlow       = cl.getValue<int>    ("earlyootlow",                 0);
-  int            earlyoothigh      = cl.getValue<int>    ("earlyoothigh",           100000);
+  int            earlyoothigh      = cl.getValue<int>    ("earlyoothigh",             1000);
   int            lateootlow        = cl.getValue<int>    ("lateootlow",                  0);
-  int            lateoothigh       = cl.getValue<int>    ("lateoothigh",            100000);
+  int            lateoothigh       = cl.getValue<int>    ("lateoothigh",              1000);
   int            totalootlow       = cl.getValue<int>    ("totalootlow",                 0);
-  int            totaloothigh      = cl.getValue<int>    ("totaloothigh",           100000);
+  int            totaloothigh      = cl.getValue<int>    ("totaloothigh",             1000);
   TString        weightfile        = cl.getValue<TString>("weightfile",                 "");
   TString        MCPUReWeighting   = cl.getValue<TString>("MCPUReWeighting",            "");
   TString        MCPUHistoName     = cl.getValue<TString>("MCPUHistoName",        "pileup");
   TString        DataPUReWeighting = cl.getValue<TString>("DataPUReWeighting",          "");
   TString        DataPUHistoName   = cl.getValue<TString>("DataPUHistoName","pileup_jt400");
   bool           verbose           = cl.getValue<bool>   ("verbose",                 false);
+  bool           dorelrsp          = cl.getValue<bool>   ("dorelrsp",                 true);
+  bool           doIDrelrsp        = cl.getValue<bool>   ("doIDrelrsp",              false);
+  bool           doabsrsp          = cl.getValue<bool>   ("doabsrsp",                false);
+  bool           doetarsp          = cl.getValue<bool>   ("doetarsp",                false);
+  bool           dophirsp          = cl.getValue<bool>   ("dophirsp",                false);
 
   if (!cl.check()) return 0;
   cl.print();
 
   gEnv->SetValue("TFile.AsyncPrefetching", 1);
 
-  bool dorelrsp=(nbinsrelrsp>0);
-  if(domu)        domu        = binsmu.size()>=2;
-  if(dorho)       dorho       = binsrho.size()>=2;
-  if(dopudensity) dopudensity = binspudensity.size()>=2;
-  bool doabsrsp=false; //(nbinsabsrsp>0);
-  bool doetarsp=false; //(nbinsetarsp>0);
-  bool dophirsp=false; //(nbinsphirsp>0);
+  if(domu)  domu   = binsmu.size()>=2;
+  if(dorho) dorho  = binsrho.size()>=2;
 
   TH1::SetDefaultSumw2(true);
 
@@ -232,15 +235,14 @@ int main(int argc,char**argv)
   }
   
   // define flavors
-  if      (doflavor && flavors.size()==0)     {flavors = get_flavors(noabsflavors);}
-  else if (doflavor && !contains(flavors,"")) {flavors.insert(flavors.begin(),"");}
-  else if (!doflavor && flavors.size()>0)     {flavors.clear(); flavors.push_back("");}
-  else                                        {flavors.push_back("");}
+  vector<string> flavor;
+  if(doflavor) flavor = get_flavors(noabsflavors);
+  else flavor.push_back("");
 
   //
   // open input/output files and loop over input directories/trees (=algorithms!)
   //
-  TFile* ifile = TFile::Open(input.c_str(),"READ");
+  TFile* ifile = TFile::Open(input,"READ");
   if (!ifile->IsOpen()) {  cout<<"Can't open "<<input<<endl; return 0; }
   
   TFile* ofile = new TFile(output.c_str(),"RECREATE");
@@ -260,13 +262,13 @@ int main(int argc,char**argv)
     TTree* tree = (TTree*)idir->Get("t");
     if (0==tree) { cout<<"no tree found."<<endl; continue; }
   
-
     float drmax_alg = drmax;
     if (alg2drmax.find(alg)!=alg2drmax.end()) drmax_alg=alg2drmax[alg];
     
     //
     // get weights
     //
+    TH1D* weightHist = 0;
     map<TString,TH2D*> weightMap;
     if(!weightfile.IsNull())
     {
@@ -275,23 +277,19 @@ int main(int argc,char**argv)
        gDirectory->cd(alg.c_str());
        if(!doflavor)
        {
-          cout << "Getting the weight histogram all_ ... " << flush; 
-          weightMap["all_"] = (TH2D*)gDirectory->Get("all_");
-          if(weightMap["all_"]==0) { cout<<"FAIL!"<<endl<<"Histogram of weights named \"all_\" was not in file "<<weightfile<<endl; return 0; } 
-          cout << "DONE" << endl;
+          weightHist = (TH1D*)wfile->Get("we");
+          if (weightHist==0) { cout<<"weightHist named \"we\" was not in file "<<weightfile<<endl; return 0; } 
+          weightHist->Scale(1./weightHist->Integral(1,weightHist->FindBin(3)));
        }
        else
        {
-          for(unsigned int f=0; f<flavors.size(); f++)
+          for(unsigned int f=0; f<flavor.size(); f++)
           {
-             cout << "Getting the weight histogram " << flavors[f] << " ... " << flush; 
-             if(flavors[f]!="") {
-                weightMap[flavors[f]] = (TH2D*)gDirectory->Get(flavors[f].c_str());
-              }
+             if(flavor[f]!="")
+                weightMap[flavor[f]] = (TH2D*)gDirectory->Get(flavor[f].c_str());
              else
-                weightMap[flavors[f]] = (TH2D*)gDirectory->Get("all_");
-             if(weightMap[flavors[f]]==0) { cout<<"FAIL!"<<endl<<"Histogram of weights named \""<< flavors[f]<< "\" was not in file "<<weightfile<<endl; return 0; } 
-             cout << "DONE" << endl;
+                weightMap[flavor[f]] = (TH2D*)gDirectory->Get("all_");
+             if(weightMap[flavor[f]]==0) { cout<<"weightHist named \""<< flavor[f]<< "\" was not in file "<<weightfile<<endl; return 0; } 
           }
        }
     }
@@ -305,12 +303,16 @@ int main(int argc,char**argv)
     //
     float weight(1.0);
     float flavorWeight(1.0);
-    JRAEvent* JRAEvt = new JRAEvent(tree,85);
+    bitset<8> bits( 81 );
+    JRAEvent* JRAEvt = new JRAEvent(tree,bits);
     tree->SetBranchStatus("*",0);
     vector<string> branch_names = {"nref","weight","rho","refpdgid","refpt",
                                    "refeta","refphi","jtpt","jteta","jtphi",
-                                   "jty","refdxjt","bxns","npus","tnpus",
-                                   "pthat","pudensity","gpudensity"};
+                                   "jty","refdxjt","bxns","npus","tnpus"};
+    if (doIDrelrsp) {
+      vector<string> id_branches = {"jtnMult","jtchMult","jtnhf","jtnef","jthfhf","jthfef"};
+      branch_names.insert( branch_names.end(), id_branches.begin(), id_branches.end() );
+    }
     for(auto n : branch_names) {
         if(n=="refpdgid") {
             if(!doflavor) continue;
@@ -323,9 +325,7 @@ int main(int argc,char**argv)
             }
         }
         if(n=="weight") {
-            if (xsection>0.0) { 
-                useweight = false;
-            }
+            if (xsection>0.0) { weight = xsection/tree->GetEntries(); useweight = false; }
             if (useweight) {
                 if (0==tree->GetBranch(n.c_str()))
                     cout<<"branch 'weight' not found, events will NOT be weighted!"<<endl;
@@ -358,6 +358,7 @@ int main(int argc,char**argv)
         tree->SetBranchStatus(n.c_str(),1);
     }
     
+    
     //
     // create directory in output file and book histograms
     //
@@ -383,21 +384,15 @@ int main(int argc,char**argv)
     vector<TH1F***>  jetPtVsJetEtaJetPt;
     vector<TH1F****> jetPtVsJetEtaMuJetPt;
     vector<TH1F****> jetPtVsJetEtaRhoJetPt;
-    vector<TH1F****> jetPtVsJetEtaRhoPUJetPt;
     vector<TH1F***>  refPtVsJetEtaRefPt;
     vector<TH1F****> refPtVsJetEtaMuRefPt;
     vector<TH1F****> refPtVsJetEtaRhoRefPt;
-    vector<TH1F****> refPtVsJetEtaRhoPURefPt;
     vector<TH1F***>  jetPtVsJetEtaRefPt;
     vector<TH1F****> jetPtVsJetEtaMuRefPt;
     vector<TH1F****> jetPtVsJetEtaRhoRefPt;
-    vector<TH1F****> jetPtVsJetEtaRhoPURefPt;
     vector<TH1F***>  jetPtVsJetYJetPt;
     vector<TH1F***>  refPtVsJetYRefPt;
     vector<TH1F***>  jetPtVsJetYRefPt;
-
-    vector<TH1F**>   pThatVsRefPt;
-    vector<TH1F***>  pThatVsJetEtaRefPt;
     
     vector<TH1F**>   relRspVsJetPt;
     vector<TH1F**>   relRspVsRefPt;
@@ -411,14 +406,20 @@ int main(int argc,char**argv)
     vector<TH1F***>  relRspVsJetEtaJetPt;
     vector<TH1F****> relRspVsJetEtaMuJetPt;
     vector<TH1F****> relRspVsJetEtaRhoJetPt;
-    vector<TH1F****> relRspVsJetEtaRhoPUJetPt;
     vector<TH1F***>  relRspVsJetEtaRefPt;
     vector<TH1F****> relRspVsJetEtaMuRefPt;
     vector<TH1F****> relRspVsJetEtaRhoRefPt;
-    vector<TH1F****> relRspVsJetEtaRhoPURefPt;
     vector<TH1F***>  relRspVsJetYJetPt;
     vector<TH1F***>  relRspVsJetYRefPt;
-    
+
+    vector<TH2F***>  relRsp_nMultVsJetEtaRefPt;
+    vector<TH2F***>  relRsp_chMultVsJetEtaRefPt;
+    vector<TH2F****> relRsp_nMultVsJetEtaMuRefPt;
+    vector<TH2F***>  relRsp_nhfVsJetEtaRefPt;
+    vector<TH2F***>  relRsp_nefVsJetEtaRefPt;
+    vector<TH2F***>  relRsp_hfhfVsJetEtaRefPt;
+    vector<TH2F***>  relRsp_hfefVsJetEtaRefPt;
+
     vector<TH1F**>   absRspVsJetPt;
     vector<TH1F**>   absRspVsRefPt;
     vector<TH1F**>   absRspVsRefPtBarrel;
@@ -435,15 +436,19 @@ int main(int argc,char**argv)
     vector<TH1F**>   etaRspVsJetEta;
     vector<TH1F**>   etaRspVsJetPhi;
     vector<TH1F***>  etaRspVsJetEtaJetPt;
+    vector<TH1F****> etaRspVsJetEtaMuJetPt;
     vector<TH1F***>  etaRspVsJetEtaRefPt;
+    vector<TH1F****> etaRspVsJetEtaMuRefPt;
 
     vector<TH1F**>   phiRspVsJetPt;
     vector<TH1F**>   phiRspVsRefPt;
     vector<TH1F**>   phiRspVsJetEta;
     vector<TH1F**>   phiRspVsJetPhi;
     vector<TH1F***>  phiRspVsJetEtaJetPt;
+    vector<TH1F****> phiRspVsJetEtaMuJetPt;
     vector<TH1F***>  phiRspVsJetEtaRefPt;
-
+    vector<TH1F****> phiRspVsJetEtaMuRefPt;
+    
     // book pT histograms
     if (binspt.size()>=2) {
       for (unsigned int ipt=0;ipt<binspt.size()-1;++ipt) {
@@ -451,64 +456,53 @@ int main(int argc,char**argv)
         string hname; float ptmin=binspt[ipt]; float ptmax=binspt[ipt+1];
 	
         if (dojetpt) {
-          jetPtVsJetPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"JetPt_"+get_suffix("JetPt",ipt,binspt);
+          jetPtVsJetPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"JetPt_"+get_suffix("JetPt",ipt,binspt);
             jetPtVsJetPt.back()[iflv]=new TH1F(hname.c_str(),";p_{T} [GeV]",
                                                nbinspt,ptmin,ptmax);
           }
         }
 	
         if (dorefpt) {
-          refPtVsRefPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RefPt_"+get_suffix("RefPt",ipt,binspt);
+          refPtVsRefPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RefPt_"+get_suffix("RefPt",ipt,binspt);
             refPtVsRefPt.back()[iflv]=new TH1F(hname.c_str(),";p_{T}^{ref} [GeV]",
                                                nbinspt,ptmin,ptmax);
           }
         }
 	
         if (dorefpt) {
-          jetPtVsRefPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"JetPt_"+get_suffix("RefPt",ipt,binspt);
+          jetPtVsRefPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"JetPt_"+get_suffix("RefPt",ipt,binspt);
             jetPtVsRefPt.back()[iflv]=new TH1F(hname.c_str(),";p_{T} [GeV]",
                                                3*nbinspt,
                                                0,
                                                3.0*ptmax);
           }
         }
-
-        if (dorefpt) {
-          pThatVsRefPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"pThat_"+get_suffix("RefPt",ipt,binspt);
-            pThatVsRefPt.back()[iflv]=new TH1F(hname.c_str(),";#hat{p}_{T} [GeV]",
-                                               (int)binspt[binspt.size()-1]/10.0,
-                                               0,
-                                               binspt[binspt.size()-1]);
-          }
-        }
 	
         if (dorefpt) {
-          refPtVsRefPtBarrel.push_back(new TH1F*[flavors.size()]);
-          refPtVsRefPtInnerEndcap.push_back(new TH1F*[flavors.size()]);
-          refPtVsRefPtOuterEndcap.push_back(new TH1F*[flavors.size()]);
-          refPtVsRefPtForward.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RefPt_Barrel_"+get_suffix("RefPt",ipt,binspt);
+          refPtVsRefPtBarrel.push_back(new TH1F*[flavor.size()]);
+          refPtVsRefPtInnerEndcap.push_back(new TH1F*[flavor.size()]);
+          refPtVsRefPtOuterEndcap.push_back(new TH1F*[flavor.size()]);
+          refPtVsRefPtForward.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RefPt_Barrel_"+get_suffix("RefPt",ipt,binspt);
             refPtVsRefPtBarrel.back()[iflv]=new TH1F(hname.c_str(),
                                                      ";p_{T}^{ref} [GeV]",
                                                      nbinspt,ptmin,ptmax);
-            hname=flavors[iflv]+"RefPt_InnerEndcap_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"RefPt_InnerEndcap_"+get_suffix("RefPt",ipt,binspt);
             refPtVsRefPtInnerEndcap.back()[iflv]=new TH1F(hname.c_str(),
                                                      ";p_{T}^{ref} [GeV]",
                                                      nbinspt,ptmin,ptmax);
-            hname=flavors[iflv]+"RefPt_OuterEndcap_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"RefPt_OuterEndcap_"+get_suffix("RefPt",ipt,binspt);
             refPtVsRefPtOuterEndcap.back()[iflv]=new TH1F(hname.c_str(),
                                                      ";p_{T}^{ref} [GeV]",
                                                      nbinspt,ptmin,ptmax);
-            hname=flavors[iflv]+"RefPt_Forward_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"RefPt_Forward_"+get_suffix("RefPt",ipt,binspt);
             refPtVsRefPtForward.back()[iflv]=new TH1F(hname.c_str(),
                                                       ";p_{T}^{ref} [GeV]",
                                                       nbinspt,ptmin,ptmax);
@@ -516,30 +510,30 @@ int main(int argc,char**argv)
         }
 	
         if (dorefpt) {
-          jetPtVsRefPtBarrel.push_back(new TH1F*[flavors.size()]);
-          jetPtVsRefPtInnerEndcap.push_back(new TH1F*[flavors.size()]);
-          jetPtVsRefPtOuterEndcap.push_back(new TH1F*[flavors.size()]);
-          jetPtVsRefPtForward.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"JetPt_Barrel_"+get_suffix("RefPt",ipt,binspt);
+          jetPtVsRefPtBarrel.push_back(new TH1F*[flavor.size()]);
+          jetPtVsRefPtInnerEndcap.push_back(new TH1F*[flavor.size()]);
+          jetPtVsRefPtOuterEndcap.push_back(new TH1F*[flavor.size()]);
+          jetPtVsRefPtForward.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"JetPt_Barrel_"+get_suffix("RefPt",ipt,binspt);
             jetPtVsRefPtBarrel.back()[iflv]=new TH1F(hname.c_str(),
                                                      ";p_{T} [GeV]",
                                                      3*nbinspt,
                                                      0,
                                                      3.0*ptmax);
-            hname=flavors[iflv]+"JetPt_InnerEndcap_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"JetPt_InnerEndcap_"+get_suffix("RefPt",ipt,binspt);
             jetPtVsRefPtInnerEndcap.back()[iflv]=new TH1F(hname.c_str(),
                                                      ";p_{T} [GeV]",
                                                      3*nbinspt,
                                                      0,
                                                      3.0*ptmax);
-            hname=flavors[iflv]+"JetPt_OuterEndcap_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"JetPt_OuterEndcap_"+get_suffix("RefPt",ipt,binspt);
             jetPtVsRefPtOuterEndcap.back()[iflv]=new TH1F(hname.c_str(),
                                                      ";p_{T} [GeV]",
                                                      3*nbinspt,
                                                      0,
                                                      3.0*ptmax);
-            hname=flavors[iflv]+"JetPt_Forward_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"JetPt_Forward_"+get_suffix("RefPt",ipt,binspt);
             jetPtVsRefPtForward.back()[iflv]=new TH1F(hname.c_str(),
                                                       ";p_{T} [GeV]",
                                                       3*nbinspt,
@@ -549,45 +543,45 @@ int main(int argc,char**argv)
         }
 	
         if (dorelrsp&&dojetpt) {
-          relRspVsJetPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RelRsp_"+get_suffix("JetPt",ipt,binspt);
+          relRspVsJetPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RelRsp_"+get_suffix("JetPt",ipt,binspt);
             relRspVsJetPt.back()[iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                                 nbinsrelrsp,relrspmin,relrspmax);
           }
         }
 
         if (dorelrsp&&dorefpt) {
-          relRspVsRefPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RelRsp_"+get_suffix("RefPt",ipt,binspt);
+          relRspVsRefPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RelRsp_"+get_suffix("RefPt",ipt,binspt);
             relRspVsRefPt.back()[iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                                 nbinsrelrsp,relrspmin,relrspmax);
           }
         }
 
         if (dorelrsp&&dorefpt) {
-          relRspVsRefPtBarrel.push_back(new TH1F*[flavors.size()]);
-          relRspVsRefPtInnerEndcap.push_back(new TH1F*[flavors.size()]);
-          relRspVsRefPtOuterEndcap.push_back(new TH1F*[flavors.size()]);
-          relRspVsRefPtForward.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RelRsp_Barrel_"+get_suffix("RefPt",ipt,binspt);
+          relRspVsRefPtBarrel.push_back(new TH1F*[flavor.size()]);
+          relRspVsRefPtInnerEndcap.push_back(new TH1F*[flavor.size()]);
+          relRspVsRefPtOuterEndcap.push_back(new TH1F*[flavor.size()]);
+          relRspVsRefPtForward.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RelRsp_Barrel_"+get_suffix("RefPt",ipt,binspt);
             relRspVsRefPtBarrel.back()[iflv]=new TH1F(hname.c_str(),
                                                       ";p_{T}/p_{T}^{ref}",
                                                       nbinsrelrsp,
                                                       relrspmin,relrspmax);
-            hname=flavors[iflv]+"RelRsp_InnerEndcap_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"RelRsp_InnerEndcap_"+get_suffix("RefPt",ipt,binspt);
             relRspVsRefPtInnerEndcap.back()[iflv]=new TH1F(hname.c_str(),
                                                       ";p_{T}/p_{T}^{ref}",
                                                       nbinsrelrsp,
                                                       relrspmin,relrspmax);
-            hname=flavors[iflv]+"RelRsp_OuterEndcap_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"RelRsp_OuterEndcap_"+get_suffix("RefPt",ipt,binspt);
             relRspVsRefPtOuterEndcap.back()[iflv]=new TH1F(hname.c_str(),
                                                       ";p_{T}/p_{T}^{ref}",
                                                       nbinsrelrsp,
                                                       relrspmin,relrspmax);
-            hname=flavors[iflv]+"RelRsp_Forward_"+get_suffix("RefPt",ipt,binspt);
+            hname=flavor[iflv]+"RelRsp_Forward_"+get_suffix("RefPt",ipt,binspt);
             relRspVsRefPtForward.back()[iflv]=new TH1F(hname.c_str(),
                                                        ";p_{T}/p_{T}^{ref}",
                                                        nbinsrelrsp,
@@ -596,9 +590,9 @@ int main(int argc,char**argv)
         }
 	
         if (doabsrsp&&dojetpt) {
-          absRspVsJetPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"AbsRsp_"+get_suffix("JetPt",ipt,binspt);
+          absRspVsJetPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"AbsRsp_"+get_suffix("JetPt",ipt,binspt);
             absRspVsJetPt.back()[iflv]=new TH1F(hname.c_str(),
                                                 ";p_{T}-p_{T}^{ref} [GeV]",
                                                 nbinsabsrsp,absrspmin,absrspmax);
@@ -606,9 +600,9 @@ int main(int argc,char**argv)
         }
 	
         if (doabsrsp&&dorefpt) {
-          absRspVsRefPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"AbsRsp_"+get_suffix("RefPt",ipt,binspt);
+          absRspVsRefPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"AbsRsp_"+get_suffix("RefPt",ipt,binspt);
             absRspVsRefPt.back()[iflv]=new TH1F(hname.c_str(),
                                                 ";p_{T}-p_{T}^{ref} [GeV]",
                                                 nbinsabsrsp,absrspmin,absrspmax);
@@ -616,9 +610,9 @@ int main(int argc,char**argv)
         }
 	
         if (doabsrsp&&dorefpt) {
-          absRspVsRefPtBarrel.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"AbsRsp_Barrel_"+get_suffix("RefPt",ipt,binspt);
+          absRspVsRefPtBarrel.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"AbsRsp_Barrel_"+get_suffix("RefPt",ipt,binspt);
             absRspVsRefPtBarrel.back()[iflv]=new TH1F(hname.c_str(),
                                                       ";p_{T}-p_{T}^{ref} [GeV]",
                                                       nbinsabsrsp,
@@ -627,9 +621,9 @@ int main(int argc,char**argv)
         }
 
         if (doetarsp&&dojetpt) {
-          etaRspVsJetPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"EtaRsp_"+get_suffix("JetPt",ipt,binspt);
+          etaRspVsJetPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"EtaRsp_"+get_suffix("JetPt",ipt,binspt);
             etaRspVsJetPt.back()[iflv]=new TH1F(hname.c_str(),
                                                 ";|#eta|-|#eta^{ref}|",
                                                 nbinsetarsp,etarspmin,etarspmax);
@@ -637,9 +631,9 @@ int main(int argc,char**argv)
         }
 	
         if (doetarsp&&dorefpt) {
-          etaRspVsRefPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"EtaRsp_"+get_suffix("RefPt",ipt,binspt);
+          etaRspVsRefPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"EtaRsp_"+get_suffix("RefPt",ipt,binspt);
             etaRspVsRefPt.back()[iflv]=new TH1F(hname.c_str(),
                                                 ";|#eta|-|#eta^{ref}|",
                                                 nbinsetarsp,etarspmin,etarspmax);
@@ -647,9 +641,9 @@ int main(int argc,char**argv)
         }
 	
         if (dophirsp&&dojetpt) {
-          phiRspVsJetPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"PhiRsp_"+get_suffix("JetPt",ipt,binspt);
+          phiRspVsJetPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"PhiRsp_"+get_suffix("JetPt",ipt,binspt);
             phiRspVsJetPt.back()[iflv]=new TH1F(hname.c_str(),
                                                 ";#phi-#phi^{ref}",
                                                 nbinsphirsp,phirspmin,phirspmax);
@@ -657,9 +651,9 @@ int main(int argc,char**argv)
         }
 	
         if (dophirsp&&dorefpt) {
-          phiRspVsRefPt.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"PhiRsp_"+get_suffix("RefPt",ipt,binspt);
+          phiRspVsRefPt.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"PhiRsp_"+get_suffix("RefPt",ipt,binspt);
             phiRspVsRefPt.back()[iflv]=new TH1F(hname.c_str(),
                                                 ";#phi-#phi^{ref}",
                                                 nbinsphirsp,phirspmin,phirspmax);
@@ -677,27 +671,27 @@ int main(int argc,char**argv)
         string hname; float etamin=binseta[ieta]; float etamax=binseta[ieta+1];
 	
         if (1) {
-          jetEtaVsJetEta.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"JetEta_"+get_suffix("JetEta",ieta,binseta);
+          jetEtaVsJetEta.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"JetEta_"+get_suffix("JetEta",ieta,binseta);
             jetEtaVsJetEta.back()[iflv]=new TH1F(hname.c_str(),";#eta",
                                                  nbinseta,etamin,etamax);
           }
         }
 	
         if (dorelrsp) {
-          relRspVsJetEta.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RelRsp_"+get_suffix("JetEta",ieta,binseta);
+          relRspVsJetEta.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RelRsp_"+get_suffix("JetEta",ieta,binseta);
             relRspVsJetEta.back()[iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                                  nbinsrelrsp,relrspmin,relrspmax);
           }
         }
 	
         if (doabsrsp) {
-          absRspVsJetEta.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"AbsRsp_"+get_suffix("JetEta",ieta,binseta);
+          absRspVsJetEta.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"AbsRsp_"+get_suffix("JetEta",ieta,binseta);
             absRspVsJetEta.back()[iflv]=new TH1F(hname.c_str(),
                                                  ";p_{T}-p_{T}^{ref} [GeV]",
                                                  nbinsabsrsp,absrspmin,absrspmax);
@@ -705,9 +699,9 @@ int main(int argc,char**argv)
         }
 	
         if (doetarsp) {
-          etaRspVsJetEta.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"EtaRsp_"+get_suffix("JetEta",ieta,binseta);
+          etaRspVsJetEta.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"EtaRsp_"+get_suffix("JetEta",ieta,binseta);
             etaRspVsJetEta.back()[iflv]=new TH1F(hname.c_str(),
                                                  ";|#eta|-|#eta^{ref}|",
                                                  nbinsetarsp,etarspmin,etarspmax);
@@ -715,9 +709,9 @@ int main(int argc,char**argv)
         }
 	
         if (dophirsp) {
-          phiRspVsJetEta.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"PhiRsp_"+get_suffix("JetEta",ieta,binseta);
+          phiRspVsJetEta.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"PhiRsp_"+get_suffix("JetEta",ieta,binseta);
             phiRspVsJetEta.back()[iflv]=new TH1F(hname.c_str(),
                                                  ";#phi-#phi^{ref}",
                                                  nbinsphirsp,phirspmin,phirspmax);
@@ -734,27 +728,27 @@ int main(int argc,char**argv)
         string hname; float phimin=binsphi[iphi]; float phimax=binsphi[iphi+1];
 
         if (1) {
-          jetPhiVsJetPhi.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"JetPhi_"+get_suffix("JetPhi",iphi,binsphi);
+          jetPhiVsJetPhi.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"JetPhi_"+get_suffix("JetPhi",iphi,binsphi);
             jetPhiVsJetPhi.back()[iflv]=new TH1F(hname.c_str(),";#phi",
                                                  nbinsphi,phimin,phimax);
           }
         }
 	
         if (dorelrsp) {
-          relRspVsJetPhi.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RelRsp_"+get_suffix("JetPhi",iphi,binsphi);
+          relRspVsJetPhi.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RelRsp_"+get_suffix("JetPhi",iphi,binsphi);
             relRspVsJetPhi.back()[iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                                  nbinsrelrsp,relrspmin,relrspmax);
           }
         }
 	
         if (doabsrsp) {
-          absRspVsJetPhi.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"AbsRsp_"+get_suffix("JetPhi",iphi,binsphi);
+          absRspVsJetPhi.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"AbsRsp_"+get_suffix("JetPhi",iphi,binsphi);
             absRspVsJetPhi.back()[iflv]=new TH1F(hname.c_str(),
                                                  ";p_{T}-p_{T}^{ref} [GeV]",
                                                  nbinsabsrsp,absrspmin,absrspmax);
@@ -762,9 +756,9 @@ int main(int argc,char**argv)
         }
 	
         if (doetarsp) {
-          etaRspVsJetPhi.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"EtaRsp_"+get_suffix("JetPhi",iphi,binsphi);
+          etaRspVsJetPhi.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"EtaRsp_"+get_suffix("JetPhi",iphi,binsphi);
             etaRspVsJetPhi.back()[iflv]=new TH1F(hname.c_str(),
                                                  ";|#eta|-|#eta^{ref}|",
                                                  nbinsetarsp,etarspmin,etarspmax);
@@ -772,9 +766,9 @@ int main(int argc,char**argv)
         }
 	
         if (dophirsp) {
-          phiRspVsJetPhi.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"PhiRsp_"+get_suffix("JetPhi",iphi,binsphi);
+          phiRspVsJetPhi.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"PhiRsp_"+get_suffix("JetPhi",iphi,binsphi);
             phiRspVsJetPhi.back()[iflv]=new TH1F(hname.c_str(),
                                                  ";#phi-#phi^{ref}",
                                                  nbinsphirsp,phirspmin,phirspmax);
@@ -790,26 +784,26 @@ int main(int argc,char**argv)
         string hname; float ymin=binsy[iy]; float ymax=binsy[iy+1];
 	
         if (1) {
-          jetYVsJetY.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"JetY_"+get_suffix("JetY",iy,binsy);
+          jetYVsJetY.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"JetY_"+get_suffix("JetY",iy,binsy);
             jetYVsJetY.back()[iflv]=new TH1F(hname.c_str(),";#y",nbinsy,ymin,ymax);
           }
         }
 	
         if (dorelrsp) {
-          relRspVsJetY.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"RelRsp_"+get_suffix("JetY",iy,binsy);
+          relRspVsJetY.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"RelRsp_"+get_suffix("JetY",iy,binsy);
             relRspVsJetY.back()[iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                                nbinsrelrsp,relrspmin,relrspmax);
           }
         }
 	
         if (doabsrsp) {
-          absRspVsJetY.push_back(new TH1F*[flavors.size()]);
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-            hname=flavors[iflv]+"AbsRsp_"+get_suffix("JetY",iy,binsy);
+          absRspVsJetY.push_back(new TH1F*[flavor.size()]);
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
+            hname=flavor[iflv]+"AbsRsp_"+get_suffix("JetY",iy,binsy);
             absRspVsJetY.back()[iflv]=new TH1F(hname.c_str(),
                                                ";p_{T}-p_{T}^{ref} [GeV]",
                                                nbinsabsrsp,absrspmin,absrspmax);
@@ -827,35 +821,42 @@ int main(int argc,char**argv)
         TH1F***  jetPtJetPt(0);
         TH1F**** jetPtMuJetPt(0);
         TH1F**** jetPtRhoJetPt(0);
-        TH1F**** jetPtRhoPUJetPt(0);
         TH1F***  refPtRefPt(0);
         TH1F**** refPtMuRefPt(0);
         TH1F**** refPtRhoRefPt(0);
-        TH1F**** refPtRhoPURefPt(0);
         TH1F***  jetPtRefPt(0);
         TH1F**** jetPtMuRefPt(0);
         TH1F**** jetPtRhoRefPt(0);
-        TH1F**** jetPtRhoPURefPt(0);
-        TH1F***  pThatRefPt(0);
         TH1F***  relRspJetPt(0);
         TH1F**** relRspMuJetPt(0);
         TH1F**** relRspRhoJetPt(0);
-        TH1F**** relRspRhoPUJetPt(0);
         TH1F***  relRspRefPt(0);
+
+        TH2F***  relRsp_nMultRefPt(0);
+        TH2F***  relRsp_chMultRefPt(0);
+        TH2F**** relRsp_nMultMuRefPt(0);
+        TH2F***  relRsp_nhfRefPt(0);
+        TH2F***  relRsp_nefRefPt(0);
+        TH2F***  relRsp_hfhfRefPt(0);
+        TH2F***  relRsp_hfefRefPt(0);
+
         TH1F**** relRspMuRefPt(0);
         TH1F**** relRspRhoRefPt(0);
-        TH1F**** relRspRhoPURefPt(0);
         TH1F***  absRspJetPt(0);
         TH1F***  absRspRefPt(0);
         TH1F***  etaRspJetPt(0);
+        TH1F**** etaRspMuJetPt(0);
         TH1F***  etaRspRefPt(0);	
+        TH1F**** etaRspMuRefPt(0);	
         TH1F***  phiRspJetPt(0);
+        TH1F**** phiRspMuJetPt(0);
         TH1F***  phiRspRefPt(0);
+        TH1F**** phiRspMuRefPt(0);
 	
         if (dojetpt) {
           jetPtJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            jetPtJetPt[ipt]=new TH1F*[flavors.size()];
+            jetPtJetPt[ipt]=new TH1F*[flavor.size()];
 
           if (domu) {
             jetPtMuJetPt = new TH1F***[binsmu.size()-1];
@@ -863,7 +864,7 @@ int main(int argc,char**argv)
 
               jetPtMuJetPt[imu] = new TH1F**[binspt.size()];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                jetPtMuJetPt[imu][ipt]=new TH1F*[flavors.size()];
+                jetPtMuJetPt[imu][ipt]=new TH1F*[flavor.size()];
             }
           }
           if (dorho) {
@@ -872,16 +873,7 @@ int main(int argc,char**argv)
 
               jetPtRhoJetPt[irho] = new TH1F**[binspt.size()];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                jetPtRhoJetPt[irho][ipt]=new TH1F*[flavors.size()];
-            }
-          }
-          if (dopudensity) {
-            jetPtRhoPUJetPt = new TH1F***[binspudensity.size()-1];
-            for (unsigned int irhopu=0;irhopu<binspudensity.size()-1;irhopu++){
-
-              jetPtRhoPUJetPt[irhopu] = new TH1F**[binspt.size()];
-              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                jetPtRhoPUJetPt[irhopu][ipt]=new TH1F*[flavors.size()];
+                jetPtRhoJetPt[irho][ipt]=new TH1F*[flavor.size()];
             }
           }
         }
@@ -889,7 +881,7 @@ int main(int argc,char**argv)
         if (dorefpt) {
           refPtRefPt =new TH1F**[binspt.size()];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            refPtRefPt[ipt]=new TH1F*[flavors.size()];
+            refPtRefPt[ipt]=new TH1F*[flavor.size()];
 
           if (domu) {
             refPtMuRefPt = new TH1F***[binsmu.size()-1];
@@ -897,7 +889,7 @@ int main(int argc,char**argv)
 
               refPtMuRefPt[imu] = new TH1F**[binspt.size()];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                refPtMuRefPt[imu][ipt]=new TH1F*[flavors.size()];
+                refPtMuRefPt[imu][ipt]=new TH1F*[flavor.size()];
             }
           }
           if (dorho) {
@@ -906,16 +898,7 @@ int main(int argc,char**argv)
 
               refPtRhoRefPt[irho] = new TH1F**[binspt.size()];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                refPtRhoRefPt[irho][ipt]=new TH1F*[flavors.size()];
-            }
-          }
-          if (dopudensity) {
-            refPtRhoPURefPt = new TH1F***[binspudensity.size()-1];
-            for (unsigned int irhopu=0;irhopu<binspudensity.size()-1;irhopu++){
-
-              refPtRhoPURefPt[irhopu] = new TH1F**[binspt.size()];
-              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                refPtRhoPURefPt[irhopu][ipt]=new TH1F*[flavors.size()];
+                refPtRhoRefPt[irho][ipt]=new TH1F*[flavor.size()];
             }
           }
         }
@@ -923,7 +906,7 @@ int main(int argc,char**argv)
         if (dorefpt) {
           jetPtRefPt =new TH1F**[binspt.size()];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            jetPtRefPt[ipt]=new TH1F*[flavors.size()];
+            jetPtRefPt[ipt]=new TH1F*[flavor.size()];
 
           if (domu) {
             jetPtMuRefPt = new TH1F***[binsmu.size()-1];
@@ -931,7 +914,7 @@ int main(int argc,char**argv)
 
               jetPtMuRefPt[imu] = new TH1F**[binspt.size()];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                jetPtMuRefPt[imu][ipt]=new TH1F*[flavors.size()];
+                jetPtMuRefPt[imu][ipt]=new TH1F*[flavor.size()];
             }
           }
           if (dorho) {
@@ -940,30 +923,15 @@ int main(int argc,char**argv)
 
               jetPtRhoRefPt[irho] = new TH1F**[binspt.size()];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                jetPtRhoRefPt[irho][ipt]=new TH1F*[flavors.size()];
+                jetPtRhoRefPt[irho][ipt]=new TH1F*[flavor.size()];
             }
           }
-          if (dopudensity) {
-            jetPtRhoPURefPt = new TH1F***[binspudensity.size()-1];
-            for (unsigned int irhopu=0;irhopu<binspudensity.size()-1;irhopu++){
-
-              jetPtRhoPURefPt[irhopu] = new TH1F**[binspt.size()];
-              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                jetPtRhoPURefPt[irhopu][ipt]=new TH1F*[flavors.size()];
-            }
-          }
-        }
-
-        if (dorefpt) {
-          pThatRefPt =new TH1F**[binspt.size()];
-          for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            pThatRefPt[ipt]=new TH1F*[flavors.size()];
         }
 	
         if (dorelrsp&&dojetpt) {
           relRspJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            relRspJetPt[ipt]=new TH1F*[flavors.size()];
+            relRspJetPt[ipt]=new TH1F*[flavor.size()];
 
           if (domu) {
             relRspMuJetPt=new TH1F***[binsmu.size()-1];
@@ -971,7 +939,7 @@ int main(int argc,char**argv)
 
               relRspMuJetPt[imu] = new TH1F**[binspt.size()-1];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                relRspMuJetPt[imu][ipt]=new TH1F*[flavors.size()];
+                relRspMuJetPt[imu][ipt]=new TH1F*[flavor.size()];
             }
           }
           if (dorho) {
@@ -980,16 +948,7 @@ int main(int argc,char**argv)
 
               relRspRhoJetPt[irho] = new TH1F**[binspt.size()-1];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                relRspRhoJetPt[irho][ipt]=new TH1F*[flavors.size()];
-            }
-          }
-          if (dopudensity) {
-            relRspRhoPUJetPt=new TH1F***[binspudensity.size()-1];
-            for (unsigned int irhopu=0;irhopu<binspudensity.size()-1;irhopu++){
-
-              relRspRhoPUJetPt[irhopu] = new TH1F**[binspt.size()-1];
-              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                relRspRhoPUJetPt[irhopu][ipt]=new TH1F*[flavors.size()];
+                relRspRhoJetPt[irho][ipt]=new TH1F*[flavor.size()];
             }
           }
         }
@@ -997,7 +956,37 @@ int main(int argc,char**argv)
         if (dorelrsp&&dorefpt) {
           relRspRefPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            relRspRefPt[ipt]=new TH1F*[flavors.size()];
+            relRspRefPt[ipt]=new TH1F*[flavor.size()];
+
+          if (doIDrelrsp) {
+            relRsp_nMultRefPt=new TH2F**[binspt.size()-1];
+            relRsp_chMultRefPt=new TH2F**[binspt.size()-1];
+
+            relRsp_nhfRefPt=new TH2F**[binspt.size()-1];
+            relRsp_nefRefPt=new TH2F**[binspt.size()-1];
+            relRsp_hfhfRefPt=new TH2F**[binspt.size()-1];
+            relRsp_hfefRefPt=new TH2F**[binspt.size()-1];
+
+            for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++) {
+              relRsp_nMultRefPt[ipt]=new TH2F*[flavor.size()];
+              relRsp_chMultRefPt[ipt]=new TH2F*[flavor.size()];
+
+              relRsp_nhfRefPt[ipt]=new TH2F*[flavor.size()];
+              relRsp_nefRefPt[ipt]=new TH2F*[flavor.size()];
+              relRsp_hfhfRefPt[ipt]=new TH2F*[flavor.size()];
+              relRsp_hfefRefPt[ipt]=new TH2F*[flavor.size()];
+            }
+
+            if (domu) {
+              relRsp_nMultMuRefPt=new TH2F***[binsmu.size()-1];
+              for (unsigned int imu=0;imu<binsmu.size()-1;imu++){
+
+                relRsp_nMultMuRefPt[imu] = new TH2F**[binspt.size()-1];
+                for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
+                  relRsp_nMultMuRefPt[imu][ipt]=new TH2F*[flavor.size()];
+              }
+            }
+          }
 
           if (domu) {
             relRspMuRefPt=new TH1F***[binsmu.size()-1];
@@ -1005,7 +994,7 @@ int main(int argc,char**argv)
 
               relRspMuRefPt[imu] = new TH1F**[binspt.size()-1];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                relRspMuRefPt[imu][ipt]=new TH1F*[flavors.size()];
+                relRspMuRefPt[imu][ipt]=new TH1F*[flavor.size()];
             }
           }
           if (dorho) {
@@ -1014,59 +1003,90 @@ int main(int argc,char**argv)
 
               relRspRhoRefPt[irho] = new TH1F**[binspt.size()-1];
               for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                relRspRhoRefPt[irho][ipt]=new TH1F*[flavors.size()];
-            }
-          }
-          if (dopudensity) {
-            relRspRhoPURefPt=new TH1F***[binspudensity.size()-1];
-            for (unsigned int irhopu=0;irhopu<binspudensity.size()-1;irhopu++){
-
-              relRspRhoPURefPt[irhopu] = new TH1F**[binspt.size()-1];
-              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-                relRspRhoPURefPt[irhopu][ipt]=new TH1F*[flavors.size()];
+                relRspRhoRefPt[irho][ipt]=new TH1F*[flavor.size()];
             }
           }
         }
-	
+
         if (doabsrsp&&dojetpt) {
           absRspJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            absRspJetPt[ipt]=new TH1F*[flavors.size()];
+            absRspJetPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (doabsrsp&&dorefpt) {
           absRspRefPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            absRspRefPt[ipt]=new TH1F*[flavors.size()];
+            absRspRefPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (doetarsp&&dojetpt) {
           etaRspJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            etaRspJetPt[ipt]=new TH1F*[flavors.size()];
+            etaRspJetPt[ipt]=new TH1F*[flavor.size()];
+
+          if (domu) {
+            etaRspMuJetPt=new TH1F***[binsmu.size()-1];
+            for (unsigned int imu=0;imu<binsmu.size()-1;imu++){
+
+              etaRspMuJetPt[imu] = new TH1F**[binspt.size()-1];
+              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
+                etaRspMuJetPt[imu][ipt]=new TH1F*[flavor.size()];
+            }
+          }
         }
 	
         if (doetarsp&&dorefpt) {
           etaRspRefPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            etaRspRefPt[ipt]=new TH1F*[flavors.size()];
+            etaRspRefPt[ipt]=new TH1F*[flavor.size()];
+
+          if (domu) {
+            etaRspMuRefPt=new TH1F***[binsmu.size()-1];
+            for (unsigned int imu=0;imu<binsmu.size()-1;imu++){
+
+              etaRspMuRefPt[imu] = new TH1F**[binspt.size()-1];
+              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
+                etaRspMuRefPt[imu][ipt]=new TH1F*[flavor.size()];
+            }
+          }
         }
 	
         if (dophirsp&&dojetpt) {
           phiRspJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            phiRspJetPt[ipt]=new TH1F*[flavors.size()];
+            phiRspJetPt[ipt]=new TH1F*[flavor.size()];
+
+          if (domu) {
+            phiRspMuJetPt=new TH1F***[binsmu.size()-1];
+            for (unsigned int imu=0;imu<binsmu.size()-1;imu++){
+
+              phiRspMuJetPt[imu] = new TH1F**[binspt.size()-1];
+              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
+                phiRspMuJetPt[imu][ipt]=new TH1F*[flavor.size()];
+            }
+          }
         }
 	
         if (dophirsp&&dorefpt) {
           phiRspRefPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            phiRspRefPt[ipt]=new TH1F*[flavors.size()];
+            phiRspRefPt[ipt]=new TH1F*[flavor.size()];
+
+          if (domu) {
+            phiRspMuRefPt=new TH1F***[binsmu.size()-1];
+            for (unsigned int imu=0;imu<binsmu.size()-1;imu++){
+
+              phiRspMuRefPt[imu] = new TH1F**[binspt.size()-1];
+              for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
+                phiRspMuRefPt[imu][ipt]=new TH1F*[flavor.size()];
+            }
+          }
         }
 	
         string jetEtaSuffix=get_suffix("JetEta",ieta,binseta);
 
-//mu loop needs to be OUTSIDE PT loop
+//mu loop needs to be OUTSIDE PT loop to work with JERWriter.h
         if (domu){
 
           for (unsigned int imu=0;imu<binsmu.size()-1;imu++){
@@ -1079,34 +1099,56 @@ int main(int argc,char**argv)
               string jetPtSuffix=get_suffix("JetPt",ipt,binspt);
               string refPtSuffix=get_suffix("RefPt",ipt,binspt);
 
-              for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
+              for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
 
                 if (dorefpt){
-                  hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
+                  hname=flavor[iflv]+"JetPt_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
                   jetPtMuRefPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",3*nbinspt, 0, 3.0*ptmax);
 
-                  hname=flavors[iflv]+"RefPt_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
+                  hname=flavor[iflv]+"RefPt_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
                   refPtMuRefPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}^{ref}",nbinspt,ptmin,ptmax);
 
                   if (dorelrsp){
-                    hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
+                    hname=flavor[iflv]+"RelRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
                     relRspMuRefPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",nbinsrelrsp,relrspmin,relrspmax);
+
+                    if (doIDrelrsp) {
+                      hname=flavor[iflv]+"RelRsp_nMult_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
+                      relRsp_nMultMuRefPt[imu][ipt][iflv]=new TH2F(hname.c_str(),";jet neutral multiplicity;p_{T}/p_{T}^{ref}",
+                                                                   nbinsmult,0,nbinsmult,nbinsrelrsp,relrspmin,relrspmax);
+                    }
+                  }
+                  if (doetarsp){
+                    hname=flavor[iflv]+"EtaRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
+                    etaRspMuRefPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";#Delta#eta",nbinsetarsp,etarspmin,etarspmax);
+                  }
+                  if (dophirsp){
+                    hname=flavor[iflv]+"PhiRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+refPtSuffix;
+                    phiRspMuRefPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";#Delta#phi",nbinsphirsp,phirspmin,phirspmax);
                   }
                 }
                 if (dojetpt){
-                  hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+muSuffix+"_"+jetPtSuffix;
+                  hname=flavor[iflv]+"JetPt_"+jetEtaSuffix+"_"+muSuffix+"_"+jetPtSuffix;
                   jetPtMuJetPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",nbinspt, ptmin, ptmax);
 
                   if (dorelrsp){
-                    hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+jetPtSuffix;
+                    hname=flavor[iflv]+"RelRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+jetPtSuffix;
                     relRspMuJetPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",nbinsrelrsp,relrspmin,relrspmax);
+                  }
+                  if (doetarsp){
+                    hname=flavor[iflv]+"EtaRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+jetPtSuffix;
+                    etaRspMuJetPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";#Delta#eta",nbinsetarsp,etarspmin,etarspmax);
+                  }
+                  if (dophirsp){
+                    hname=flavor[iflv]+"PhiRsp_"+jetEtaSuffix+"_"+muSuffix+"_"+jetPtSuffix;
+                    phiRspMuJetPt[imu][ipt][iflv]=new TH1F(hname.c_str(),";#Delta#phi",nbinsphirsp,phirspmin,phirspmax);
                   }
                 }
               }
             }
           }
         }
-//rho loop needs to be OUTSIDE PT loop
+//rho loop needs to be OUTSIDE PT loop to work with JERWriter.h
         if (dorho){
 
           for (unsigned int irho=0;irho<binsrho.size()-1;irho++){
@@ -1119,26 +1161,26 @@ int main(int argc,char**argv)
               string jetPtSuffix=get_suffix("JetPt",ipt,binspt);
               string refPtSuffix=get_suffix("RefPt",ipt,binspt);
 
-              for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
+              for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
 
                 if (dorefpt){
-                  hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+rhoSuffix+"_"+refPtSuffix;
+                  hname=flavor[iflv]+"JetPt_"+jetEtaSuffix+"_"+rhoSuffix+"_"+refPtSuffix;
                   jetPtRhoRefPt[irho][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",3*nbinspt, 0, 3.0*ptmax);
 
-                  hname=flavors[iflv]+"RefPt_"+jetEtaSuffix+"_"+rhoSuffix+"_"+refPtSuffix;
+                  hname=flavor[iflv]+"RefPt_"+jetEtaSuffix+"_"+rhoSuffix+"_"+refPtSuffix;
                   refPtRhoRefPt[irho][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}^{ref}",nbinspt,ptmin,ptmax);
 
                   if (dorelrsp){
-                    hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+rhoSuffix+"_"+refPtSuffix;
+                    hname=flavor[iflv]+"RelRsp_"+jetEtaSuffix+"_"+rhoSuffix+"_"+refPtSuffix;
                     relRspRhoRefPt[irho][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",nbinsrelrsp,relrspmin,relrspmax);
                   }
                 }
                 if (dojetpt){
-                  hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+rhoSuffix+"_"+jetPtSuffix;
+                  hname=flavor[iflv]+"JetPt_"+jetEtaSuffix+"_"+rhoSuffix+"_"+jetPtSuffix;
                   jetPtRhoJetPt[irho][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",nbinspt, ptmin, ptmax);
 
                   if (dorelrsp){
-                    hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+rhoSuffix+"_"+jetPtSuffix;
+                    hname=flavor[iflv]+"RelRsp_"+jetEtaSuffix+"_"+rhoSuffix+"_"+jetPtSuffix;
                     relRspRhoJetPt[irho][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",nbinsrelrsp,relrspmin,relrspmax);
                   }
                 }
@@ -1146,46 +1188,6 @@ int main(int argc,char**argv)
             }
           }
         }
-        if (dopudensity){
-
-          for (unsigned int irhopu=0;irhopu<binspudensity.size()-1;irhopu++){
-            string rhoPUSuffix=get_suffix("RhoPU",irhopu,binspudensity);
-
-            for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++) {
-
-              string hname; float ptmin=binspt[ipt]; float ptmax=binspt[ipt+1];
-
-              string jetPtSuffix=get_suffix("JetPt",ipt,binspt);
-              string refPtSuffix=get_suffix("RefPt",ipt,binspt);
-
-              for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
-
-                if (dorefpt){
-                  hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+rhoPUSuffix+"_"+refPtSuffix;
-                  jetPtRhoPURefPt[irhopu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",3*nbinspt, 0, 3.0*ptmax);
-
-                  hname=flavors[iflv]+"RefPt_"+jetEtaSuffix+"_"+rhoPUSuffix+"_"+refPtSuffix;
-                  refPtRhoPURefPt[irhopu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}^{ref}",nbinspt,ptmin,ptmax);
-
-                  if (dorelrsp){
-                    hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+rhoPUSuffix+"_"+refPtSuffix;
-                    relRspRhoPURefPt[irhopu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",nbinsrelrsp,relrspmin,relrspmax);
-                  }
-                }
-                if (dojetpt){
-                  hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+rhoPUSuffix+"_"+jetPtSuffix;
-                  jetPtRhoPUJetPt[irhopu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",nbinspt, ptmin, ptmax);
-
-                  if (dorelrsp){
-                    hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+rhoPUSuffix+"_"+jetPtSuffix;
-                    relRspRhoPUJetPt[irhopu][ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",nbinsrelrsp,relrspmin,relrspmax);
-                  }
-                }
-              }
-            }
-          }
-        }
-
         for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++) {
 
           string hname; float ptmin=binspt[ipt]; float ptmax=binspt[ipt+1];
@@ -1193,117 +1195,143 @@ int main(int argc,char**argv)
           string jetPtSuffix=get_suffix("JetPt",ipt,binspt);
           string refPtSuffix=get_suffix("RefPt",ipt,binspt);
 	  
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
 	    
             if (dojetpt) {
-              hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"JetPt_"+jetEtaSuffix+"_"+jetPtSuffix;
               jetPtJetPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",
                                              nbinspt,ptmin,ptmax);
             }
 	    
             if (dorefpt) {
-              hname=flavors[iflv]+"RefPt_"+jetEtaSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"RefPt_"+jetEtaSuffix+"_"+refPtSuffix;
               refPtRefPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}^{ref}",
                                              nbinspt,ptmin,ptmax);
             }
 	    
             if (dorefpt) {             
-              hname=flavors[iflv]+"JetPt_"+jetEtaSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"JetPt_"+jetEtaSuffix+"_"+refPtSuffix;
               jetPtRefPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",
                                              3*nbinspt,
                                              0,
                                              3.0*ptmax);
             }
 
-            if (dorefpt) {             
-              hname=flavors[iflv]+"pThat_"+jetEtaSuffix+"_"+refPtSuffix;
-              pThatRefPt[ipt][iflv]=new TH1F(hname.c_str(),";#hat{p}_{T}",
-                                            (int)binspt[binspt.size()-1]/10.0,
-                                            0,
-                                            binspt[binspt.size()-1]);
-            }
-
             if (dorelrsp&&dojetpt) {
-              hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"RelRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
               relRspJetPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                               nbinsrelrsp,relrspmin,relrspmax);
             }
 	    
             if (dorelrsp&&dorefpt) {
-              hname=flavors[iflv]+"RelRsp_"+jetEtaSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"RelRsp_"+jetEtaSuffix+"_"+refPtSuffix;
               relRspRefPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                               nbinsrelrsp,relrspmin,relrspmax);
+
+              if (doIDrelrsp) {
+                hname=flavor[iflv]+"RelRsp_nMult_"+jetEtaSuffix+"_"+refPtSuffix;
+                relRsp_nMultRefPt[ipt][iflv]=new TH2F(hname.c_str(),";jet neutral multiplicity;p_{T}/p_{T}^{ref}",
+                                                      nbinsmult,0,nbinsmult,nbinsrelrsp,relrspmin,relrspmax);
+                hname=flavor[iflv]+"RelRsp_chMult_"+jetEtaSuffix+"_"+refPtSuffix;
+                relRsp_chMultRefPt[ipt][iflv]=new TH2F(hname.c_str(),";jet neutral multiplicity weighted;p_{T}/p_{T}^{ref}",
+                                                         nbinsmult,0,nbinsmult,nbinsrelrsp,relrspmin,relrspmax);
+
+                hname=flavor[iflv]+"RelRsp_nhf_"+jetEtaSuffix+"_"+refPtSuffix;
+                relRsp_nhfRefPt[ipt][iflv]=new TH2F(hname.c_str(),";jet neutral hadron fraction;p_{T}/p_{T}^{ref}",
+                                                    nbinsfraction,0,1,nbinsrelrsp,relrspmin,relrspmax);
+                hname=flavor[iflv]+"RelRsp_nef_"+jetEtaSuffix+"_"+refPtSuffix;
+                relRsp_nefRefPt[ipt][iflv]=new TH2F(hname.c_str(),";jet neutral em fraction;p_{T}/p_{T}^{ref}",
+                                                    nbinsfraction,0,1,nbinsrelrsp,relrspmin,relrspmax);
+                hname=flavor[iflv]+"RelRsp_hfhf_"+jetEtaSuffix+"_"+refPtSuffix;
+                relRsp_hfhfRefPt[ipt][iflv]=new TH2F(hname.c_str(),";jet hf hadron fraction;p_{T}/p_{T}^{ref}",
+                                                     nbinsfraction,0,1,nbinsrelrsp,relrspmin,relrspmax);
+                hname=flavor[iflv]+"RelRsp_hfef_"+jetEtaSuffix+"_"+refPtSuffix;
+                relRsp_hfefRefPt[ipt][iflv]=new TH2F(hname.c_str(),";jet hf em fraction;p_{T}/p_{T}^{ref}",
+                                                     nbinsfraction,0,1,nbinsrelrsp,relrspmin,relrspmax);
+              }
             }
-	    
+
             if (doabsrsp&&dojetpt) {
-              hname=flavors[iflv]+"AbsRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"AbsRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
               absRspJetPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";p_{T}-p_{T}^{ref} [GeV]",
                                               nbinsabsrsp,absrspmin,absrspmax);
             }
 	    
             if (doabsrsp&&dorefpt) {
-              hname=flavors[iflv]+"AbsRsp_"+jetEtaSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"AbsRsp_"+jetEtaSuffix+"_"+refPtSuffix;
               absRspRefPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";p_{T}-p_{T}^{ref} [GeV]",
                                               nbinsabsrsp,absrspmin,absrspmax);
             }
             if (doabsrsp&&dojetpt) {
-              hname=flavors[iflv]+"AbsRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"AbsRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
               absRspJetPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";|#eta|-|#eta^{ref}|",
                                               nbinsabsrsp,absrspmin,absrspmax);
             }
 	    
             if (doetarsp&&dorefpt) {
-              hname=flavors[iflv]+"EtaRsp_"+jetEtaSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"EtaRsp_"+jetEtaSuffix+"_"+refPtSuffix;
               etaRspRefPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";|#eta|-|#eta^{ref}|",
                                               nbinsetarsp,etarspmin,etarspmax);
             }
 
             if (doetarsp&&dojetpt) {
-              hname=flavors[iflv]+"EtaRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"EtaRsp_"+jetEtaSuffix+"_"+jetPtSuffix;
               etaRspJetPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";#phi-#phi^{ref}",
                                               nbinsetarsp,etarspmin,etarspmax);
             }
 	    
             if (dophirsp&&dorefpt) {
-              hname=flavors[iflv]+"PhiRsp_"+jetEtaSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"PhiRsp_"+jetEtaSuffix+"_"+refPtSuffix;
               phiRspRefPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";#phi-#phi^{ref}",
                                               nbinsphirsp,phirspmin,phirspmax);
             }
           }
         }
-        if (dojetpt)                        jetPtVsJetEtaJetPt      .push_back(jetPtJetPt);
-        if (dojetpt&&domu)                  jetPtVsJetEtaMuJetPt    .push_back(jetPtMuJetPt);
-        if (dojetpt&&dorho)                 jetPtVsJetEtaRhoJetPt   .push_back(jetPtRhoJetPt);
-        if (dojetpt&&dopudensity)           jetPtVsJetEtaRhoPUJetPt .push_back(jetPtRhoPUJetPt);
-        if (dorefpt)                        refPtVsJetEtaRefPt      .push_back(refPtRefPt);
-        if (dorefpt&&domu)                  refPtVsJetEtaMuRefPt    .push_back(refPtMuRefPt);
-        if (dorefpt&&dorho)                 refPtVsJetEtaRhoRefPt   .push_back(refPtRhoRefPt);
-        if (dorefpt&&dopudensity)           refPtVsJetEtaRhoPURefPt .push_back(refPtRhoPURefPt);
-        if (dorefpt)                        jetPtVsJetEtaRefPt      .push_back(jetPtRefPt);
-        if (dorefpt&&domu)                  jetPtVsJetEtaMuRefPt    .push_back(jetPtMuRefPt);
-        if (dorefpt&&dorho)                 jetPtVsJetEtaRhoRefPt   .push_back(jetPtRhoRefPt);
-        if (dorefpt&&dopudensity)           jetPtVsJetEtaRhoPURefPt .push_back(jetPtRhoPURefPt);
-        if (dorefpt)                        pThatVsJetEtaRefPt      .push_back(pThatRefPt);
-        if (dorelrsp&&dojetpt)              relRspVsJetEtaJetPt     .push_back(relRspJetPt);
-        if (dorelrsp&&dojetpt&&domu)        relRspVsJetEtaMuJetPt   .push_back(relRspMuJetPt);
-        if (dorelrsp&&dojetpt&&dorho)       relRspVsJetEtaRhoJetPt  .push_back(relRspRhoJetPt);
-        if (dorelrsp&&dojetpt&&dopudensity) relRspVsJetEtaRhoPUJetPt.push_back(relRspRhoPUJetPt);
-        if (dorelrsp&&dorefpt)              relRspVsJetEtaRefPt     .push_back(relRspRefPt);
-        if (dorelrsp&&dorefpt&&domu)        relRspVsJetEtaMuRefPt   .push_back(relRspMuRefPt);
-        if (dorelrsp&&dorefpt&&dorho)       relRspVsJetEtaRhoRefPt  .push_back(relRspRhoRefPt);
-        if (dorelrsp&&dorefpt&&dopudensity) relRspVsJetEtaRhoPURefPt.push_back(relRspRhoPURefPt);
-        if (doabsrsp&&dojetpt)              absRspVsJetEtaJetPt     .push_back(absRspJetPt);
-        if (doabsrsp&&dorefpt)              absRspVsJetEtaRefPt     .push_back(absRspRefPt);
-        if (doetarsp&&dojetpt)              etaRspVsJetEtaJetPt     .push_back(etaRspJetPt);
-        if (doetarsp&&dorefpt)              etaRspVsJetEtaRefPt     .push_back(etaRspRefPt);
-        if (dophirsp&&dojetpt)              phiRspVsJetEtaJetPt     .push_back(phiRspJetPt);
-        if (dophirsp&&dorefpt)              phiRspVsJetEtaRefPt     .push_back(phiRspRefPt);
+        if (dojetpt)                  jetPtVsJetEtaJetPt    .push_back(jetPtJetPt);
+        if (dojetpt&&domu)            jetPtVsJetEtaMuJetPt  .push_back(jetPtMuJetPt);
+        if (dojetpt&&dorho)           jetPtVsJetEtaRhoJetPt .push_back(jetPtRhoJetPt);
+        if (dorefpt)                  refPtVsJetEtaRefPt    .push_back(refPtRefPt);
+        if (dorefpt&&domu)            refPtVsJetEtaMuRefPt  .push_back(refPtMuRefPt);
+        if (dorefpt&&dorho)           refPtVsJetEtaRhoRefPt .push_back(refPtRhoRefPt);
+        if (dorefpt)                  jetPtVsJetEtaRefPt    .push_back(jetPtRefPt);
+        if (dorefpt&&domu)            jetPtVsJetEtaMuRefPt  .push_back(jetPtMuRefPt);
+        if (dorefpt&&dorho)           jetPtVsJetEtaRhoRefPt .push_back(jetPtRhoRefPt);
+        if (dorelrsp&&dojetpt)        relRspVsJetEtaJetPt   .push_back(relRspJetPt);
+        if (dorelrsp&&dojetpt&&domu)  relRspVsJetEtaMuJetPt .push_back(relRspMuJetPt);
+        if (dorelrsp&&dojetpt&&dorho) relRspVsJetEtaRhoJetPt.push_back(relRspRhoJetPt);
+        if (dorelrsp&&dorefpt) {
+          relRspVsJetEtaRefPt.push_back(relRspRefPt);
+
+          if (doIDrelrsp) {
+            relRsp_nMultVsJetEtaRefPt   .push_back(relRsp_nMultRefPt);
+            relRsp_chMultVsJetEtaRefPt.push_back(relRsp_chMultRefPt);
+
+            relRsp_nhfVsJetEtaRefPt     .push_back(relRsp_nhfRefPt);
+            relRsp_nefVsJetEtaRefPt     .push_back(relRsp_nefRefPt);
+            relRsp_hfhfVsJetEtaRefPt    .push_back(relRsp_hfhfRefPt);
+            relRsp_hfefVsJetEtaRefPt    .push_back(relRsp_hfefRefPt);
+
+            if (domu) relRsp_nMultVsJetEtaMuRefPt.push_back(relRsp_nMultMuRefPt);
+          }
+        }
+        if (dorelrsp&&dorefpt&&domu)  relRspVsJetEtaMuRefPt .push_back(relRspMuRefPt);
+        if (dorelrsp&&dorefpt&&dorho) relRspVsJetEtaRhoRefPt.push_back(relRspRhoRefPt);
+        if (doabsrsp&&dojetpt)        absRspVsJetEtaJetPt   .push_back(absRspJetPt);
+        if (doabsrsp&&dorefpt)        absRspVsJetEtaRefPt   .push_back(absRspRefPt);
+        if (doetarsp&&dojetpt)        etaRspVsJetEtaJetPt   .push_back(etaRspJetPt);
+        if (doetarsp&&dojetpt&&domu)  etaRspVsJetEtaMuJetPt .push_back(etaRspMuJetPt);
+        if (doetarsp&&dorefpt)        etaRspVsJetEtaRefPt   .push_back(etaRspRefPt);
+        if (doetarsp&&dorefpt&&domu)  etaRspVsJetEtaMuRefPt .push_back(etaRspMuRefPt);
+        if (dophirsp&&dojetpt)        phiRspVsJetEtaJetPt   .push_back(phiRspJetPt);
+        if (dophirsp&&dojetpt&&domu)  phiRspVsJetEtaMuJetPt .push_back(phiRspMuJetPt);
+        if (dophirsp&&dorefpt)        phiRspVsJetEtaRefPt   .push_back(phiRspRefPt);
+        if (dophirsp&&dorefpt&&domu)  phiRspVsJetEtaMuRefPt .push_back(phiRspMuRefPt);
       }
     }
     
@@ -1323,43 +1351,43 @@ int main(int argc,char**argv)
         if (dojetpt) {
           jetPtJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            jetPtJetPt[ipt]=new TH1F*[flavors.size()];
+            jetPtJetPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (dorefpt) {
           refPtRefPt =new TH1F**[binspt.size()];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            refPtRefPt[ipt]=new TH1F*[flavors.size()];
+            refPtRefPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (dorefpt) {
           jetPtRefPt =new TH1F**[binspt.size()];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            jetPtRefPt[ipt]=new TH1F*[flavors.size()];
+            jetPtRefPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (dorelrsp&&dojetpt) {
           relRspJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            relRspJetPt[ipt]=new TH1F*[flavors.size()];
+            relRspJetPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (dorelrsp&&dorefpt) {
           relRspRefPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            relRspRefPt[ipt]=new TH1F*[flavors.size()];
+            relRspRefPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (doabsrsp&&dojetpt) {
           absRspJetPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            absRspJetPt[ipt]=new TH1F*[flavors.size()];
+            absRspJetPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         if (doabsrsp&&dorefpt) {
           absRspRefPt=new TH1F**[binspt.size()-1];
           for (unsigned int ipt=0;ipt<binspt.size()-1;ipt++)
-            absRspRefPt[ipt]=new TH1F*[flavors.size()];
+            absRspRefPt[ipt]=new TH1F*[flavor.size()];
         }
 	
         string jetYSuffix=get_suffix("JetY",iy,binsy);
@@ -1371,53 +1399,53 @@ int main(int argc,char**argv)
           string jetPtSuffix=get_suffix("JetPt",ipt,binspt);
           string refPtSuffix=get_suffix("RefPt",ipt,binspt);
 	  
-          for (unsigned int iflv=0;iflv<flavors.size();iflv++) {
+          for (unsigned int iflv=0;iflv<flavor.size();iflv++) {
 	    
             if (dojetpt) {
-              hname=flavors[iflv]+"JetPt_"+jetYSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"JetPt_"+jetYSuffix+"_"+jetPtSuffix;
               jetPtJetPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",
                                              nbinspt,ptmin,ptmax);
             }
 	    
             if (dorefpt) {
-              hname=flavors[iflv]+"RefPt_"+jetYSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"RefPt_"+jetYSuffix+"_"+refPtSuffix;
               refPtRefPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}^{ref}",
                                              nbinspt,ptmin,ptmax);
             }
 	    
             if (dorefpt) {
-              hname=flavors[iflv]+"JetPt_"+jetYSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"JetPt_"+jetYSuffix+"_"+refPtSuffix;
               jetPtRefPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}",
                                              3*nbinspt,0,3.0*ptmax);
             }
 	    
             if (dorelrsp&&dojetpt) {
-              hname=flavors[iflv]+"RelRsp_"+jetYSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"RelRsp_"+jetYSuffix+"_"+jetPtSuffix;
               relRspJetPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                               nbinsrelrsp,relrspmin,relrspmax);
             }
 	    
             if (dorelrsp&&dorefpt) {
-              hname=flavors[iflv]+"RelRsp_"+jetYSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"RelRsp_"+jetYSuffix+"_"+refPtSuffix;
               relRspRefPt[ipt][iflv]=new TH1F(hname.c_str(),";p_{T}/p_{T}^{ref}",
                                               nbinsrelrsp,relrspmin,relrspmax);
             }
 	    
             if (doabsrsp&&dojetpt) {
-              hname=flavors[iflv]+"AbsRsp_"+jetYSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"AbsRsp_"+jetYSuffix+"_"+jetPtSuffix;
               absRspJetPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";p_{T}-p_{T}^{ref} [GeV]",
                                               nbinsabsrsp,absrspmin,absrspmax);
             }
 	    
             if (doabsrsp&&dorefpt) {
-              hname=flavors[iflv]+"AbsRsp_"+jetYSuffix+"_"+refPtSuffix;
+              hname=flavor[iflv]+"AbsRsp_"+jetYSuffix+"_"+refPtSuffix;
               absRspRefPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";p_{T}-p_{T}^{ref} [GeV]",
                                               nbinsabsrsp,absrspmin,absrspmax);
             }
             if (doabsrsp&&dojetpt) {
-              hname=flavors[iflv]+"AbsRsp_"+jetYSuffix+"_"+jetPtSuffix;
+              hname=flavor[iflv]+"AbsRsp_"+jetYSuffix+"_"+jetPtSuffix;
               absRspJetPt[ipt][iflv]=new TH1F(hname.c_str(),
                                               ";|#y|-|#y^{ref}|",
                                               nbinsabsrsp,absrspmin,absrspmax);
@@ -1449,6 +1477,7 @@ int main(int argc,char**argv)
     tree->GetEntry( el->GetEntry(0) );         
     int itInd = itIndex(JRAEvt->bxns);
 
+    //loop over tree
     unsigned int nevt = (unsigned) el->GetN();
     for (unsigned int ievt=0;ievt<nevt;ievt++)
       {
@@ -1457,24 +1486,7 @@ int main(int argc,char**argv)
         const Long64_t ientry = el->GetEntry(ievt);
         tree->GetEntry(ientry);
 
-        float mu = (NpuNotMu) ? JRAEvt->npus->at(itInd) : JRAEvt->tnpus->at(itInd);
-        float rho = JRAEvt->rho;
-        float rhoPU = (GRhoPU) ? JRAEvt->gpudensity : JRAEvt->pudensity;
-        float pthat = JRAEvt->pthat;
-        bool evt_fill = true;
-
-        if(JRAEvt->refdrjt->size()!=(unsigned int)JRAEvt->nref) {
-          if(verbose) cout << "WARNING::The number of reference jets doesn't match the number of stored values!" << endl;
-          continue;
-        }
-        if(pthatmin>0.0 && pthat<pthatmin) {
-           if(verbose) cout << "WARNING::The pthat of this event is less than the minimum pthat!" << endl;
-           continue;
-        }
-        if(pthatmax!=-1.0 && pthat>pthatmax) {
-           if(verbose) cout << "WARNING::The pthat of this event is greater than the maximum pthat!" << endl;
-           continue;
-        }
+        float mu = JRAEvt->tnpus->at(itInd);
 
         if (nrefmax>0) JRAEvt->nref = std::min((int)JRAEvt->nref,nrefmax);
         for (unsigned char iref=0;iref<JRAEvt->nref;iref++) {
@@ -1505,9 +1517,23 @@ int main(int argc,char**argv)
           float y      =
             (binsy.size()&&binsy.front()>=0.)?std::abs(JRAEvt->jty->at(iref)):JRAEvt->jty->at(iref);
           float pt     = JRAEvt->jtpt->at(iref);
+
           float refpt  = JRAEvt->refpt->at(iref);
           float phi    = JRAEvt->jtphi->at(iref);
+          float rho    = JRAEvt->rho;
           float pdgid(0);
+
+          int nMult=0, chMult=0;
+          float nhf=0, nef=0, hfhf=0, hfef=0;
+          if (doIDrelrsp) {
+            nMult = JRAEvt->jtnMult->at(iref);
+            chMult = JRAEvt->jtchMult->at(iref);
+
+            nhf = JRAEvt->jtnhf->at(iref);
+            nef = JRAEvt->jtnef->at(iref);
+            hfhf = JRAEvt->jthfhf->at(iref);
+            hfef = JRAEvt->jthfef->at(iref);
+          }
           if(doflavor) {
             flavorDefinition.ToUpper();
             if(flavorDefinition.CompareTo("ALGO")==0)
@@ -1519,35 +1545,43 @@ int main(int argc,char**argv)
           }
           float absrsp = pt-refpt;
           float relrsp = pt/refpt;
+
           float etarsp = JRAEvt->jteta->at(iref)-JRAEvt->refeta->at(iref);
           float phirsp = fmod(JRAEvt->jtphi->at(iref)-JRAEvt->refphi->at(iref)+3*M_PI,2*M_PI)-M_PI;
 
           //
           // retrieve the correct weight
           //
-          if(xsection>0.0) weight = (xsection*luminosity)/nevt;
           if(useweight) weight = JRAEvt->weight;
-          if(!(xsection>0.0) && !useweight) weight = 1.0;
+          if (!(xsection>0.0) && !useweight) weight = 1.0;
           if(!weightfile.IsNull())
           {
-             if(!doflavor)
+             if(!doflavor && log10(refpt)<3)
              {
-                weight *= weightMap["all_"]->GetBinContent(weightMap["all_"]->FindBin(refpt,eta));
+                weight = weightHist->GetBinContent(weightHist->FindBin(log10(refpt)));
              }
              else if(doflavor)
              {
-                weight *= weightMap["all_"]->GetBinContent(weightMap["all_"]->FindBin(refpt,eta));
+                weight = weightMap["all_"]->
+                   GetBinContent(weightMap["all_"]->FindBin(pt,eta));
                 if(noabsflavors)
-                   flavorWeight *= weightMap[pdgid_to_flavor_name(pdgid)]->GetBinContent(weightMap[pdgid_to_flavor_name(pdgid)]->FindBin(refpt,eta));
+                   flavorWeight = weightMap[pdgid_to_flavor_name(pdgid)]->
+                      GetBinContent(weightMap[pdgid_to_flavor_name(pdgid)]->FindBin(pt,eta));
                 else
-                   flavorWeight *= weightMap[pdgid_to_flavor_name(fabs(pdgid))]->GetBinContent(weightMap[pdgid_to_flavor_name(fabs(pdgid))]->FindBin(refpt,eta));
+                   flavorWeight = weightMap[pdgid_to_flavor_name(fabs(pdgid))]->
+                      GetBinContent(weightMap[pdgid_to_flavor_name(fabs(pdgid))]->FindBin(pt,eta));
              }
           }
           else
-             flavorWeight *= weight;
+             flavorWeight = weight;
           if(!MCPUReWeighting.IsNull() && !DataPUReWeighting.IsNull()) {
              double LumiWeight = LumiWeights_.weight(JRAEvt->tnpus->at(itIndex(JRAEvt->bxns)));
+             //if (ievt<10)
+             //   cout << "LumiWeight = " << LumiWeight << "\tweight (before) = "<< weight;
              weight *= LumiWeight;
+             //if (ievt<10)
+             //   cout << "\tweight (after) = " << weight << endl;
+
           }
 
           if (eta>=etabarrelmin&&eta<=etabarrelmax) {
@@ -1662,9 +1696,8 @@ int main(int argc,char**argv)
 
           if (dojetpt) {
             fill_histo(pt,weight,eta,pt,binseta,binspt,jetPtVsJetEtaJetPt);
-            if (domu)        fill_histo(pt, weight, eta, mu,  pt, binseta, binsmu,  binspt, jetPtVsJetEtaMuJetPt);
-            if (dorho)       fill_histo(pt, weight, eta, rho, pt, binseta, binsrho, binspt, jetPtVsJetEtaRhoJetPt);
-            if (dopudensity) fill_histo(pt, weight, eta, rhoPU, pt, binseta, binspudensity, binspt, jetPtVsJetEtaRhoPUJetPt);
+            if (domu)  fill_histo(pt, weight, eta, mu,  pt, binseta, binsmu,  binspt, jetPtVsJetEtaMuJetPt);
+            if (dorho) fill_histo(pt, weight, eta, rho, pt, binseta, binsrho, binspt, jetPtVsJetEtaRhoJetPt);
 
             fill_histo(pt,weight,y,pt,
                        binsy,binspt,jetPtVsJetYJetPt);
@@ -1673,9 +1706,8 @@ int main(int argc,char**argv)
               fill_histo(pdgid,pt,flavorWeight,
                          eta,pt,binseta,binspt,jetPtVsJetEtaJetPt,
                          noabsflavors);
-              if (domu)        fill_histo(pdgid,pt, flavorWeight, eta, mu,  pt, binseta, binsmu,  binspt, jetPtVsJetEtaMuJetPt,  noabsflavors);
-              if (dorho)       fill_histo(pdgid,pt, flavorWeight, eta, rho, pt, binseta, binsrho, binspt, jetPtVsJetEtaRhoJetPt, noabsflavors);
-              if (dopudensity) fill_histo(pdgid,pt, flavorWeight, eta, rhoPU, pt, binseta, binspudensity, binspt, jetPtVsJetEtaRhoPUJetPt, noabsflavors);
+              if (domu)  fill_histo(pdgid,pt, flavorWeight, eta, mu,  pt, binseta, binsmu,  binspt, jetPtVsJetEtaMuJetPt,  noabsflavors);
+              if (dorho) fill_histo(pdgid,pt, flavorWeight, eta, rho, pt, binseta, binsrho, binspt, jetPtVsJetEtaRhoJetPt, noabsflavors);
 
               fill_histo(pdgid,pt,flavorWeight,
                          y,pt,binsy,binspt,jetPtVsJetYJetPt,
@@ -1685,32 +1717,36 @@ int main(int argc,char**argv)
 
           if (dorefpt) {
             fill_histo(refpt,weight,eta,refpt,binseta,binspt,refPtVsJetEtaRefPt);
-            if (domu)        fill_histo(refpt, weight, eta, mu,  refpt, binseta, binsmu,  binspt, refPtVsJetEtaMuRefPt);
-            if (dorho)       fill_histo(refpt, weight, eta, rho, refpt, binseta, binsrho, binspt, refPtVsJetEtaRhoRefPt);
-            if (dopudensity) fill_histo(refpt, weight, eta, rhoPU, refpt, binseta, binspudensity, binspt, refPtVsJetEtaRhoPURefPt);
+            if (domu)  fill_histo(refpt, weight, eta, mu,  refpt, binseta, binsmu,  binspt, refPtVsJetEtaMuRefPt);
+            if (dorho) fill_histo(refpt, weight, eta, rho, refpt, binseta, binsrho, binspt, refPtVsJetEtaRhoRefPt);
 
             fill_histo(pt,weight,eta,refpt,binseta,binspt,jetPtVsJetEtaRefPt);
-            if (domu)        fill_histo(pt, weight, eta, mu,  refpt, binseta, binsmu,  binspt, jetPtVsJetEtaMuRefPt);
-            if (dorho)       fill_histo(pt, weight, eta, rho, refpt, binseta, binsrho, binspt, jetPtVsJetEtaRhoRefPt);
-            if (dopudensity) fill_histo(pt, weight, eta, rhoPU, refpt, binseta, binspudensity, binspt, jetPtVsJetEtaRhoPURefPt);
+            if (domu)  fill_histo(pt, weight, eta, mu,  refpt, binseta, binsmu,  binspt, jetPtVsJetEtaMuRefPt);
+            if (dorho) fill_histo(pt, weight, eta, rho, refpt, binseta, binsrho, binspt, jetPtVsJetEtaRhoRefPt);
 
-            if(evt_fill) {fill_histo(pthat,weight,eta,refpt,binseta,binspt,pThatVsJetEtaRefPt); if(!doflavor) {evt_fill=false;}}
-            fill_histo(refpt,weight,y,refpt,binsy,binspt,refPtVsJetYRefPt);
-            fill_histo(pt,weight,y,refpt,binsy,binspt,jetPtVsJetYRefPt);
+            fill_histo(refpt,weight,y,refpt,
+                       binsy,binspt,refPtVsJetYRefPt);
+            fill_histo(pt,weight,y,refpt,
+                       binsy,binspt,jetPtVsJetYRefPt);
             if (doflavor) {
-              fill_histo(pdgid,refpt,flavorWeight,eta,refpt,binseta,binspt,refPtVsJetEtaRefPt,noabsflavors);
-              if (domu)       fill_histo(pdgid, refpt, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, refPtVsJetEtaMuRefPt,  noabsflavors);
-              if (dorho)      fill_histo(pdgid, refpt, flavorWeight, eta, rho, refpt, binseta, binsrho, binspt, refPtVsJetEtaRhoRefPt, noabsflavors);
-              if (dopudensity) fill_histo(pdgid, refpt, flavorWeight, eta, rhoPU, refpt, binseta, binspudensity, binspt, refPtVsJetEtaRhoPURefPt, noabsflavors);
+              fill_histo(pdgid,refpt,flavorWeight,
+                         eta,refpt,binseta,binspt,refPtVsJetEtaRefPt,
+                         noabsflavors);
+              if (domu)  fill_histo(pdgid, refpt, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, refPtVsJetEtaMuRefPt,  noabsflavors);
+              if (dorho) fill_histo(pdgid, refpt, flavorWeight, eta, rho, refpt, binseta, binsrho, binspt, refPtVsJetEtaRhoRefPt, noabsflavors);
 
-              fill_histo(pdgid,pt,flavorWeight,eta,refpt,binseta,binspt,jetPtVsJetEtaRefPt,noabsflavors);
-              if (domu)        fill_histo(pdgid, pt, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, jetPtVsJetEtaMuRefPt,  noabsflavors);
-              if (dorho)       fill_histo(pdgid, pt, flavorWeight, eta, rho, refpt, binseta, binsrho, binspt, jetPtVsJetEtaRhoRefPt, noabsflavors);
-              if (dopudensity) fill_histo(pdgid, pt, flavorWeight, eta, rhoPU, refpt, binseta, binspudensity, binspt, jetPtVsJetEtaRhoPURefPt, noabsflavors);
+              fill_histo(pdgid,pt,flavorWeight,
+                         eta,refpt,binseta,binspt,jetPtVsJetEtaRefPt,
+                         noabsflavors);
+              if (domu)  fill_histo(pdgid, pt, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, jetPtVsJetEtaMuRefPt,  noabsflavors);
+              if (dorho) fill_histo(pdgid, pt, flavorWeight, eta, rho, refpt, binseta, binsrho, binspt, jetPtVsJetEtaRhoRefPt, noabsflavors);
 
-              fill_histo(pdgid,refpt,flavorWeight,y,refpt,binsy,binspt,refPtVsJetYRefPt,noabsflavors);
-              fill_histo(pdgid,pt,flavorWeight,y,refpt,binsy,binspt,jetPtVsJetYRefPt,noabsflavors);
-              if(evt_fill) {fill_histo(pdgid,pthat,flavorWeight,eta,refpt,binseta,binspt,pThatVsJetEtaRefPt,noabsflavors); evt_fill=false;}
+              fill_histo(pdgid,refpt,flavorWeight,
+                         y,refpt,binsy,binspt,refPtVsJetYRefPt,
+                         noabsflavors);
+              fill_histo(pdgid,pt,flavorWeight,
+                         y,refpt,binsy,binspt,jetPtVsJetYRefPt,
+                         noabsflavors);
             }
           }
 	
@@ -1745,18 +1781,16 @@ int main(int argc,char**argv)
 	  
             if (dojetpt) {
               fill_histo(relrsp,weight,eta,pt,binseta,binspt,relRspVsJetEtaJetPt);
-              if (domu)        fill_histo(relrsp, weight, eta, mu,  pt, binseta, binsmu,  binspt, relRspVsJetEtaMuJetPt);
-              if (dorho)       fill_histo(relrsp, weight, eta, rho, pt, binseta, binsrho, binspt, relRspVsJetEtaRhoJetPt);
-              if (dopudensity) fill_histo(relrsp, weight, eta, rhoPU, pt, binseta, binspudensity, binspt, relRspVsJetEtaRhoPUJetPt);
+              if (domu)  fill_histo(relrsp, weight, eta, mu,  pt, binseta, binsmu,  binspt, relRspVsJetEtaMuJetPt);
+              if (dorho) fill_histo(relrsp, weight, eta, rho, pt, binseta, binsrho, binspt, relRspVsJetEtaRhoJetPt);
 
               fill_histo(relrsp,weight,y,pt,
                          binsy,binspt,relRspVsJetYJetPt);
               if (doflavor) {
                 fill_histo(pdgid,relrsp,flavorWeight,eta,pt,
                            binseta,binspt,relRspVsJetEtaJetPt,noabsflavors);
-                if (domu)        fill_histo(pdgid,relrsp, flavorWeight, eta, mu,  pt, binseta, binsmu,  binspt, relRspVsJetEtaMuJetPt,  noabsflavors);
-                if (dorho)       fill_histo(pdgid,relrsp, flavorWeight, eta, rho, pt, binseta, binsrho, binspt, relRspVsJetEtaRhoJetPt, noabsflavors);
-                if (dopudensity) fill_histo(pdgid,relrsp, flavorWeight, eta, rhoPU, pt, binseta, binspudensity, binspt, relRspVsJetEtaRhoPUJetPt, noabsflavors);
+                if (domu)  fill_histo(pdgid,relrsp, flavorWeight, eta, mu,  pt, binseta, binsmu,  binspt, relRspVsJetEtaMuJetPt,  noabsflavors);
+                if (dorho) fill_histo(pdgid,relrsp, flavorWeight, eta, rho, pt, binseta, binsrho, binspt, relRspVsJetEtaRhoJetPt, noabsflavors);
 
                 fill_histo(pdgid,relrsp,flavorWeight,y,pt,
                            binsy,binspt,relRspVsJetYJetPt,noabsflavors);
@@ -1764,18 +1798,29 @@ int main(int argc,char**argv)
             }
             if (dorefpt) {
               fill_histo(relrsp,weight,eta,refpt,binseta,binspt,relRspVsJetEtaRefPt);
-              if (domu)        fill_histo(relrsp, weight, eta, mu,  refpt, binseta, binsmu,  binspt, relRspVsJetEtaMuRefPt);
-              if (dorho)       fill_histo(relrsp, weight, eta, rho, refpt, binseta, binsrho, binspt, relRspVsJetEtaRhoRefPt);
-              if (dopudensity) fill_histo(relrsp, weight, eta, rhoPU, refpt, binseta, binspudensity, binspt, relRspVsJetEtaRhoPURefPt);
+
+              if (doIDrelrsp) {
+                fill_histo(nMult,relrsp,weight,eta,refpt,binseta,binspt,relRsp_nMultVsJetEtaRefPt);
+                fill_histo(chMult,relrsp,weight,eta,refpt,binseta,binspt,relRsp_chMultVsJetEtaRefPt);
+
+                fill_histo(nhf,relrsp,weight,eta,refpt,binseta,binspt,relRsp_nhfVsJetEtaRefPt);
+                fill_histo(nef,relrsp,weight,eta,refpt,binseta,binspt,relRsp_nefVsJetEtaRefPt);
+                fill_histo(hfhf,relrsp,weight,eta,refpt,binseta,binspt,relRsp_hfhfVsJetEtaRefPt);
+                fill_histo(hfef,relrsp,weight,eta,refpt,binseta,binspt,relRsp_hfefVsJetEtaRefPt);
+
+                if (domu) fill_histo(nMult, relrsp, weight, eta, mu,  refpt, binseta, binsmu,  binspt, relRsp_nMultVsJetEtaMuRefPt);
+              }
+
+              if (domu)  fill_histo(relrsp, weight, eta, mu,  refpt, binseta, binsmu,  binspt, relRspVsJetEtaMuRefPt);
+              if (dorho) fill_histo(relrsp, weight, eta, rho, refpt, binseta, binsrho, binspt, relRspVsJetEtaRhoRefPt);
 
               fill_histo(relrsp,weight,y,refpt,
                          binsy,binspt,relRspVsJetYRefPt);
               if (doflavor) {
                 fill_histo(pdgid,relrsp,flavorWeight,eta,refpt,
                            binseta,binspt,relRspVsJetEtaRefPt,noabsflavors);
-                if (domu)        fill_histo(pdgid,relrsp, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, relRspVsJetEtaMuRefPt,  noabsflavors);
-                if (dorho)       fill_histo(pdgid,relrsp, flavorWeight, eta, rho, refpt, binseta, binsrho, binspt, relRspVsJetEtaRhoRefPt, noabsflavors);
-                if (dopudensity) fill_histo(pdgid,relrsp, flavorWeight, eta, rhoPU, refpt, binseta, binspudensity, binspt, relRspVsJetEtaRhoPURefPt, noabsflavors);
+                if (domu)  fill_histo(pdgid,relrsp, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, relRspVsJetEtaMuRefPt,  noabsflavors);
+                if (dorho) fill_histo(pdgid,relrsp, flavorWeight, eta, rho, refpt, binseta, binsrho, binspt, relRspVsJetEtaRhoRefPt, noabsflavors);
 
                 fill_histo(pdgid,relrsp,flavorWeight,y,refpt,
                            binsy,binspt,relRspVsJetYRefPt,noabsflavors);
@@ -1863,20 +1908,27 @@ int main(int argc,char**argv)
                                      noabsflavors);
 	  
             if (dojetpt) {
-              fill_histo(etarsp,weight,eta,pt,
-                         binseta,binspt,etaRspVsJetEtaJetPt);
-              if (doflavor) fill_histo(pdgid,etarsp,flavorWeight,
-                                       eta,pt,
-                                       binseta,binspt,etaRspVsJetEtaJetPt,
-                                       noabsflavors);
+              fill_histo(etarsp,weight,eta,pt,binseta,binspt,etaRspVsJetEtaJetPt);
+              if (domu)  fill_histo(etarsp, weight, eta, mu,  pt, binseta, binsmu,  binspt, etaRspVsJetEtaMuJetPt);
+
+              if (doflavor) {
+                fill_histo(pdgid,etarsp,flavorWeight,eta,pt,binseta,binspt,etaRspVsJetEtaJetPt,noabsflavors);
+
+                if (domu) fill_histo(pdgid,etarsp, flavorWeight, eta, mu,  pt, binseta, binsmu,  binspt, etaRspVsJetEtaMuJetPt, noabsflavors);
+              }
+
             }
             if (dorefpt) {
-              fill_histo(etarsp,weight,eta,refpt,
-                         binseta,binspt,etaRspVsJetEtaRefPt);
-              if (doflavor) fill_histo(pdgid,etarsp,flavorWeight,
+              fill_histo(etarsp,weight,eta,refpt,binseta,binspt,etaRspVsJetEtaRefPt);
+              if (domu)  fill_histo(etarsp, weight, eta, mu,  refpt, binseta, binsmu,  binspt, etaRspVsJetEtaMuRefPt);
+
+              if (doflavor) {
+                fill_histo(pdgid,etarsp,flavorWeight,
                                        eta,refpt,
                                        binseta,binspt,etaRspVsJetEtaRefPt,
                                        noabsflavors);
+                if (domu) fill_histo(pdgid,etarsp, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, etaRspVsJetEtaMuRefPt, noabsflavors);
+              }
             }
           }
 	
@@ -1907,27 +1959,36 @@ int main(int argc,char**argv)
             if (dojetpt) {
               fill_histo(phirsp,weight,eta,pt,
                          binseta,binspt,phiRspVsJetEtaJetPt);
-              if (doflavor) fill_histo(pdgid,phirsp,flavorWeight,
+              if (domu)  fill_histo(phirsp, weight, eta, mu,  pt, binseta, binsmu,  binspt, phiRspVsJetEtaMuJetPt);
+
+              if (doflavor) {
+                fill_histo(pdgid,phirsp,flavorWeight,
                                        eta,pt,
                                        binseta,binspt,phiRspVsJetEtaJetPt,
                                        noabsflavors);
+                if (domu) fill_histo(pdgid,phirsp, flavorWeight, eta, mu,  pt, binseta, binsmu,  binspt, phiRspVsJetEtaMuJetPt, noabsflavors);
+              }
             }
             if (dorefpt) {
               fill_histo(phirsp,weight,eta,refpt,
                          binseta,binspt,phiRspVsJetEtaRefPt);
-              if (doflavor) fill_histo(pdgid,phirsp,flavorWeight,
+              if (domu)  fill_histo(phirsp, weight, eta, mu,  refpt, binseta, binsmu,  binspt, phiRspVsJetEtaMuRefPt);
+
+              if (doflavor) {
+                fill_histo(pdgid,phirsp,flavorWeight,
                                        eta,refpt,
                                        binseta,binspt,phiRspVsJetEtaRefPt,
                                        noabsflavors);
+                if (domu) fill_histo(pdgid,phirsp, flavorWeight, eta, mu,  refpt, binseta, binsmu,  binspt, phiRspVsJetEtaMuRefPt, noabsflavors);
+              }
             }
           }
 	
         }
       }
-   
+
     cout<<" DONE."<<endl;
   }
-  
   
   //
   // close files
@@ -2107,6 +2168,18 @@ void fill_histo(float value,float weight,float x,float y,
 
 
 //______________________________________________________________________________
+void fill_histo(float value1,float value2,float weight,float x,float y,
+                const vector<float>& binsx,const vector<float>& binsy,
+                const vector<TH2F***>& histos)
+{
+  if (binsx.size()==0||binsy.size()==0) return;
+  int ix=get_index(x,binsx);
+  int iy=get_index(y,binsy);
+  if (ix>=0&&iy>=0) histos[ix][iy][0]->Fill(value1,value2,weight);
+}
+
+
+//______________________________________________________________________________
 void fill_histo(int pdgid,float value,float weight,float x,float y,
                 const vector<float>& binsx,const vector<float>& binsy,
                 const vector<TH1F***>& histos, bool noabsflavors)
@@ -2170,6 +2243,18 @@ void fill_histo(float value,float weight,float x,float y,float z,
   int iy=get_index(y,binsy);
   int iz=get_index(z,binsz);  
   if (ix>=0&&iy>=0&&iz>=0) histos[ix][iy][iz][0]->Fill(value,weight);
+}
+
+//______________________________________________________________________________
+void fill_histo(float value1,float value2,float weight,float x,float y, float z,
+                const vector<float>& binsx,const vector<float>& binsy,const vector<float>& binsz,
+                const vector<TH2F****>& histos)
+{
+  if (binsx.size()==0||binsy.size()==0||binsz.size()==0) return;
+  int ix=get_index(x,binsx);
+  int iy=get_index(y,binsy);
+  int iz=get_index(z,binsz);  
+  if (ix>=0&&iy>=0&&iz>=0) histos[ix][iy][iz][0]->Fill(value1,value2,weight);
 }
 
 //______________________________________________________________________________
