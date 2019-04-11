@@ -48,9 +48,9 @@ compareAlgs() {
     fi
   fi
 
-  jet_inspect_graphs_x -sizes "1 1 1" -removeFit true -opath $opath -inputs $file -algs $algs -logx true -batch true \
+  jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $file -algs $algs -logx true -batch true \
   -variables $var -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
-  -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle $title -tdrlabels $labels
+  -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle "$title" -tdrlabels $labels
 }
 
 inspectAlg() {
@@ -115,5 +115,5 @@ inspectAlg() {
 
   jet_inspect_graphs_x -opath $opath -inputs $file -algs $algs -logx true -batch true \
   -variables $var -leglabels $legend -legx 0.67 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
-  -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle $title -tdrlabels $labels
+  -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle "$title" -tdrlabels $labels
 }

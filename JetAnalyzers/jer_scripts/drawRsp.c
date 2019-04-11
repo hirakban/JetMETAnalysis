@@ -79,7 +79,8 @@ void drawRsp( TString fname="jra.root", int r=4, TString var="Rel", float eta1=0
     h->GetXaxis()->SetTitle( h1->GetXaxis()->GetTitle() );
     h->GetYaxis()->SetRangeUser(0, h1->GetMaximum()*1.2 );
     h->GetXaxis()->SetNdivisions(5,5,0);
-    h->GetXaxis()->SetRangeUser(0, 2);
+    if (var=="Eta" || var=="Phi") h->GetXaxis()->SetRangeUser(-0.5, 0.5);
+    else                          h->GetXaxis()->SetRangeUser(0, 2);
 
     float ex=0.73, px=0.68;
     if (pt1==300) { ex=0.7; px=0.63; }

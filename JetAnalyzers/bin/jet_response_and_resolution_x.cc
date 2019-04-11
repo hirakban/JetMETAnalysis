@@ -498,6 +498,9 @@ int main(int argc,char**argv)
       for (int ipoint=0;ipoint<g->GetN();ipoint++)
         if (g->GetX()[ipoint]>xmax) xmax = g->GetX()[ipoint];
 
+//Example way to adjust fit range for a single graph
+//if (alg=="ak8pfl1l2l3" && (TString)g->GetName()=="EtaResVsJetPt_JetEta3.2to4.7_Mu60to70") xmin = 35; //xmax
+
       if (fitmin!=0.0 && fitmin>xmin) xmin = fitmin;
       if (fitmax!=0.0 && fitmax<xmax) xmax = fitmax;
 

@@ -44,7 +44,7 @@ Once completed, copy the file to your EOS or the `lpcjme` group (may need to req
 
 # Analyze Tree
 
-Edit the `jet_response_analyzer_x` config file `config/JER_jra.config`. Change `input`. Set `doIDrelrsp` to `true` to study jet composition plots (tree must have variables).
+Edit the `jet_response_analyzer_x` config file `config/JER_jra.config`. Change `input`. Set `doIDrelrsp` to `true` if you want to study jet composition plots (tree must have variables).
 Run the analyzer
 
     cd jer_scripts/
@@ -58,13 +58,38 @@ Get the rho versus mu profile from the tree file
 
     root -l -b -q 'getRhoMuHisto.c ( "tree_file_name_EOS.root" )'
 
-Run the resolution script three times- each time setting one of `dorelrsp`, `doetarsp`, or `dophirsp` to true
+# Create Text Files
+
+Run the resolution script three times- each time setting one of `dorelrsp`, `doetarsp`, or `dophirsp` to true.
+This will produce three root files, one for each variable.
 
     jet_response_and_resolution_x ../config/JER_jrr.config
 
-Use the `plot.sh` script to produce many, many plots from `jet_inspect_graphs_x`, `drawRsp.c`, and `JERmu.c`. Feel free to edit the parameters.
-`jet_inspect_graphs_x` parameters are in `jer_graphs.lib`.
-The `pt`, `eta`, and `mu` variables depend on the `jet_response_analyzer_x` config file `config/JER_jra.config`.
-Comment or use `continue` to skip things you don't want to plot.
+If a fit fails, open the root file to look at the problematic graph. For example, if you see `EtaResVsJetPt_JetEta0.8to1.1_Mu50to60 DID NOT FIT!!!`
+
+    root -l etarsp.root
+    ((TGraphErrors*)_file0->Get("ak8pfl1l2l3/EtaResVsJetPt_JetEta0.8to1.1_Mu50to60"))->Draw()
+
+Adjusting the fit range usually solves the issue. Edit `bin/jet_response_and_resolution_x.cc` to target the specific problematic graph.
+Search `//Example` for an example in the file.
+
+Use the `plot.sh` script to produce many, many plots from `jet_inspect_graphs_x`, `drawRsp.c`, and `JERmu.c`.
+Feel free to edit the parameters, and use comments or `continue` to skip things you don't want to plot.
+`jet_inspect_graphs_x` parameters are in `inspect_graph_methods.sh`.
+The `pt`, `eta`, and `mu` variables must match the config file `config/JER_jra.config`.
 
     ./plot.sh Rel
+    ./plot.sh Eta
+    ./plot.sh Phi
+
+If plots look ok, create the `.db` files from the text files using [DBUploadTools](https://github.com/cms-jet/DBUploadTools/tree/master/JEC).
+Put all the text files in a single directory. Rename the files, and move to `DBUploadTools` directory.
+
+    ./rename.sh JER_text_files/
+    mv newJER_text_files/ ../../../DBUploadTools/data
+    cd ../../../DBUploadTools/
+    cmsRun JR/createDBFromTxtFiles.py era=Autumn18_V8_MC path=DBUploadTools/data/
+
+If `.db` file successfully created, check the contents with
+
+    conddb --db Autumn18_V8_MC.db listTags

@@ -10,11 +10,11 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
            string era2 = "Fall17_17Nov2017_V4_MC", string alg2="puppi") {
   setStyle();
 
-  map<string, tuple<string, Color_t, Style_t> > alg_style = { {"pf", {"PF", kBlue+1, 10} }, {"pfchs", {"PF+CHS", kRed+1, 1} }, {"puppi", {"PUPPI", kGreen+2, 7} } };
+  map<string, tuple<string, Color_t, Style_t> > alg_style = { {"pf", {"PF", kBlue+1, 10} }, {"pfchs", {"PF+CHS", kRed+1, 1} }, {"puppi", {"PF+PUPPI", kGreen+2, 7} } };
 
   map<int, map<int, map<int, float> > > pars1, pars2;
-  getPars( pars1, era1 + "_PtResolution_ak" + to_string(r) + alg1 + "l1l2l3.txt" );
-  getPars( pars2, era2 + "_PtResolution_ak" + to_string(r) + alg2 + "l1l2l3.txt" );
+  getPars( pars1, era1 + "/" + era1 + "_PtResolution_ak" + to_string(r) + alg1 + "l1l2l3.txt" );
+  getPars( pars2, era2 + "/" + era2 + "_PtResolution_ak" + to_string(r) + alg2 + "l1l2l3.txt" );
 
   int iEta = getEtaIndex(eta);
   vector<float> pTs;
@@ -45,7 +45,7 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
   text.SetTextSize(0.04);
   text.DrawLatex(0.75, 0.87, "p_{T}^{Jet} (GeV)");
 
-  TLegend* leg = new TLegend(.44,.75,.7,.85);
+  TLegend* leg = new TLegend(.35,.75,.65,.85);
   leg->SetTextSize(0.04);
   leg->SetBorderSize(0);
   leg->SetFillColor(0);
@@ -63,12 +63,13 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
     g1->SetMarkerStyle(iPt+24);
     g1->SetMarkerColor( kBlack ); //get<1>( alg_style[alg1] ) );
     g1->SetLineColor( kBlack ); //get<1>( alg_style[alg1] ) );
+//    g1->SetLineStyle( get<2>( alg_style[alg1] ) );
     g1->Draw("plsame");
 
     g2->SetMarkerStyle(iPt+24);
     g2->SetMarkerColor( get<1>( alg_style[alg2] ) );
     g2->SetLineColor( get<1>( alg_style[alg2] ) );
-    g2->SetLineStyle( get<2>( alg_style[alg2] ) );
+    g2->SetLineStyle( 7 ); //g2->SetLineStyle( get<2>( alg_style[alg2] ) );
     g2->Draw("plsame");
 
     TMarker* t = new TMarker(0.79, .84-iPt*nPt*0.012, iPt+24);
@@ -76,8 +77,8 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
     t->Draw();  text.DrawLatex(0.83, .825-iPt*nPt*0.012,  Form("%.0f", pTs[iPt]) );
 
     if (iPt==0) {
-      leg->AddEntry(g1, ("OLD " + get<0>( alg_style[alg1] )).data(), "L");
-      leg->AddEntry(g2, ("NEW " + get<0>( alg_style[alg2] )).data(), "L");
+      leg->AddEntry(g1, Form("%s %s", era1.substr(0, era1.find('_')).data(), get<0>( alg_style[alg1] ).data()), "L");
+      leg->AddEntry(g2, Form("%s %s", era2.substr(0, era2.find('_')).data(), get<0>( alg_style[alg2] ).data()), "L");
     }
   }
 
@@ -95,7 +96,7 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
   text.SetTextFont(42);
   text.DrawLatex(0.85, 0.96, "(13 TeV)");
 
-  c->Print( Form("ak%i/JERMu_eta%.1f.pdf", r, etabins[iEta]) );
+  c->Print( Form("Rel/ak%i/JERMu_eta%.1f.pdf", r, etabins[iEta]) );
 }
 
 void setStyle() {
@@ -139,8 +140,6 @@ void getPars(map<int, map<int, map<int, float> > >& pars, string inFile) {
   getline(file, line);  //read first line
 
   int j = -1, nbins = mubins.size()-1;
-  if (inFile.find("spring80x") != string::npos) nbins = bins80x;
-
   for (int i=0; getline(file, line); i++) {
 
     string str;

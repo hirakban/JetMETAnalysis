@@ -303,7 +303,8 @@ int main(int argc,char**argv)
     //
     float weight(1.0);
     float flavorWeight(1.0);
-    bitset<8> bits( 81 );
+    bitset<8> bits( 65 );
+    if (doIDrelrsp) bits = bitset<8>( 81 );
     JRAEvent* JRAEvt = new JRAEvent(tree,bits);
     tree->SetBranchStatus("*",0);
     vector<string> branch_names = {"nref","weight","rho","refpdgid","refpt",
