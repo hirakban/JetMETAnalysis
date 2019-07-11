@@ -108,6 +108,7 @@ int main(int argc,char** argv)
   vector<string> tdrlabels = cl.getVector<string>("tdrlabels",             "");
   bool           tdrautobins=cl.getValue<bool>   ("tdrautobins",        false);
   bool           drawrange = cl.getValue<bool>   ("drawrange",           true);
+  bool           center    = cl.getValue<bool>   ("center",             false);
 
 
   bool           leginplot = cl.getValue<bool>   ("leginplot",           true);
@@ -281,6 +282,19 @@ int main(int argc,char** argv)
 
       string alg=algs[ialg];
       
+/*
+TDirectory* dir=0;
+if (alg.find("puppi")!=string::npos) {
+
+TFile* file2 = 0;
+if (input.find("etarsp")!=string::npos) file2 = new TFile( "newtune_noCorr/etarsp.root", "READ" );
+else file2 = new TFile( "newtune_noCorr/relrsp.root", "READ" );
+
+dir =(TDirectory*)file2->Get(alg.c_str());
+}
+else dir =(TDirectory*)file->Get(alg.c_str());
+*/
+
       TDirectory* dir =(TDirectory*)file->Get(alg.c_str());
       if (0==dir && override) {
         continue;
@@ -305,7 +319,28 @@ int main(int argc,char** argv)
 	gl.begin_loop();
 	vector<unsigned int> indices;
 	TGraphErrors* g(0);
+
+  //hack, add this as string in command line
+  vector<int> xs = {1,  2,   3,   4,   5,   6,   7,   8,   9,   10,   11,   12,   13,   14,   15,   17,
+       20,   23,   27,   30,   35,   40,   45,   57,   72,   90,   120,   150,
+       200,   300,   400,   550,   750,   1000,   1500,   2000,   2500,   3000,
+       3500,   4000,   4500,   5000,   10000};
+
 	while ((g=gl.next_object(indices))) {
+
+    if (center) {
+      double *yerr = g->GetEY(), *x = g->GetX(), *y = g->GetY();
+      int n= g->GetN();
+      for (int i=0; i<n; i++) {
+
+        int j=0;
+        for (j=0; j<int(xs.size())-1; j++) {
+          if (xs[j] <= x[i] && x[i] < xs[j+1]) break;
+        }
+        g->SetPoint( i, (xs[j+1]+xs[j])/2., y[i] );
+        g->SetPointError( i, (xs[j+1]-xs[j])/2., yerr[i] );
+      }
+    }
 
 	  graphs.push_back(g);
 	  ranges.push_back(get_range(gl,indices,variables.size()==1,refpt));

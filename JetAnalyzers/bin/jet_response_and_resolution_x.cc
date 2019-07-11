@@ -93,6 +93,7 @@ int main(int argc,char**argv)
   float          pffitmax      = cl.getValue<float>  ("pffitmax",            -1.);
   float          puppifitmax   = cl.getValue<float>  ("puppifitmax",         -1.);
 
+  bool           addChi2Ndof   = cl.getValue<bool>  ("addChi2Ndof",        false);
   bool           semifitted    = cl.getValue<bool>  ("semifitted",         false);
   float          addUnc        = cl.getValue<float> ("addUnc",               0.0);
   vector<float>  fixCTerm      = cl.getVector<float>("fixCTerm",       "-9999.0");
@@ -343,7 +344,7 @@ int main(int argc,char**argv)
     
     // add new points to current response & resolution graphs
 
-    if (hrsp->Integral()==0) continue;
+    if ( hrsp->Integral()==0 || hrsp->GetEntries()<100 ) continue;
     
     double x(0.0),ex(0.0);
     if (hlvar.nobjects()>0) {
@@ -420,6 +421,7 @@ int main(int argc,char**argv)
     else if (hlrsp.quantity().find("RelRsp")!=string::npos) {
       
       double erel  = e/y;
+      if (erel<0) continue;
       double eerel = erel*std::sqrt(ee*ee/e/e+ey*ey/y/y);
       
       e  = erel;
@@ -437,6 +439,10 @@ int main(int argc,char**argv)
     if(addUnc>0.0) {
         // add an additional uncertainty in quadrature to each point
         ee  = std::sqrt(ee*ee+addUnc*e*addUnc*e);
+    }
+    if (addChi2Ndof) {
+      double chi2ndof = (frsp==0 ? 1 : frsp->GetChisquare()/frsp->GetNDF());
+      ee *= ( chi2ndof<1 ? 1 : sqrt(chi2ndof) );
     }
 
     int n = grsp->GetN();

@@ -15,8 +15,11 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
   map<int, map<int, map<int, float> > > pars1, pars2;
   getPars( pars1, era1 + "/" + era1 + "_PtResolution_ak" + to_string(r) + alg1 + "l1l2l3.txt" );
   getPars( pars2, era2 + "/" + era2 + "_PtResolution_ak" + to_string(r) + alg2 + "l1l2l3.txt" );
+//  getPars( pars2, era2 + "/" + era2 + "_PtResolution_ak" + to_string(r) + alg2 + ".txt" );
 
   int iEta = getEtaIndex(eta);
+
+//  if (eta==0 && r==4) str_pTs = "15 " + str_pTs;
   vector<float> pTs;
 
   int delim_pos;
@@ -33,7 +36,8 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
   TH1F* h = new TH1F("h", "h", mubins.size()-1, &mubins[0]);
   h->Draw();
 
-  h->GetXaxis()->SetTitle("#mu");
+//  h->GetXaxis()->SetTitle("#mu");
+  h->GetXaxis()->SetTitle("Number of Pileup Interactions");
   h->GetXaxis()->SetNdivisions(7, 2, 0);
   h->GetYaxis()->SetTitle("JER");
   h->GetYaxis()->SetTitleOffset(1.3);
@@ -43,9 +47,10 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
   TLatex text;
   text.SetNDC();
   text.SetTextSize(0.04);
-  text.DrawLatex(0.75, 0.87, "p_{T}^{Jet} (GeV)");
+  text.DrawLatex(0.75, 0.87, "p_{T}^{Jet} [GeV]");
 
-  TLegend* leg = new TLegend(.35,.75,.65,.85);
+//  TLegend* leg = new TLegend(.35,.75,.65,.85);
+  TLegend* leg = new TLegend(.44,.75,.69,.85);
   leg->SetTextSize(0.04);
   leg->SetBorderSize(0);
   leg->SetFillColor(0);
@@ -61,8 +66,8 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
       g2->SetPoint( iMu, mu, getRes( pars2[iEta][iMu][0], pars2[iEta][iMu][1], pars2[iEta][iMu][2], pars2[iEta][iMu][3], pTs[iPt] ) );
     }
     g1->SetMarkerStyle(iPt+24);
-    g1->SetMarkerColor( kBlack ); //get<1>( alg_style[alg1] ) );
-    g1->SetLineColor( kBlack ); //get<1>( alg_style[alg1] ) );
+    g1->SetMarkerColor( get<1>( alg_style[alg1] ) );
+    g1->SetLineColor( get<1>( alg_style[alg1] ) );
 //    g1->SetLineStyle( get<2>( alg_style[alg1] ) );
     g1->Draw("plsame");
 
@@ -77,15 +82,20 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
     t->Draw();  text.DrawLatex(0.83, .825-iPt*nPt*0.012,  Form("%.0f", pTs[iPt]) );
 
     if (iPt==0) {
-      leg->AddEntry(g1, Form("%s %s", era1.substr(0, era1.find('_')).data(), get<0>( alg_style[alg1] ).data()), "L");
-      leg->AddEntry(g2, Form("%s %s", era2.substr(0, era2.find('_')).data(), get<0>( alg_style[alg2] ).data()), "L");
+//      leg->AddEntry(g1, Form("%s %s", era1.substr(0, era1.find('_')).data(), get<0>( alg_style[alg1] ).data()), "L");
+//      leg->AddEntry(g2, Form("%s %s", era2.substr(0, era2.find('_')).data(), get<0>( alg_style[alg2] ).data()), "L");
+
+      leg->AddEntry(g1, Form("#bf{%s}", get<0>( alg_style[alg1] ).data()), "L");
+      leg->AddEntry(g2, Form("#bf{%s}", get<0>( alg_style[alg2] ).data()), "L");
     }
   }
 
   text.DrawLatex(0.2, 0.87, "Anti-k_{T}");
   text.DrawLatex(0.2, 0.82, Form("R=0.%i", r));
+  text.DrawLatex(0.2, 0.77, "Response");
+  text.DrawLatex(0.2, 0.72, "Corrected");
 
-  text.DrawLatex( 0.45, 0.87, Form("%2.1f#leq#eta<%2.1f", etabins[iEta], etabins[iEta+1]) );
+  text.DrawLatex( 0.45, 0.87, Form("%2.1f#leq|#eta|<%2.1f", etabins[iEta], etabins[iEta+1]) );
   leg->Draw();
 
   text.SetTextSize(0.05);
@@ -94,7 +104,11 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
 
   text.SetTextSize(0.035);
   text.SetTextFont(42);
-  text.DrawLatex(0.85, 0.96, "(13 TeV)");
+  text.DrawLatex(0.87, 0.96, "13 TeV");
+
+  text.SetTextSize(0.04);
+  text.SetTextFont(52);
+  text.DrawLatex(0.295, 0.96, "Simulation"); // Preliminary");
 
   c->Print( Form("Rel/ak%i/JERMu_eta%.1f.pdf", r, etabins[iEta]) );
 }

@@ -211,6 +211,7 @@ struct JERWriter
                                         var2nd1 = roundf(proffit->Eval(var2nd1) * 100) / 100;
                                         if (var2nd1 < 2) var2nd1 = 0;
                                         var2nd2 = roundf(proffit->Eval(var2nd2) * 100) / 100;
+                                        if (var2nd2>40) var2nd2 = 90;
                                     }
 
                                     string name = ssfunc.str()+ss2ndVar.str();
@@ -289,6 +290,7 @@ struct JERWriter
                                     var2nd1 = roundf(proffit->Eval(var2nd1) * 100) / 100;
                                     if (var2nd1 < 2) var2nd1 = 0;
                                     var2nd2 = roundf(proffit->Eval(var2nd2) * 100) / 100;
+                                    if (var2nd2>40) var2nd2 = 90;
                                 }
 
                                 string name = ssfunc.str()+ss2ndVar.str();
