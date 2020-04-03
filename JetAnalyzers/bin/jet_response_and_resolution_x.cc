@@ -114,6 +114,7 @@ int main(int argc,char**argv)
   const string s_sigma="sqrt([0]*abs([0])/(x*x)+[1]*[1]*pow(x,[3])+[2]*[2])";
   const string s_sigma_calo="sqrt([0]*[0]/(x*x)+[1]*[1]*pow(x,[3])+[2]*[2])";
   const string s_sigma_angle="[0]+[1]*exp(-x/[2])";
+  const string s_sigma_angle1="[0]+[1]*exp(-x/[2])+[3]*exp(-x/[4])";
   //const string s_sigma="sqrt(((TMath::Sign(1,[0])*sq([0]/x))+(sq([1])*(x^([3]-1))))+sq([2]))";
   const string s_aone ="[0]";
   const string s_atwo ="[0]*x**[1]";
@@ -518,6 +519,7 @@ int main(int argc,char**argv)
       if(hlrsp.quantity().find("EtaRsp")!=string::npos ||
          hlrsp.quantity().find("PhiRsp")!=string::npos) {
          fnc = new TF1("fit",s_sigma_angle.c_str(),xmin,xmax);
+         // fnc = new TF1("fit",s_sigma_angle.c_str(),xmin,xmax);
       }
       else if(alg.find("calo")!=string::npos) {
          fnc = new TF1("fit",s_sigma_calo.c_str(),xmin,xmax);
@@ -537,6 +539,7 @@ int main(int argc,char**argv)
 
       if(hlrsp.quantity().find("EtaRsp")!=string::npos ||
          hlrsp.quantity().find("PhiRsp")!=string::npos) {
+         // fnc->SetParameters(0.005,0.05,150.0,0.02,150.0);
          fnc->SetParameters(0.005,0.02,150.0);
       }
       else if(alg.find("calo")!=string::npos) {

@@ -13,25 +13,35 @@ fi
 v=${args[0]}
 
 filersp="jra_f.root" #use jra.root to not draw fits
-rads=(4 8)
-algos=("pf" "pfchs" "puppi")
+#rads=(4 8)
+rads=(4)
+#algos=("pf" "pfchs" "puppi")
+algos=("pf" "pfchs")
 
-eta1s=(0   1.1 2.1 3.2)
-eta2s=(0.5 1.3 2.3 4.7)
+#eta1s=(0   1.1 1.9 2.1 2.3 3.2)
+#eta2s=(0.5 1.3 2.1 2.3 2.5 4.7)
+
+eta1s=(0   0.5 0.8 1.1 2.1 3.2)
+eta2s=(0.5 0.8 1.1 1.3 2.3 4.7)
+
 
 #pt1s=(15 20 27 30 45 90  750)
 #pt2s=(17 23 30 35 57 120 1000)
 
-pt1s=(27 30)
-pt2s=(30 35)
+pt1s=(15 20 23 27 30 45)
+pt2s=(17 23 27 30 35 57)
 
-mus=(0 10 20 30 40 50 60)
+#pt1s=(150)
+#pt2s=(200)
+
+
+mus=(0 10 20 30 40 50 60 70)
 
 #Use these parameters for JERmu script#
 pTs="30 50 100 200"
-era1="Fall17_17Nov2017_V32_102X_MC"
+era1="UL2017_V1_SimpleL1_MC"
 alg1="pfchs"
-era2="Autumn18_V8_MC"
+era2="UL2017_V1_SimpleL1_MC"
 alg2="pfchs"
 ##
 
@@ -62,7 +72,10 @@ for rad in "${rads[@]}" ; do
       for ((i=0;i<${#pt1s[@]};++i)) ; do
         eval "root -l -b -q 'drawRsp.c(\"$filersp\", $rad, \"$v\", ${eta1s[ieta]}, ${eta2s[ieta]}, ${pt1s[i]}, ${pt2s[i]}, \"$a\")'"
 
+        eval "root -l -b -q 'drawRsp.c(\"$filersp\", $rad, \"$v\", ${eta1s[ieta]}, ${eta2s[ieta]}, ${pt1s[i]}, ${pt2s[i]}, \"$a\", ${mus[1]}, ${mus[2]})'"
         eval "root -l -b -q 'drawRsp.c(\"$filersp\", $rad, \"$v\", ${eta1s[ieta]}, ${eta2s[ieta]}, ${pt1s[i]}, ${pt2s[i]}, \"$a\", ${mus[2]}, ${mus[3]})'"
+        eval "root -l -b -q 'drawRsp.c(\"$filersp\", $rad, \"$v\", ${eta1s[ieta]}, ${eta2s[ieta]}, ${pt1s[i]}, ${pt2s[i]}, \"$a\", ${mus[4]}, ${mus[5]})'"
+
         eval "root -l -b -q 'drawRsp.c(\"$filersp\", $rad, \"$v\", ${eta1s[ieta]}, ${eta2s[ieta]}, ${pt1s[i]}, ${pt2s[i]}, \"$a\", ${mus[5]}, ${mus[6]})'"
 
 #        for mu in "${mus[@]}" ; do

@@ -1,0 +1,1091 @@
+ak4pfl1l2l3
+ak4pfchsl1l2l3
+31-Jan-2020 16:53:44 CST  Initiating request to open file root://cmsxrootd-site.fnal.gov//store/mc/RunIISummer19UL17MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/FlatPU0to70_106X_mc2017_realistic_v6-v3/40000/FFEE2656-43CF-4247-8A06-8B04E8FF00F5.root
+%MSG-w XrdAdaptorInternal:  file_open 31-Jan-2020 16:56:30 CST pre-events
+Failed to open file at URL root://cmsxrootd-site.fnal.gov:1094//store/mc/RunIISummer19UL17MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/FlatPU0to70_106X_mc2017_realistic_v6-v3/40000/FFEE2656-43CF-4247-8A06-8B04E8FF00F5.root.
+%MSG
+%MSG-w XrdAdaptorInternal:  file_open 31-Jan-2020 16:56:56 CST pre-events
+Failed to open file at URL root://cmsxrootd-site.fnal.gov:1094//store/mc/RunIISummer19UL17MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/FlatPU0to70_106X_mc2017_realistic_v6-v3/40000/FFEE2656-43CF-4247-8A06-8B04E8FF00F5.root?tried=.
+%MSG
+31-Jan-2020 16:56:56 CST  Fallback request to file root://cmsxrootd.fnal.gov//store/mc/RunIISummer19UL17MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/FlatPU0to70_106X_mc2017_realistic_v6-v3/40000/FFEE2656-43CF-4247-8A06-8B04E8FF00F5.root
+%MSG-w XrdAdaptor:  file_open 31-Jan-2020 16:56:59 CST pre-events
+Data is served from T2_US_Wisconsin instead of original site T1_US_FNAL
+%MSG
+31-Jan-2020 16:57:01 CST  Successfully opened file root://cmsxrootd.fnal.gov//store/mc/RunIISummer19UL17MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/FlatPU0to70_106X_mc2017_realistic_v6-v3/40000/FFEE2656-43CF-4247-8A06-8B04E8FF00F5.root
+Begin processing the 1st record. Run 1, Event 675805, LumiSection 6759 on stream 0 at 31-Jan-2020 16:57:06.597 CST
+Begin processing the 101st record. Run 1, Event 675902, LumiSection 6760 on stream 0 at 31-Jan-2020 16:57:22.971 CST
+Begin processing the 201st record. Run 1, Event 676011, LumiSection 6761 on stream 0 at 31-Jan-2020 16:57:35.922 CST
+Begin processing the 301st record. Run 1, Event 676101, LumiSection 6762 on stream 0 at 31-Jan-2020 16:57:48.747 CST
+Begin processing the 401st record. Run 1, Event 18175710, LumiSection 181758 on stream 0 at 31-Jan-2020 16:58:01.609 CST
+Begin processing the 501st record. Run 1, Event 18184201, LumiSection 181843 on stream 0 at 31-Jan-2020 16:58:14.257 CST
+Begin processing the 601st record. Run 1, Event 18186201, LumiSection 181863 on stream 0 at 31-Jan-2020 16:58:26.615 CST
+Begin processing the 701st record. Run 1, Event 18186315, LumiSection 181864 on stream 0 at 31-Jan-2020 16:58:38.660 CST
+Begin processing the 801st record. Run 1, Event 18186405, LumiSection 181865 on stream 0 at 31-Jan-2020 16:58:51.429 CST
+Begin processing the 901st record. Run 1, Event 18186508, LumiSection 181866 on stream 0 at 31-Jan-2020 16:59:04.921 CST
+Begin processing the 1001st record. Run 1, Event 18186706, LumiSection 181868 on stream 0 at 31-Jan-2020 16:59:19.288 CST
+Begin processing the 1101st record. Run 1, Event 18186910, LumiSection 181870 on stream 0 at 31-Jan-2020 16:59:31.734 CST
+Begin processing the 1201st record. Run 1, Event 18187005, LumiSection 181871 on stream 0 at 31-Jan-2020 16:59:44.488 CST
+Begin processing the 1301st record. Run 1, Event 18187113, LumiSection 181872 on stream 0 at 31-Jan-2020 16:59:55.907 CST
+Begin processing the 1401st record. Run 1, Event 18187308, LumiSection 181874 on stream 0 at 31-Jan-2020 17:00:07.776 CST
+Begin processing the 1501st record. Run 1, Event 18187509, LumiSection 181876 on stream 0 at 31-Jan-2020 17:00:19.995 CST
+Begin processing the 1601st record. Run 1, Event 18187610, LumiSection 181877 on stream 0 at 31-Jan-2020 17:00:32.685 CST
+Begin processing the 1701st record. Run 1, Event 18187711, LumiSection 181878 on stream 0 at 31-Jan-2020 17:00:44.949 CST
+Begin processing the 1801st record. Run 1, Event 18187913, LumiSection 181880 on stream 0 at 31-Jan-2020 17:00:57.295 CST
+Begin processing the 1901st record. Run 1, Event 18188116, LumiSection 181882 on stream 0 at 31-Jan-2020 17:01:11.801 CST
+Begin processing the 2001st record. Run 1, Event 18188206, LumiSection 181883 on stream 0 at 31-Jan-2020 17:01:24.340 CST
+Begin processing the 2101st record. Run 1, Event 18188306, LumiSection 181884 on stream 0 at 31-Jan-2020 17:01:36.686 CST
+Begin processing the 2201st record. Run 1, Event 3887802, LumiSection 38879 on stream 0 at 31-Jan-2020 17:01:48.386 CST
+Begin processing the 2301st record. Run 1, Event 3887912, LumiSection 38880 on stream 0 at 31-Jan-2020 17:02:00.726 CST
+Begin processing the 2401st record. Run 1, Event 3888005, LumiSection 38881 on stream 0 at 31-Jan-2020 17:02:13.375 CST
+Begin processing the 2501st record. Run 1, Event 3888105, LumiSection 38882 on stream 0 at 31-Jan-2020 17:02:25.616 CST
+Begin processing the 2601st record. Run 1, Event 3888204, LumiSection 38883 on stream 0 at 31-Jan-2020 17:02:38.443 CST
+Begin processing the 2701st record. Run 1, Event 3888311, LumiSection 38884 on stream 0 at 31-Jan-2020 17:02:51.508 CST
+Begin processing the 2801st record. Run 1, Event 3888420, LumiSection 38885 on stream 0 at 31-Jan-2020 17:03:06.722 CST
+Begin processing the 2901st record. Run 1, Event 3888506, LumiSection 38886 on stream 0 at 31-Jan-2020 17:03:19.261 CST
+Begin processing the 3001st record. Run 1, Event 3888609, LumiSection 38887 on stream 0 at 31-Jan-2020 17:03:31.753 CST
+Begin processing the 3101st record. Run 1, Event 3888708, LumiSection 38888 on stream 0 at 31-Jan-2020 17:03:44.650 CST
+Begin processing the 3201st record. Run 1, Event 3888802, LumiSection 38889 on stream 0 at 31-Jan-2020 17:03:57.082 CST
+Begin processing the 3301st record. Run 1, Event 3888913, LumiSection 38890 on stream 0 at 31-Jan-2020 17:04:09.178 CST
+Begin processing the 3401st record. Run 1, Event 3889008, LumiSection 38891 on stream 0 at 31-Jan-2020 17:04:21.691 CST
+Begin processing the 3501st record. Run 1, Event 3889107, LumiSection 38892 on stream 0 at 31-Jan-2020 17:04:34.181 CST
+Begin processing the 3601st record. Run 1, Event 3889201, LumiSection 38893 on stream 0 at 31-Jan-2020 17:04:46.968 CST
+Begin processing the 3701st record. Run 1, Event 3889305, LumiSection 38894 on stream 0 at 31-Jan-2020 17:05:02.377 CST
+Begin processing the 3801st record. Run 1, Event 3889409, LumiSection 38895 on stream 0 at 31-Jan-2020 17:05:15.061 CST
+Begin processing the 3901st record. Run 1, Event 3889507, LumiSection 38896 on stream 0 at 31-Jan-2020 17:05:27.607 CST
+Begin processing the 4001st record. Run 1, Event 3889606, LumiSection 38897 on stream 0 at 31-Jan-2020 17:05:40.806 CST
+Begin processing the 4101st record. Run 1, Event 3889706, LumiSection 38898 on stream 0 at 31-Jan-2020 17:05:54.257 CST
+Begin processing the 4201st record. Run 1, Event 3889806, LumiSection 38899 on stream 0 at 31-Jan-2020 17:06:06.964 CST
+Begin processing the 4301st record. Run 1, Event 3889907, LumiSection 38900 on stream 0 at 31-Jan-2020 17:06:20.516 CST
+Begin processing the 4401st record. Run 1, Event 7204703, LumiSection 72048 on stream 0 at 31-Jan-2020 17:06:33.409 CST
+Begin processing the 4501st record. Run 1, Event 7204816, LumiSection 72049 on stream 0 at 31-Jan-2020 17:06:47.141 CST
+Begin processing the 4601st record. Run 1, Event 7204914, LumiSection 72050 on stream 0 at 31-Jan-2020 17:07:02.663 CST
+Begin processing the 4701st record. Run 1, Event 7205004, LumiSection 72051 on stream 0 at 31-Jan-2020 17:07:15.855 CST
+Begin processing the 4801st record. Run 1, Event 7205108, LumiSection 72052 on stream 0 at 31-Jan-2020 17:07:31.411 CST
+Begin processing the 4901st record. Run 1, Event 7205205, LumiSection 72053 on stream 0 at 31-Jan-2020 17:07:49.500 CST
+Begin processing the 5001st record. Run 1, Event 7205310, LumiSection 72054 on stream 0 at 31-Jan-2020 17:08:02.848 CST
+Begin processing the 5101st record. Run 1, Event 7205403, LumiSection 72055 on stream 0 at 31-Jan-2020 17:08:15.769 CST
+Begin processing the 5201st record. Run 1, Event 7205506, LumiSection 72056 on stream 0 at 31-Jan-2020 17:08:27.703 CST
+Begin processing the 5301st record. Run 1, Event 7205613, LumiSection 72057 on stream 0 at 31-Jan-2020 17:08:40.177 CST
+Begin processing the 5401st record. Run 1, Event 7205710, LumiSection 72058 on stream 0 at 31-Jan-2020 17:08:52.642 CST
+Begin processing the 5501st record. Run 1, Event 7205812, LumiSection 72059 on stream 0 at 31-Jan-2020 17:09:07.007 CST
+Begin processing the 5601st record. Run 1, Event 7205915, LumiSection 72060 on stream 0 at 31-Jan-2020 17:09:19.382 CST
+Begin processing the 5701st record. Run 1, Event 7206001, LumiSection 72061 on stream 0 at 31-Jan-2020 17:09:31.447 CST
+Begin processing the 5801st record. Run 1, Event 7206108, LumiSection 72062 on stream 0 at 31-Jan-2020 17:09:43.029 CST
+Begin processing the 5901st record. Run 1, Event 7206207, LumiSection 72063 on stream 0 at 31-Jan-2020 17:09:54.987 CST
+Begin processing the 6001st record. Run 1, Event 7211407, LumiSection 72115 on stream 0 at 31-Jan-2020 17:10:07.311 CST
+Begin processing the 6101st record. Run 1, Event 7211510, LumiSection 72116 on stream 0 at 31-Jan-2020 17:10:19.724 CST
+Begin processing the 6201st record. Run 1, Event 7211604, LumiSection 72117 on stream 0 at 31-Jan-2020 17:10:32.630 CST
+Begin processing the 6301st record. Run 1, Event 7211705, LumiSection 72118 on stream 0 at 31-Jan-2020 17:10:46.030 CST
+Begin processing the 6401st record. Run 1, Event 7211810, LumiSection 72119 on stream 0 at 31-Jan-2020 17:11:00.493 CST
+Begin processing the 6501st record. Run 1, Event 7211907, LumiSection 72120 on stream 0 at 31-Jan-2020 17:11:12.818 CST
+Begin processing the 6601st record. Run 1, Event 10404901, LumiSection 104050 on stream 0 at 31-Jan-2020 17:11:25.445 CST
+Begin processing the 6701st record. Run 1, Event 10405109, LumiSection 104052 on stream 0 at 31-Jan-2020 17:11:37.732 CST
+Begin processing the 6801st record. Run 1, Event 11222015, LumiSection 112221 on stream 0 at 31-Jan-2020 17:11:50.409 CST
+Begin processing the 6901st record. Run 1, Event 11223201, LumiSection 112233 on stream 0 at 31-Jan-2020 17:12:02.085 CST
+Begin processing the 7001st record. Run 1, Event 11223301, LumiSection 112234 on stream 0 at 31-Jan-2020 17:12:14.379 CST
+Begin processing the 7101st record. Run 1, Event 11223407, LumiSection 112235 on stream 0 at 31-Jan-2020 17:12:26.939 CST
+Begin processing the 7201st record. Run 1, Event 11223509, LumiSection 112236 on stream 0 at 31-Jan-2020 17:12:55.476 CST
+Begin processing the 7301st record. Run 1, Event 11223612, LumiSection 112237 on stream 0 at 31-Jan-2020 17:13:10.104 CST
+Begin processing the 7401st record. Run 1, Event 11223703, LumiSection 112238 on stream 0 at 31-Jan-2020 17:13:22.953 CST
+Begin processing the 7501st record. Run 1, Event 11223811, LumiSection 112239 on stream 0 at 31-Jan-2020 17:13:34.273 CST
+Begin processing the 7601st record. Run 1, Event 11223914, LumiSection 112240 on stream 0 at 31-Jan-2020 17:13:46.985 CST
+Begin processing the 7701st record. Run 1, Event 11224002, LumiSection 112241 on stream 0 at 31-Jan-2020 17:13:59.748 CST
+Begin processing the 7801st record. Run 1, Event 11224203, LumiSection 112243 on stream 0 at 31-Jan-2020 17:14:12.424 CST
+Begin processing the 7901st record. Run 1, Event 11224403, LumiSection 112245 on stream 0 at 31-Jan-2020 17:14:25.617 CST
+Begin processing the 8001st record. Run 1, Event 11224510, LumiSection 112246 on stream 0 at 31-Jan-2020 17:14:38.171 CST
+Begin processing the 8101st record. Run 1, Event 11224705, LumiSection 112248 on stream 0 at 31-Jan-2020 17:14:51.709 CST
+Begin processing the 8201st record. Run 1, Event 11224813, LumiSection 112249 on stream 0 at 31-Jan-2020 17:15:06.964 CST
+Begin processing the 8301st record. Run 1, Event 11224906, LumiSection 112250 on stream 0 at 31-Jan-2020 17:15:19.855 CST
+Begin processing the 8401st record. Run 1, Event 11225004, LumiSection 112251 on stream 0 at 31-Jan-2020 17:15:32.514 CST
+Begin processing the 8501st record. Run 1, Event 11225104, LumiSection 112252 on stream 0 at 31-Jan-2020 17:15:45.413 CST
+Begin processing the 8601st record. Run 1, Event 11225311, LumiSection 112254 on stream 0 at 31-Jan-2020 17:15:57.641 CST
+Begin processing the 8701st record. Run 1, Event 11225404, LumiSection 112255 on stream 0 at 31-Jan-2020 17:16:10.269 CST
+Begin processing the 8801st record. Run 1, Event 11703711, LumiSection 117038 on stream 0 at 31-Jan-2020 17:16:22.932 CST
+Begin processing the 8901st record. Run 1, Event 11706616, LumiSection 117067 on stream 0 at 31-Jan-2020 17:16:35.674 CST
+Begin processing the 9001st record. Run 1, Event 11706713, LumiSection 117068 on stream 0 at 31-Jan-2020 17:16:48.024 CST
+Begin processing the 9101st record. Run 1, Event 11706801, LumiSection 117069 on stream 0 at 31-Jan-2020 17:17:02.234 CST
+Begin processing the 9201st record. Run 1, Event 11706901, LumiSection 117070 on stream 0 at 31-Jan-2020 17:17:14.981 CST
+Begin processing the 9301st record. Run 1, Event 11707003, LumiSection 117071 on stream 0 at 31-Jan-2020 17:17:27.652 CST
+Begin processing the 9401st record. Run 1, Event 11707106, LumiSection 117072 on stream 0 at 31-Jan-2020 17:17:39.885 CST
+Begin processing the 9501st record. Run 1, Event 11707202, LumiSection 117073 on stream 0 at 31-Jan-2020 17:17:51.284 CST
+Begin processing the 9601st record. Run 1, Event 11707312, LumiSection 117074 on stream 0 at 31-Jan-2020 17:18:03.007 CST
+Begin processing the 9701st record. Run 1, Event 11707409, LumiSection 117075 on stream 0 at 31-Jan-2020 17:18:14.753 CST
+Begin processing the 9801st record. Run 1, Event 11707513, LumiSection 117076 on stream 0 at 31-Jan-2020 17:18:27.319 CST
+Begin processing the 9901st record. Run 1, Event 11707606, LumiSection 117077 on stream 0 at 31-Jan-2020 17:18:39.797 CST
+Begin processing the 10001st record. Run 1, Event 11713407, LumiSection 117135 on stream 0 at 31-Jan-2020 17:18:55.070 CST
+Begin processing the 10101st record. Run 1, Event 11714016, LumiSection 117141 on stream 0 at 31-Jan-2020 17:19:07.905 CST
+Begin processing the 10201st record. Run 1, Event 11715219, LumiSection 117153 on stream 0 at 31-Jan-2020 17:19:20.304 CST
+Begin processing the 10301st record. Run 1, Event 11715411, LumiSection 117155 on stream 0 at 31-Jan-2020 17:19:32.257 CST
+Begin processing the 10401st record. Run 1, Event 11715613, LumiSection 117157 on stream 0 at 31-Jan-2020 17:19:44.779 CST
+Begin processing the 10501st record. Run 1, Event 11715712, LumiSection 117158 on stream 0 at 31-Jan-2020 17:19:57.047 CST
+Begin processing the 10601st record. Run 1, Event 11715812, LumiSection 117159 on stream 0 at 31-Jan-2020 17:20:09.493 CST
+Begin processing the 10701st record. Run 1, Event 11715906, LumiSection 117160 on stream 0 at 31-Jan-2020 17:20:22.024 CST
+Begin processing the 10801st record. Run 1, Event 11716015, LumiSection 117161 on stream 0 at 31-Jan-2020 17:20:34.798 CST
+Begin processing the 10901st record. Run 1, Event 11716110, LumiSection 117162 on stream 0 at 31-Jan-2020 17:20:49.344 CST
+Begin processing the 11001st record. Run 1, Event 12324106, LumiSection 123242 on stream 0 at 31-Jan-2020 17:21:02.071 CST
+Begin processing the 11101st record. Run 1, Event 12324211, LumiSection 123243 on stream 0 at 31-Jan-2020 17:21:13.704 CST
+Begin processing the 11201st record. Run 1, Event 12324307, LumiSection 123244 on stream 0 at 31-Jan-2020 17:21:26.137 CST
+Begin processing the 11301st record. Run 1, Event 12324411, LumiSection 123245 on stream 0 at 31-Jan-2020 17:21:38.238 CST
+Begin processing the 11401st record. Run 1, Event 12324510, LumiSection 123246 on stream 0 at 31-Jan-2020 17:21:50.206 CST
+Begin processing the 11501st record. Run 1, Event 12324614, LumiSection 123247 on stream 0 at 31-Jan-2020 17:22:02.669 CST
+Begin processing the 11601st record. Run 1, Event 825803, LumiSection 8259 on stream 0 at 31-Jan-2020 17:22:14.357 CST
+Begin processing the 11701st record. Run 1, Event 825909, LumiSection 8260 on stream 0 at 31-Jan-2020 17:22:27.475 CST
+Begin processing the 11801st record. Run 1, Event 826005, LumiSection 8261 on stream 0 at 31-Jan-2020 17:22:41.781 CST
+Begin processing the 11901st record. Run 1, Event 826102, LumiSection 8262 on stream 0 at 31-Jan-2020 17:22:53.977 CST
+Begin processing the 12001st record. Run 1, Event 826211, LumiSection 8263 on stream 0 at 31-Jan-2020 17:23:04.827 CST
+Begin processing the 12101st record. Run 1, Event 826305, LumiSection 8264 on stream 0 at 31-Jan-2020 17:23:17.588 CST
+Begin processing the 12201st record. Run 1, Event 826408, LumiSection 8265 on stream 0 at 31-Jan-2020 17:23:29.954 CST
+Begin processing the 12301st record. Run 1, Event 826515, LumiSection 8266 on stream 0 at 31-Jan-2020 17:23:42.822 CST
+Begin processing the 12401st record. Run 1, Event 826608, LumiSection 8267 on stream 0 at 31-Jan-2020 17:23:55.253 CST
+Begin processing the 12501st record. Run 1, Event 826706, LumiSection 8268 on stream 0 at 31-Jan-2020 17:24:07.916 CST
+Begin processing the 12601st record. Run 1, Event 826812, LumiSection 8269 on stream 0 at 31-Jan-2020 17:24:21.476 CST
+Begin processing the 12701st record. Run 1, Event 826905, LumiSection 8270 on stream 0 at 31-Jan-2020 17:24:35.838 CST
+Begin processing the 12801st record. Run 1, Event 827008, LumiSection 8271 on stream 0 at 31-Jan-2020 17:24:48.538 CST
+Begin processing the 12901st record. Run 1, Event 827112, LumiSection 8272 on stream 0 at 31-Jan-2020 17:25:01.371 CST
+Begin processing the 13001st record. Run 1, Event 827203, LumiSection 8273 on stream 0 at 31-Jan-2020 17:25:14.562 CST
+Begin processing the 13101st record. Run 1, Event 827316, LumiSection 8274 on stream 0 at 31-Jan-2020 17:25:26.914 CST
+Begin processing the 13201st record. Run 1, Event 827401, LumiSection 8275 on stream 0 at 31-Jan-2020 17:25:39.418 CST
+Begin processing the 13301st record. Run 1, Event 827506, LumiSection 8276 on stream 0 at 31-Jan-2020 17:25:52.410 CST
+Begin processing the 13401st record. Run 1, Event 827608, LumiSection 8277 on stream 0 at 31-Jan-2020 17:26:04.895 CST
+Begin processing the 13501st record. Run 1, Event 827710, LumiSection 8278 on stream 0 at 31-Jan-2020 17:26:17.418 CST
+Begin processing the 13601st record. Run 1, Event 827811, LumiSection 8279 on stream 0 at 31-Jan-2020 17:26:32.399 CST
+Begin processing the 13701st record. Run 1, Event 827903, LumiSection 8280 on stream 0 at 31-Jan-2020 17:26:43.921 CST
+Begin processing the 13801st record. Run 1, Event 1966406, LumiSection 19665 on stream 0 at 31-Jan-2020 17:26:55.796 CST
+Begin processing the 13901st record. Run 1, Event 1966505, LumiSection 19666 on stream 0 at 31-Jan-2020 17:27:07.976 CST
+Begin processing the 14001st record. Run 1, Event 1966602, LumiSection 19667 on stream 0 at 31-Jan-2020 17:27:19.718 CST
+Begin processing the 14101st record. Run 1, Event 1966708, LumiSection 19668 on stream 0 at 31-Jan-2020 17:27:31.882 CST
+Begin processing the 14201st record. Run 1, Event 1966813, LumiSection 19669 on stream 0 at 31-Jan-2020 17:27:43.402 CST
+Begin processing the 14301st record. Run 1, Event 1966904, LumiSection 19670 on stream 0 at 31-Jan-2020 17:27:55.203 CST
+Begin processing the 14401st record. Run 1, Event 1967007, LumiSection 19671 on stream 0 at 31-Jan-2020 17:28:07.809 CST
+Begin processing the 14501st record. Run 1, Event 1967111, LumiSection 19672 on stream 0 at 31-Jan-2020 17:28:22.349 CST
+Begin processing the 14601st record. Run 1, Event 1967207, LumiSection 19673 on stream 0 at 31-Jan-2020 17:28:34.649 CST
+Begin processing the 14701st record. Run 1, Event 1967312, LumiSection 19674 on stream 0 at 31-Jan-2020 17:28:47.238 CST
+Begin processing the 14801st record. Run 1, Event 1967411, LumiSection 19675 on stream 0 at 31-Jan-2020 17:28:59.586 CST
+Begin processing the 14901st record. Run 1, Event 1967517, LumiSection 19676 on stream 0 at 31-Jan-2020 17:29:11.503 CST
+Begin processing the 15001st record. Run 1, Event 1967606, LumiSection 19677 on stream 0 at 31-Jan-2020 17:29:23.423 CST
+Begin processing the 15101st record. Run 1, Event 1967705, LumiSection 19678 on stream 0 at 31-Jan-2020 17:29:35.860 CST
+Begin processing the 15201st record. Run 1, Event 1967813, LumiSection 19679 on stream 0 at 31-Jan-2020 17:29:48.358 CST
+Begin processing the 15301st record. Run 1, Event 1967902, LumiSection 19680 on stream 0 at 31-Jan-2020 17:30:04.622 CST
+Begin processing the 15401st record. Run 1, Event 1968006, LumiSection 19681 on stream 0 at 31-Jan-2020 17:30:19.368 CST
+Begin processing the 15501st record. Run 1, Event 1968108, LumiSection 19682 on stream 0 at 31-Jan-2020 17:30:32.038 CST
+Begin processing the 15601st record. Run 1, Event 1968202, LumiSection 19683 on stream 0 at 31-Jan-2020 17:30:45.075 CST
+Begin processing the 15701st record. Run 1, Event 1968307, LumiSection 19684 on stream 0 at 31-Jan-2020 17:30:57.233 CST
+Begin processing the 15801st record. Run 1, Event 1968411, LumiSection 19685 on stream 0 at 31-Jan-2020 17:31:09.104 CST
+Begin processing the 15901st record. Run 1, Event 1968505, LumiSection 19686 on stream 0 at 31-Jan-2020 17:31:20.882 CST
+Begin processing the 16001st record. Run 1, Event 6195811, LumiSection 61959 on stream 0 at 31-Jan-2020 17:31:32.962 CST
+Begin processing the 16101st record. Run 1, Event 6195913, LumiSection 61960 on stream 0 at 31-Jan-2020 17:31:44.901 CST
+Begin processing the 16201st record. Run 1, Event 6828801, LumiSection 68289 on stream 0 at 31-Jan-2020 17:31:57.388 CST
+Begin processing the 16301st record. Run 1, Event 6828903, LumiSection 68290 on stream 0 at 31-Jan-2020 17:32:12.170 CST
+Begin processing the 16401st record. Run 1, Event 6829002, LumiSection 68291 on stream 0 at 31-Jan-2020 17:32:24.463 CST
+Begin processing the 16501st record. Run 1, Event 6829102, LumiSection 68292 on stream 0 at 31-Jan-2020 17:32:37.005 CST
+Begin processing the 16601st record. Run 1, Event 6829209, LumiSection 68293 on stream 0 at 31-Jan-2020 17:32:48.900 CST
+Begin processing the 16701st record. Run 1, Event 6829301, LumiSection 68294 on stream 0 at 31-Jan-2020 17:33:01.240 CST
+Begin processing the 16801st record. Run 1, Event 6829416, LumiSection 68295 on stream 0 at 31-Jan-2020 17:33:13.654 CST
+Begin processing the 16901st record. Run 1, Event 6829506, LumiSection 68296 on stream 0 at 31-Jan-2020 17:33:25.718 CST
+Begin processing the 17001st record. Run 1, Event 6829616, LumiSection 68297 on stream 0 at 31-Jan-2020 17:33:38.020 CST
+Begin processing the 17101st record. Run 1, Event 6829709, LumiSection 68298 on stream 0 at 31-Jan-2020 17:33:51.108 CST
+Begin processing the 17201st record. Run 1, Event 6829811, LumiSection 68299 on stream 0 at 31-Jan-2020 17:34:05.656 CST
+Begin processing the 17301st record. Run 1, Event 6829905, LumiSection 68300 on stream 0 at 31-Jan-2020 17:34:17.534 CST
+Begin processing the 17401st record. Run 1, Event 6830003, LumiSection 68301 on stream 0 at 31-Jan-2020 17:34:29.408 CST
+Begin processing the 17501st record. Run 1, Event 6830110, LumiSection 68302 on stream 0 at 31-Jan-2020 17:34:42.126 CST
+Begin processing the 17601st record. Run 1, Event 6830216, LumiSection 68303 on stream 0 at 31-Jan-2020 17:34:54.326 CST
+Begin processing the 17701st record. Run 1, Event 6830313, LumiSection 68304 on stream 0 at 31-Jan-2020 17:35:06.916 CST
+Begin processing the 17801st record. Run 1, Event 6830414, LumiSection 68305 on stream 0 at 31-Jan-2020 17:35:19.272 CST
+Begin processing the 17901st record. Run 1, Event 6830516, LumiSection 68306 on stream 0 at 31-Jan-2020 17:35:31.591 CST
+Begin processing the 18001st record. Run 1, Event 6830612, LumiSection 68307 on stream 0 at 31-Jan-2020 17:35:44.711 CST
+Begin processing the 18101st record. Run 1, Event 6830717, LumiSection 68308 on stream 0 at 31-Jan-2020 17:35:59.178 CST
+Begin processing the 18201st record. Run 1, Event 6830810, LumiSection 68309 on stream 0 at 31-Jan-2020 17:36:11.223 CST
+Begin processing the 18301st record. Run 1, Event 6830907, LumiSection 68310 on stream 0 at 31-Jan-2020 17:36:23.353 CST
+Begin processing the 18401st record. Run 1, Event 7443311, LumiSection 74434 on stream 0 at 31-Jan-2020 17:36:35.581 CST
+Begin processing the 18501st record. Run 1, Event 7443416, LumiSection 74435 on stream 0 at 31-Jan-2020 17:36:48.013 CST
+Begin processing the 18601st record. Run 1, Event 7443513, LumiSection 74436 on stream 0 at 31-Jan-2020 17:37:00.186 CST
+Begin processing the 18701st record. Run 1, Event 7443612, LumiSection 74437 on stream 0 at 31-Jan-2020 17:37:12.959 CST
+Begin processing the 18801st record. Run 1, Event 7443717, LumiSection 74438 on stream 0 at 31-Jan-2020 17:37:25.120 CST
+Begin processing the 18901st record. Run 1, Event 7443811, LumiSection 74439 on stream 0 at 31-Jan-2020 17:37:38.179 CST
+Begin processing the 19001st record. Run 1, Event 7443902, LumiSection 74440 on stream 0 at 31-Jan-2020 17:37:52.874 CST
+Begin processing the 19101st record. Run 1, Event 7444011, LumiSection 74441 on stream 0 at 31-Jan-2020 17:38:04.997 CST
+Begin processing the 19201st record. Run 1, Event 7444101, LumiSection 74442 on stream 0 at 31-Jan-2020 17:38:17.262 CST
+Begin processing the 19301st record. Run 1, Event 7444301, LumiSection 74444 on stream 0 at 31-Jan-2020 17:38:29.833 CST
+Begin processing the 19401st record. Run 1, Event 7444413, LumiSection 74445 on stream 0 at 31-Jan-2020 17:38:42.396 CST
+Begin processing the 19501st record. Run 1, Event 7445203, LumiSection 74453 on stream 0 at 31-Jan-2020 17:38:54.965 CST
+Begin processing the 19601st record. Run 1, Event 7445307, LumiSection 74454 on stream 0 at 31-Jan-2020 17:39:07.298 CST
+Begin processing the 19701st record. Run 1, Event 7445414, LumiSection 74455 on stream 0 at 31-Jan-2020 17:39:20.006 CST
+Begin processing the 19801st record. Run 1, Event 865317, LumiSection 8654 on stream 0 at 31-Jan-2020 17:39:32.801 CST
+Begin processing the 19901st record. Run 1, Event 865407, LumiSection 8655 on stream 0 at 31-Jan-2020 17:39:48.179 CST
+Begin processing the 20001st record. Run 1, Event 865511, LumiSection 8656 on stream 0 at 31-Jan-2020 17:40:00.612 CST
+Begin processing the 20101st record. Run 1, Event 865602, LumiSection 8657 on stream 0 at 31-Jan-2020 17:40:12.535 CST
+Begin processing the 20201st record. Run 1, Event 865706, LumiSection 8658 on stream 0 at 31-Jan-2020 17:40:24.487 CST
+Begin processing the 20301st record. Run 1, Event 865812, LumiSection 8659 on stream 0 at 31-Jan-2020 17:40:36.784 CST
+Begin processing the 20401st record. Run 1, Event 865913, LumiSection 8660 on stream 0 at 31-Jan-2020 17:40:48.623 CST
+Begin processing the 20501st record. Run 1, Event 866007, LumiSection 8661 on stream 0 at 31-Jan-2020 17:41:01.316 CST
+Begin processing the 20601st record. Run 1, Event 866107, LumiSection 8662 on stream 0 at 31-Jan-2020 17:41:13.671 CST
+Begin processing the 20701st record. Run 1, Event 866210, LumiSection 8663 on stream 0 at 31-Jan-2020 17:41:26.553 CST
+Begin processing the 20801st record. Run 1, Event 866308, LumiSection 8664 on stream 0 at 31-Jan-2020 17:41:40.740 CST
+Begin processing the 20901st record. Run 1, Event 866404, LumiSection 8665 on stream 0 at 31-Jan-2020 17:41:52.934 CST
+Begin processing the 21001st record. Run 1, Event 866520, LumiSection 8666 on stream 0 at 31-Jan-2020 17:42:05.735 CST
+Begin processing the 21101st record. Run 1, Event 866618, LumiSection 8667 on stream 0 at 31-Jan-2020 17:42:18.098 CST
+Begin processing the 21201st record. Run 1, Event 866704, LumiSection 8668 on stream 0 at 31-Jan-2020 17:42:30.084 CST
+Begin processing the 21301st record. Run 1, Event 866814, LumiSection 8669 on stream 0 at 31-Jan-2020 17:42:42.438 CST
+Begin processing the 21401st record. Run 1, Event 866918, LumiSection 8670 on stream 0 at 31-Jan-2020 17:42:54.711 CST
+Begin processing the 21501st record. Run 1, Event 867016, LumiSection 8671 on stream 0 at 31-Jan-2020 17:43:07.020 CST
+Begin processing the 21601st record. Run 1, Event 867114, LumiSection 8672 on stream 0 at 31-Jan-2020 17:43:19.925 CST
+Begin processing the 21701st record. Run 1, Event 1449010, LumiSection 14491 on stream 0 at 31-Jan-2020 17:43:34.717 CST
+Begin processing the 21801st record. Run 1, Event 1449114, LumiSection 14492 on stream 0 at 31-Jan-2020 17:43:46.383 CST
+Begin processing the 21901st record. Run 1, Event 1449202, LumiSection 14493 on stream 0 at 31-Jan-2020 17:43:58.220 CST
+Begin processing the 22001st record. Run 1, Event 1449311, LumiSection 14494 on stream 0 at 31-Jan-2020 17:44:09.905 CST
+Begin processing the 22101st record. Run 1, Event 1449410, LumiSection 14495 on stream 0 at 31-Jan-2020 17:44:21.507 CST
+Begin processing the 22201st record. Run 1, Event 1449506, LumiSection 14496 on stream 0 at 31-Jan-2020 17:44:34.199 CST
+Begin processing the 22301st record. Run 1, Event 1449603, LumiSection 14497 on stream 0 at 31-Jan-2020 17:44:46.723 CST
+Begin processing the 22401st record. Run 1, Event 2150308, LumiSection 21504 on stream 0 at 31-Jan-2020 17:44:59.678 CST
+Begin processing the 22501st record. Run 1, Event 2150401, LumiSection 21505 on stream 0 at 31-Jan-2020 17:45:12.622 CST
+Begin processing the 22601st record. Run 1, Event 2150516, LumiSection 21506 on stream 0 at 31-Jan-2020 17:45:27.265 CST
+Begin processing the 22701st record. Run 1, Event 2150620, LumiSection 21507 on stream 0 at 31-Jan-2020 17:45:38.902 CST
+Begin processing the 22801st record. Run 1, Event 2150705, LumiSection 21508 on stream 0 at 31-Jan-2020 17:45:51.496 CST
+Begin processing the 22901st record. Run 1, Event 2150812, LumiSection 21509 on stream 0 at 31-Jan-2020 17:46:04.136 CST
+Begin processing the 23001st record. Run 1, Event 2150901, LumiSection 21510 on stream 0 at 31-Jan-2020 17:46:16.398 CST
+Begin processing the 23101st record. Run 1, Event 2151005, LumiSection 21511 on stream 0 at 31-Jan-2020 17:46:29.310 CST
+Begin processing the 23201st record. Run 1, Event 2151101, LumiSection 21512 on stream 0 at 31-Jan-2020 17:46:41.040 CST
+Begin processing the 23301st record. Run 1, Event 2151205, LumiSection 21513 on stream 0 at 31-Jan-2020 17:46:52.705 CST
+Begin processing the 23401st record. Run 1, Event 2151311, LumiSection 21514 on stream 0 at 31-Jan-2020 17:47:05.085 CST
+Begin processing the 23501st record. Run 1, Event 2151403, LumiSection 21515 on stream 0 at 31-Jan-2020 17:47:19.090 CST
+Begin processing the 23601st record. Run 1, Event 2151508, LumiSection 21516 on stream 0 at 31-Jan-2020 17:47:31.856 CST
+Begin processing the 23701st record. Run 1, Event 2151604, LumiSection 21517 on stream 0 at 31-Jan-2020 17:47:44.591 CST
+Begin processing the 23801st record. Run 1, Event 2151705, LumiSection 21518 on stream 0 at 31-Jan-2020 17:47:57.050 CST
+Begin processing the 23901st record. Run 1, Event 2151805, LumiSection 21519 on stream 0 at 31-Jan-2020 17:48:09.210 CST
+Begin processing the 24001st record. Run 1, Event 2151906, LumiSection 21520 on stream 0 at 31-Jan-2020 17:48:20.904 CST
+Begin processing the 24101st record. Run 1, Event 2152018, LumiSection 21521 on stream 0 at 31-Jan-2020 17:48:32.637 CST
+Begin processing the 24201st record. Run 1, Event 2152116, LumiSection 21522 on stream 0 at 31-Jan-2020 17:48:44.458 CST
+Begin processing the 24301st record. Run 1, Event 2152204, LumiSection 21523 on stream 0 at 31-Jan-2020 17:48:56.561 CST
+Begin processing the 24401st record. Run 1, Event 2152304, LumiSection 21524 on stream 0 at 31-Jan-2020 17:49:11.320 CST
+Begin processing the 24501st record. Run 1, Event 2152411, LumiSection 21525 on stream 0 at 31-Jan-2020 17:49:23.640 CST
+Begin processing the 24601st record. Run 1, Event 2152513, LumiSection 21526 on stream 0 at 31-Jan-2020 17:49:35.180 CST
+Begin processing the 24701st record. Run 1, Event 2152605, LumiSection 21527 on stream 0 at 31-Jan-2020 17:49:47.323 CST
+Begin processing the 24801st record. Run 1, Event 2152710, LumiSection 21528 on stream 0 at 31-Jan-2020 17:49:59.848 CST
+Begin processing the 24901st record. Run 1, Event 7071913, LumiSection 70720 on stream 0 at 31-Jan-2020 17:50:12.308 CST
+Begin processing the 25001st record. Run 1, Event 7072002, LumiSection 70721 on stream 0 at 31-Jan-2020 17:50:23.913 CST
+Begin processing the 25101st record. Run 1, Event 7072117, LumiSection 70722 on stream 0 at 31-Jan-2020 17:50:36.309 CST
+Begin processing the 25201st record. Run 1, Event 7072202, LumiSection 70723 on stream 0 at 31-Jan-2020 17:50:49.015 CST
+Begin processing the 25301st record. Run 1, Event 7072312, LumiSection 70724 on stream 0 at 31-Jan-2020 17:51:03.779 CST
+Begin processing the 25401st record. Run 1, Event 7072404, LumiSection 70725 on stream 0 at 31-Jan-2020 17:51:16.223 CST
+Begin processing the 25501st record. Run 1, Event 7072505, LumiSection 70726 on stream 0 at 31-Jan-2020 17:51:28.245 CST
+Begin processing the 25601st record. Run 1, Event 7072617, LumiSection 70727 on stream 0 at 31-Jan-2020 17:51:40.328 CST
+Begin processing the 25701st record. Run 1, Event 7072713, LumiSection 70728 on stream 0 at 31-Jan-2020 17:51:52.189 CST
+Begin processing the 25801st record. Run 1, Event 7072804, LumiSection 70729 on stream 0 at 31-Jan-2020 17:52:03.956 CST
+Begin processing the 25901st record. Run 1, Event 7072903, LumiSection 70730 on stream 0 at 31-Jan-2020 17:52:15.856 CST
+Begin processing the 26001st record. Run 1, Event 7073012, LumiSection 70731 on stream 0 at 31-Jan-2020 17:52:28.030 CST
+Begin processing the 26101st record. Run 1, Event 7073102, LumiSection 70732 on stream 0 at 31-Jan-2020 17:52:40.464 CST
+Begin processing the 26201st record. Run 1, Event 7073212, LumiSection 70733 on stream 0 at 31-Jan-2020 17:52:55.365 CST
+Begin processing the 26301st record. Run 1, Event 7073317, LumiSection 70734 on stream 0 at 31-Jan-2020 17:53:08.031 CST
+Begin processing the 26401st record. Run 1, Event 7073410, LumiSection 70735 on stream 0 at 31-Jan-2020 17:53:19.308 CST
+Begin processing the 26501st record. Run 1, Event 7073506, LumiSection 70736 on stream 0 at 31-Jan-2020 17:53:31.103 CST
+Begin processing the 26601st record. Run 1, Event 7073608, LumiSection 70737 on stream 0 at 31-Jan-2020 17:53:43.317 CST
+Begin processing the 26701st record. Run 1, Event 7073705, LumiSection 70738 on stream 0 at 31-Jan-2020 17:53:55.553 CST
+Begin processing the 26801st record. Run 1, Event 7073811, LumiSection 70739 on stream 0 at 31-Jan-2020 17:54:07.466 CST
+Begin processing the 26901st record. Run 1, Event 7073907, LumiSection 70740 on stream 0 at 31-Jan-2020 17:54:19.442 CST
+Begin processing the 27001st record. Run 1, Event 7074003, LumiSection 70741 on stream 0 at 31-Jan-2020 17:54:32.498 CST
+Begin processing the 27101st record. Run 1, Event 11443108, LumiSection 114432 on stream 0 at 31-Jan-2020 17:54:47.133 CST
+Begin processing the 27201st record. Run 1, Event 11443217, LumiSection 114433 on stream 0 at 31-Jan-2020 17:54:59.772 CST
+Begin processing the 27301st record. Run 1, Event 11443305, LumiSection 114434 on stream 0 at 31-Jan-2020 17:55:11.292 CST
+Begin processing the 27401st record. Run 1, Event 11443404, LumiSection 114435 on stream 0 at 31-Jan-2020 17:55:23.957 CST
+Begin processing the 27501st record. Run 1, Event 11443508, LumiSection 114436 on stream 0 at 31-Jan-2020 17:55:35.545 CST
+Begin processing the 27601st record. Run 1, Event 11443611, LumiSection 114437 on stream 0 at 31-Jan-2020 17:55:46.892 CST
+Begin processing the 27701st record. Run 1, Event 11443714, LumiSection 114438 on stream 0 at 31-Jan-2020 17:55:59.239 CST
+Begin processing the 27801st record. Run 1, Event 11443819, LumiSection 114439 on stream 0 at 31-Jan-2020 17:56:11.787 CST
+Begin processing the 27901st record. Run 1, Event 11443905, LumiSection 114440 on stream 0 at 31-Jan-2020 17:56:25.164 CST
+Begin processing the 28001st record. Run 1, Event 11444015, LumiSection 114441 on stream 0 at 31-Jan-2020 17:56:39.977 CST
+Begin processing the 28101st record. Run 1, Event 11444121, LumiSection 114442 on stream 0 at 31-Jan-2020 17:56:52.673 CST
+Begin processing the 28201st record. Run 1, Event 11444223, LumiSection 114443 on stream 0 at 31-Jan-2020 17:57:04.606 CST
+Begin processing the 28301st record. Run 1, Event 11444301, LumiSection 114444 on stream 0 at 31-Jan-2020 17:57:17.182 CST
+Begin processing the 28401st record. Run 1, Event 11444406, LumiSection 114445 on stream 0 at 31-Jan-2020 17:57:29.506 CST
+Begin processing the 28501st record. Run 1, Event 11444504, LumiSection 114446 on stream 0 at 31-Jan-2020 17:57:41.451 CST
+Begin processing the 28601st record. Run 1, Event 11444613, LumiSection 114447 on stream 0 at 31-Jan-2020 17:57:53.514 CST
+Begin processing the 28701st record. Run 1, Event 11444708, LumiSection 114448 on stream 0 at 31-Jan-2020 17:58:05.596 CST
+Begin processing the 28801st record. Run 1, Event 11444806, LumiSection 114449 on stream 0 at 31-Jan-2020 17:58:18.302 CST
+Begin processing the 28901st record. Run 1, Event 11444908, LumiSection 114450 on stream 0 at 31-Jan-2020 17:58:32.397 CST
+Begin processing the 29001st record. Run 1, Event 11445015, LumiSection 114451 on stream 0 at 31-Jan-2020 17:58:43.611 CST
+Begin processing the 29101st record. Run 1, Event 11445104, LumiSection 114452 on stream 0 at 31-Jan-2020 17:58:56.009 CST
+Begin processing the 29201st record. Run 1, Event 11445205, LumiSection 114453 on stream 0 at 31-Jan-2020 17:59:07.983 CST
+Begin processing the 29301st record. Run 1, Event 11445306, LumiSection 114454 on stream 0 at 31-Jan-2020 17:59:20.505 CST
+Begin processing the 29401st record. Run 1, Event 11445415, LumiSection 114455 on stream 0 at 31-Jan-2020 17:59:33.465 CST
+Begin processing the 29501st record. Run 1, Event 11445516, LumiSection 114456 on stream 0 at 31-Jan-2020 17:59:45.475 CST
+Begin processing the 29601st record. Run 1, Event 11445611, LumiSection 114457 on stream 0 at 31-Jan-2020 17:59:57.869 CST
+Begin processing the 29701st record. Run 1, Event 11445708, LumiSection 114458 on stream 0 at 31-Jan-2020 18:00:11.197 CST
+Begin processing the 29801st record. Run 1, Event 11445816, LumiSection 114459 on stream 0 at 31-Jan-2020 18:00:25.812 CST
+Begin processing the 29901st record. Run 1, Event 11445908, LumiSection 114460 on stream 0 at 31-Jan-2020 18:00:38.056 CST
+Begin processing the 30001st record. Run 1, Event 8807505, LumiSection 88076 on stream 0 at 31-Jan-2020 18:00:50.206 CST
+Begin processing the 30101st record. Run 1, Event 8807607, LumiSection 88077 on stream 0 at 31-Jan-2020 18:01:02.432 CST
+Begin processing the 30201st record. Run 1, Event 13222308, LumiSection 132224 on stream 0 at 31-Jan-2020 18:01:14.741 CST
+Begin processing the 30301st record. Run 1, Event 13222410, LumiSection 132225 on stream 0 at 31-Jan-2020 18:01:26.926 CST
+Begin processing the 30401st record. Run 1, Event 13222503, LumiSection 132226 on stream 0 at 31-Jan-2020 18:01:38.290 CST
+Begin processing the 30501st record. Run 1, Event 13222607, LumiSection 132227 on stream 0 at 31-Jan-2020 18:01:50.128 CST
+Begin processing the 30601st record. Run 1, Event 13222703, LumiSection 132228 on stream 0 at 31-Jan-2020 18:02:01.870 CST
+Begin processing the 30701st record. Run 1, Event 13222805, LumiSection 132229 on stream 0 at 31-Jan-2020 18:02:15.882 CST
+Begin processing the 30801st record. Run 1, Event 13222908, LumiSection 132230 on stream 0 at 31-Jan-2020 18:02:28.078 CST
+Begin processing the 30901st record. Run 1, Event 13223008, LumiSection 132231 on stream 0 at 31-Jan-2020 18:02:40.651 CST
+Begin processing the 31001st record. Run 1, Event 13223111, LumiSection 132232 on stream 0 at 31-Jan-2020 18:02:52.663 CST
+Begin processing the 31101st record. Run 1, Event 13223218, LumiSection 132233 on stream 0 at 31-Jan-2020 18:03:04.886 CST
+Begin processing the 31201st record. Run 1, Event 13223304, LumiSection 132234 on stream 0 at 31-Jan-2020 18:03:17.671 CST
+Begin processing the 31301st record. Run 1, Event 13223414, LumiSection 132235 on stream 0 at 31-Jan-2020 18:03:29.581 CST
+Begin processing the 31401st record. Run 1, Event 4090211, LumiSection 40903 on stream 0 at 31-Jan-2020 18:03:41.499 CST
+Begin processing the 31501st record. Run 1, Event 15014401, LumiSection 150145 on stream 0 at 31-Jan-2020 18:03:55.466 CST
+Begin processing the 31601st record. Run 1, Event 15014511, LumiSection 150146 on stream 0 at 31-Jan-2020 18:04:10.166 CST
+Begin processing the 31701st record. Run 1, Event 15014602, LumiSection 150147 on stream 0 at 31-Jan-2020 18:04:22.622 CST
+Begin processing the 31801st record. Run 1, Event 15014711, LumiSection 150148 on stream 0 at 31-Jan-2020 18:04:35.298 CST
+Begin processing the 31901st record. Run 1, Event 15014802, LumiSection 150149 on stream 0 at 31-Jan-2020 18:04:47.504 CST
+Begin processing the 32001st record. Run 1, Event 15014913, LumiSection 150150 on stream 0 at 31-Jan-2020 18:04:59.738 CST
+Begin processing the 32101st record. Run 1, Event 15015016, LumiSection 150151 on stream 0 at 31-Jan-2020 18:05:12.332 CST
+Begin processing the 32201st record. Run 1, Event 15015108, LumiSection 150152 on stream 0 at 31-Jan-2020 18:05:25.162 CST
+Begin processing the 32301st record. Run 1, Event 15015206, LumiSection 150153 on stream 0 at 31-Jan-2020 18:05:38.366 CST
+Begin processing the 32401st record. Run 1, Event 15015318, LumiSection 150154 on stream 0 at 31-Jan-2020 18:05:51.123 CST
+Begin processing the 32501st record. Run 1, Event 15015404, LumiSection 150155 on stream 0 at 31-Jan-2020 18:06:05.938 CST
+Begin processing the 32601st record. Run 1, Event 15015512, LumiSection 150156 on stream 0 at 31-Jan-2020 18:06:18.643 CST
+Begin processing the 32701st record. Run 1, Event 15015604, LumiSection 150157 on stream 0 at 31-Jan-2020 18:06:30.445 CST
+Begin processing the 32801st record. Run 1, Event 15015702, LumiSection 150158 on stream 0 at 31-Jan-2020 18:06:42.711 CST
+Begin processing the 32901st record. Run 1, Event 15015806, LumiSection 150159 on stream 0 at 31-Jan-2020 18:06:54.357 CST
+Begin processing the 33001st record. Run 1, Event 15015920, LumiSection 150160 on stream 0 at 31-Jan-2020 18:07:06.447 CST
+Begin processing the 33101st record. Run 1, Event 6831010, LumiSection 68311 on stream 0 at 31-Jan-2020 18:07:18.923 CST
+Begin processing the 33201st record. Run 1, Event 6831115, LumiSection 68312 on stream 0 at 31-Jan-2020 18:07:30.876 CST
+Begin processing the 33301st record. Run 1, Event 6831208, LumiSection 68313 on stream 0 at 31-Jan-2020 18:07:43.388 CST
+Begin processing the 33401st record. Run 1, Event 6831304, LumiSection 68314 on stream 0 at 31-Jan-2020 18:07:58.593 CST
+Begin processing the 33501st record. Run 1, Event 6831401, LumiSection 68315 on stream 0 at 31-Jan-2020 18:08:11.032 CST
+Begin processing the 33601st record. Run 1, Event 6831508, LumiSection 68316 on stream 0 at 31-Jan-2020 18:08:23.971 CST
+Begin processing the 33701st record. Run 1, Event 6831609, LumiSection 68317 on stream 0 at 31-Jan-2020 18:08:36.092 CST
+Begin processing the 33801st record. Run 1, Event 6831718, LumiSection 68318 on stream 0 at 31-Jan-2020 18:08:47.821 CST
+Begin processing the 33901st record. Run 1, Event 6831816, LumiSection 68319 on stream 0 at 31-Jan-2020 18:08:59.645 CST
+Begin processing the 34001st record. Run 1, Event 6831912, LumiSection 68320 on stream 0 at 31-Jan-2020 18:09:11.495 CST
+Begin processing the 34101st record. Run 1, Event 6832012, LumiSection 68321 on stream 0 at 31-Jan-2020 18:09:23.394 CST
+Begin processing the 34201st record. Run 1, Event 6832102, LumiSection 68322 on stream 0 at 31-Jan-2020 18:09:35.854 CST
+Begin processing the 34301st record. Run 1, Event 6832206, LumiSection 68323 on stream 0 at 31-Jan-2020 18:09:50.744 CST
+Begin processing the 34401st record. Run 1, Event 6832308, LumiSection 68324 on stream 0 at 31-Jan-2020 18:10:02.802 CST
+Begin processing the 34501st record. Run 1, Event 6832406, LumiSection 68325 on stream 0 at 31-Jan-2020 18:10:14.656 CST
+Begin processing the 34601st record. Run 1, Event 6832508, LumiSection 68326 on stream 0 at 31-Jan-2020 18:10:25.724 CST
+Begin processing the 34701st record. Run 1, Event 6832601, LumiSection 68327 on stream 0 at 31-Jan-2020 18:10:37.561 CST
+Begin processing the 34801st record. Run 1, Event 6832701, LumiSection 68328 on stream 0 at 31-Jan-2020 18:10:49.888 CST
+Begin processing the 34901st record. Run 1, Event 6832806, LumiSection 68329 on stream 0 at 31-Jan-2020 18:11:01.698 CST
+Begin processing the 35001st record. Run 1, Event 6835115, LumiSection 68352 on stream 0 at 31-Jan-2020 18:11:14.528 CST
+Begin processing the 35101st record. Run 1, Event 6835206, LumiSection 68353 on stream 0 at 31-Jan-2020 18:11:27.657 CST
+Begin processing the 35201st record. Run 1, Event 6835306, LumiSection 68354 on stream 0 at 31-Jan-2020 18:11:42.144 CST
+Begin processing the 35301st record. Run 1, Event 6835404, LumiSection 68355 on stream 0 at 31-Jan-2020 18:11:54.898 CST
+Begin processing the 35401st record. Run 1, Event 6835506, LumiSection 68356 on stream 0 at 31-Jan-2020 18:12:06.970 CST
+Begin processing the 35501st record. Run 1, Event 6835608, LumiSection 68357 on stream 0 at 31-Jan-2020 18:12:18.680 CST
+Begin processing the 35601st record. Run 1, Event 6835718, LumiSection 68358 on stream 0 at 31-Jan-2020 18:12:30.657 CST
+Begin processing the 35701st record. Run 1, Event 6835803, LumiSection 68359 on stream 0 at 31-Jan-2020 18:12:42.436 CST
+Begin processing the 35801st record. Run 1, Event 6835908, LumiSection 68360 on stream 0 at 31-Jan-2020 18:12:54.617 CST
+Begin processing the 35901st record. Run 1, Event 6836021, LumiSection 68361 on stream 0 at 31-Jan-2020 18:13:06.417 CST
+Begin processing the 36001st record. Run 1, Event 6836114, LumiSection 68362 on stream 0 at 31-Jan-2020 18:13:19.501 CST
+Begin processing the 36101st record. Run 1, Event 6836215, LumiSection 68363 on stream 0 at 31-Jan-2020 18:13:34.459 CST
+Begin processing the 36201st record. Run 1, Event 6836303, LumiSection 68364 on stream 0 at 31-Jan-2020 18:13:47.022 CST
+Begin processing the 36301st record. Run 1, Event 6836404, LumiSection 68365 on stream 0 at 31-Jan-2020 18:13:58.817 CST
+Begin processing the 36401st record. Run 1, Event 6836511, LumiSection 68366 on stream 0 at 31-Jan-2020 18:14:10.320 CST
+Begin processing the 36501st record. Run 1, Event 6836620, LumiSection 68367 on stream 0 at 31-Jan-2020 18:14:22.306 CST
+Begin processing the 36601st record. Run 1, Event 6836706, LumiSection 68368 on stream 0 at 31-Jan-2020 18:14:34.631 CST
+Begin processing the 36701st record. Run 1, Event 6836813, LumiSection 68369 on stream 0 at 31-Jan-2020 18:14:46.493 CST
+Begin processing the 36801st record. Run 1, Event 6836903, LumiSection 68370 on stream 0 at 31-Jan-2020 18:14:58.857 CST
+Begin processing the 36901st record. Run 1, Event 6837007, LumiSection 68371 on stream 0 at 31-Jan-2020 18:15:12.194 CST
+Begin processing the 37001st record. Run 1, Event 6881003, LumiSection 68811 on stream 0 at 31-Jan-2020 18:15:27.272 CST
+Begin processing the 37101st record. Run 1, Event 6881110, LumiSection 68812 on stream 0 at 31-Jan-2020 18:15:39.511 CST
+Begin processing the 37201st record. Run 1, Event 6881204, LumiSection 68813 on stream 0 at 31-Jan-2020 18:15:51.097 CST
+Begin processing the 37301st record. Run 1, Event 6881303, LumiSection 68814 on stream 0 at 31-Jan-2020 18:16:03.085 CST
+Begin processing the 37401st record. Run 1, Event 6881406, LumiSection 68815 on stream 0 at 31-Jan-2020 18:16:15.696 CST
+Begin processing the 37501st record. Run 1, Event 6881517, LumiSection 68816 on stream 0 at 31-Jan-2020 18:16:28.498 CST
+Begin processing the 37601st record. Run 1, Event 6881602, LumiSection 68817 on stream 0 at 31-Jan-2020 18:16:40.674 CST
+Begin processing the 37701st record. Run 1, Event 6881706, LumiSection 68818 on stream 0 at 31-Jan-2020 18:16:52.864 CST
+Begin processing the 37801st record. Run 1, Event 6881813, LumiSection 68819 on stream 0 at 31-Jan-2020 18:17:06.810 CST
+Begin processing the 37901st record. Run 1, Event 6881909, LumiSection 68820 on stream 0 at 31-Jan-2020 18:17:20.916 CST
+Begin processing the 38001st record. Run 1, Event 6882017, LumiSection 68821 on stream 0 at 31-Jan-2020 18:17:31.928 CST
+Begin processing the 38101st record. Run 1, Event 6882104, LumiSection 68822 on stream 0 at 31-Jan-2020 18:17:43.689 CST
+Begin processing the 38201st record. Run 1, Event 9395114, LumiSection 93952 on stream 0 at 31-Jan-2020 18:17:56.734 CST
+Begin processing the 38301st record. Run 1, Event 9395206, LumiSection 93953 on stream 0 at 31-Jan-2020 18:18:09.018 CST
+Begin processing the 38401st record. Run 1, Event 9395305, LumiSection 93954 on stream 0 at 31-Jan-2020 18:18:21.254 CST
+Begin processing the 38501st record. Run 1, Event 9395414, LumiSection 93955 on stream 0 at 31-Jan-2020 18:18:33.183 CST
+Begin processing the 38601st record. Run 1, Event 9395511, LumiSection 93956 on stream 0 at 31-Jan-2020 18:18:44.854 CST
+Begin processing the 38701st record. Run 1, Event 9395605, LumiSection 93957 on stream 0 at 31-Jan-2020 18:18:57.724 CST
+Begin processing the 38801st record. Run 1, Event 9395707, LumiSection 93958 on stream 0 at 31-Jan-2020 18:19:12.584 CST
+Begin processing the 38901st record. Run 1, Event 9395809, LumiSection 93959 on stream 0 at 31-Jan-2020 18:19:24.835 CST
+Begin processing the 39001st record. Run 1, Event 9395909, LumiSection 93960 on stream 0 at 31-Jan-2020 18:19:36.947 CST
+Begin processing the 39101st record. Run 1, Event 9396002, LumiSection 93961 on stream 0 at 31-Jan-2020 18:19:49.250 CST
+Begin processing the 39201st record. Run 1, Event 9396107, LumiSection 93962 on stream 0 at 31-Jan-2020 18:20:01.692 CST
+Begin processing the 39301st record. Run 1, Event 9396207, LumiSection 93963 on stream 0 at 31-Jan-2020 18:20:13.450 CST
+Begin processing the 39401st record. Run 1, Event 9396321, LumiSection 93964 on stream 0 at 31-Jan-2020 18:20:26.282 CST
+Begin processing the 39501st record. Run 1, Event 9396408, LumiSection 93965 on stream 0 at 31-Jan-2020 18:20:38.249 CST
+Begin processing the 39601st record. Run 1, Event 1407602, LumiSection 14077 on stream 0 at 31-Jan-2020 18:20:51.597 CST
+Begin processing the 39701st record. Run 1, Event 1407714, LumiSection 14078 on stream 0 at 31-Jan-2020 18:21:06.528 CST
+Begin processing the 39801st record. Run 1, Event 1407809, LumiSection 14079 on stream 0 at 31-Jan-2020 18:21:18.455 CST
+Begin processing the 39901st record. Run 1, Event 1413006, LumiSection 14131 on stream 0 at 31-Jan-2020 18:21:30.910 CST
+Begin processing the 40001st record. Run 1, Event 1413104, LumiSection 14132 on stream 0 at 31-Jan-2020 18:21:42.751 CST
+Begin processing the 40101st record. Run 1, Event 1413211, LumiSection 14133 on stream 0 at 31-Jan-2020 18:21:54.912 CST
+Begin processing the 40201st record. Run 1, Event 1413316, LumiSection 14134 on stream 0 at 31-Jan-2020 18:22:06.950 CST
+Begin processing the 40301st record. Run 1, Event 1413403, LumiSection 14135 on stream 0 at 31-Jan-2020 18:22:19.565 CST
+Begin processing the 40401st record. Run 1, Event 1821613, LumiSection 18217 on stream 0 at 31-Jan-2020 18:22:31.764 CST
+Begin processing the 40501st record. Run 1, Event 1821913, LumiSection 18220 on stream 0 at 31-Jan-2020 18:22:45.058 CST
+Begin processing the 40601st record. Run 1, Event 1823105, LumiSection 18232 on stream 0 at 31-Jan-2020 18:23:00.314 CST
+Begin processing the 40701st record. Run 1, Event 1823205, LumiSection 18233 on stream 0 at 31-Jan-2020 18:23:12.794 CST
+Begin processing the 40801st record. Run 1, Event 1823411, LumiSection 18235 on stream 0 at 31-Jan-2020 18:23:24.422 CST
+Begin processing the 40901st record. Run 1, Event 1829507, LumiSection 18296 on stream 0 at 31-Jan-2020 18:23:37.416 CST
+Begin processing the 41001st record. Run 1, Event 1829610, LumiSection 18297 on stream 0 at 31-Jan-2020 18:23:50.221 CST
+Begin processing the 41101st record. Run 1, Event 1829719, LumiSection 18298 on stream 0 at 31-Jan-2020 18:24:01.717 CST
+Begin processing the 41201st record. Run 1, Event 1829807, LumiSection 18299 on stream 0 at 31-Jan-2020 18:24:13.832 CST
+Begin processing the 41301st record. Run 1, Event 1829902, LumiSection 18300 on stream 0 at 31-Jan-2020 18:24:26.239 CST
+Begin processing the 41401st record. Run 1, Event 1830015, LumiSection 18301 on stream 0 at 31-Jan-2020 18:24:39.459 CST
+Begin processing the 41501st record. Run 1, Event 1830118, LumiSection 18302 on stream 0 at 31-Jan-2020 18:24:53.922 CST
+Begin processing the 41601st record. Run 1, Event 1830202, LumiSection 18303 on stream 0 at 31-Jan-2020 18:25:06.300 CST
+Begin processing the 41701st record. Run 1, Event 1830419, LumiSection 18305 on stream 0 at 31-Jan-2020 18:25:18.850 CST
+Begin processing the 41801st record. Run 1, Event 4093708, LumiSection 40938 on stream 0 at 31-Jan-2020 18:25:31.414 CST
+Begin processing the 41901st record. Run 1, Event 4093805, LumiSection 40939 on stream 0 at 31-Jan-2020 18:25:43.647 CST
+Begin processing the 42001st record. Run 1, Event 4093912, LumiSection 40940 on stream 0 at 31-Jan-2020 18:25:56.611 CST
+Begin processing the 42101st record. Run 1, Event 4094011, LumiSection 40941 on stream 0 at 31-Jan-2020 18:26:09.443 CST
+Begin processing the 42201st record. Run 1, Event 4094102, LumiSection 40942 on stream 0 at 31-Jan-2020 18:26:22.128 CST
+Begin processing the 42301st record. Run 1, Event 4094215, LumiSection 40943 on stream 0 at 31-Jan-2020 18:26:35.129 CST
+Begin processing the 42401st record. Run 1, Event 4094307, LumiSection 40944 on stream 0 at 31-Jan-2020 18:26:49.716 CST
+Begin processing the 42501st record. Run 1, Event 4094401, LumiSection 40945 on stream 0 at 31-Jan-2020 18:27:01.820 CST
+Begin processing the 42601st record. Run 1, Event 4094501, LumiSection 40946 on stream 0 at 31-Jan-2020 18:27:13.295 CST
+Begin processing the 42701st record. Run 1, Event 4094612, LumiSection 40947 on stream 0 at 31-Jan-2020 18:27:25.278 CST
+Begin processing the 42801st record. Run 1, Event 4094716, LumiSection 40948 on stream 0 at 31-Jan-2020 18:27:37.011 CST
+Begin processing the 42901st record. Run 1, Event 4094808, LumiSection 40949 on stream 0 at 31-Jan-2020 18:27:48.859 CST
+Begin processing the 43001st record. Run 1, Event 4094902, LumiSection 40950 on stream 0 at 31-Jan-2020 18:28:01.506 CST
+Begin processing the 43101st record. Run 1, Event 4095006, LumiSection 40951 on stream 0 at 31-Jan-2020 18:28:13.891 CST
+Begin processing the 43201st record. Run 1, Event 4095110, LumiSection 40952 on stream 0 at 31-Jan-2020 18:28:27.140 CST
+Begin processing the 43301st record. Run 1, Event 4095216, LumiSection 40953 on stream 0 at 31-Jan-2020 18:28:41.572 CST
+Begin processing the 43401st record. Run 1, Event 4095315, LumiSection 40954 on stream 0 at 31-Jan-2020 18:28:54.738 CST
+Begin processing the 43501st record. Run 1, Event 4095415, LumiSection 40955 on stream 0 at 31-Jan-2020 18:29:07.388 CST
+Begin processing the 43601st record. Run 1, Event 4095505, LumiSection 40956 on stream 0 at 31-Jan-2020 18:29:20.132 CST
+Begin processing the 43701st record. Run 1, Event 4095610, LumiSection 40957 on stream 0 at 31-Jan-2020 18:29:32.325 CST
+Begin processing the 43801st record. Run 1, Event 4095713, LumiSection 40958 on stream 0 at 31-Jan-2020 18:29:44.627 CST
+Begin processing the 43901st record. Run 1, Event 4095805, LumiSection 40959 on stream 0 at 31-Jan-2020 18:29:57.146 CST
+Begin processing the 44001st record. Run 1, Event 5119810, LumiSection 51199 on stream 0 at 31-Jan-2020 18:30:10.329 CST
+Begin processing the 44101st record. Run 1, Event 5128310, LumiSection 51284 on stream 0 at 31-Jan-2020 18:30:23.959 CST
+Begin processing the 44201st record. Run 1, Event 5128511, LumiSection 51286 on stream 0 at 31-Jan-2020 18:30:38.107 CST
+Begin processing the 44301st record. Run 1, Event 5128808, LumiSection 51289 on stream 0 at 31-Jan-2020 18:30:50.560 CST
+Begin processing the 44401st record. Run 1, Event 5129616, LumiSection 51297 on stream 0 at 31-Jan-2020 18:31:03.634 CST
+Begin processing the 44501st record. Run 1, Event 5129707, LumiSection 51298 on stream 0 at 31-Jan-2020 18:31:16.108 CST
+Begin processing the 44601st record. Run 1, Event 5129807, LumiSection 51299 on stream 0 at 31-Jan-2020 18:31:28.738 CST
+Begin processing the 44701st record. Run 1, Event 5130201, LumiSection 51303 on stream 0 at 31-Jan-2020 18:31:41.400 CST
+Begin processing the 44801st record. Run 1, Event 5130505, LumiSection 51306 on stream 0 at 31-Jan-2020 18:31:53.256 CST
+Begin processing the 44901st record. Run 1, Event 5131203, LumiSection 51313 on stream 0 at 31-Jan-2020 18:32:05.904 CST
+Begin processing the 45001st record. Run 1, Event 5131511, LumiSection 51316 on stream 0 at 31-Jan-2020 18:32:19.031 CST
+Begin processing the 45101st record. Run 1, Event 5513411, LumiSection 55135 on stream 0 at 31-Jan-2020 18:32:33.229 CST
+Begin processing the 45201st record. Run 1, Event 5513503, LumiSection 55136 on stream 0 at 31-Jan-2020 18:32:45.046 CST
+Begin processing the 45301st record. Run 1, Event 5513605, LumiSection 55137 on stream 0 at 31-Jan-2020 18:32:56.725 CST
+Begin processing the 45401st record. Run 1, Event 5513717, LumiSection 55138 on stream 0 at 31-Jan-2020 18:33:09.315 CST
+Begin processing the 45501st record. Run 1, Event 5513801, LumiSection 55139 on stream 0 at 31-Jan-2020 18:33:21.729 CST
+Begin processing the 45601st record. Run 1, Event 5513901, LumiSection 55140 on stream 0 at 31-Jan-2020 18:33:33.534 CST
+Begin processing the 45701st record. Run 1, Event 5514008, LumiSection 55141 on stream 0 at 31-Jan-2020 18:33:45.751 CST
+Begin processing the 45801st record. Run 1, Event 5514107, LumiSection 55142 on stream 0 at 31-Jan-2020 18:33:57.687 CST
+Begin processing the 45901st record. Run 1, Event 5514202, LumiSection 55143 on stream 0 at 31-Jan-2020 18:34:10.662 CST
+Begin processing the 46001st record. Run 1, Event 5514305, LumiSection 55144 on stream 0 at 31-Jan-2020 18:34:24.606 CST
+Begin processing the 46101st record. Run 1, Event 5514408, LumiSection 55145 on stream 0 at 31-Jan-2020 18:34:37.178 CST
+Begin processing the 46201st record. Run 1, Event 5514509, LumiSection 55146 on stream 0 at 31-Jan-2020 18:34:50.256 CST
+Begin processing the 46301st record. Run 1, Event 5514615, LumiSection 55147 on stream 0 at 31-Jan-2020 18:35:03.295 CST
+Begin processing the 46401st record. Run 1, Event 5514707, LumiSection 55148 on stream 0 at 31-Jan-2020 18:35:15.642 CST
+Begin processing the 46501st record. Run 1, Event 5514805, LumiSection 55149 on stream 0 at 31-Jan-2020 18:35:27.969 CST
+Begin processing the 46601st record. Run 1, Event 5514904, LumiSection 55150 on stream 0 at 31-Jan-2020 18:35:41.361 CST
+Begin processing the 46701st record. Run 1, Event 5515010, LumiSection 55151 on stream 0 at 31-Jan-2020 18:35:53.337 CST
+Begin processing the 46801st record. Run 1, Event 5515107, LumiSection 55152 on stream 0 at 31-Jan-2020 18:36:06.495 CST
+Begin processing the 46901st record. Run 1, Event 5515204, LumiSection 55153 on stream 0 at 31-Jan-2020 18:36:21.534 CST
+Begin processing the 47001st record. Run 1, Event 5515311, LumiSection 55154 on stream 0 at 31-Jan-2020 18:36:34.134 CST
+Begin processing the 47101st record. Run 1, Event 5515404, LumiSection 55155 on stream 0 at 31-Jan-2020 18:36:46.646 CST
+Begin processing the 47201st record. Run 1, Event 5515503, LumiSection 55156 on stream 0 at 31-Jan-2020 18:36:59.194 CST
+Begin processing the 47301st record. Run 1, Event 10314514, LumiSection 103146 on stream 0 at 31-Jan-2020 18:37:12.155 CST
+Begin processing the 47401st record. Run 1, Event 10314602, LumiSection 103147 on stream 0 at 31-Jan-2020 18:37:23.378 CST
+Begin processing the 47501st record. Run 1, Event 10314713, LumiSection 103148 on stream 0 at 31-Jan-2020 18:37:35.725 CST
+Begin processing the 47601st record. Run 1, Event 10314802, LumiSection 103149 on stream 0 at 31-Jan-2020 18:37:48.425 CST
+Begin processing the 47701st record. Run 1, Event 10314902, LumiSection 103150 on stream 0 at 31-Jan-2020 18:38:01.873 CST
+Begin processing the 47801st record. Run 1, Event 10315004, LumiSection 103151 on stream 0 at 31-Jan-2020 18:38:16.155 CST
+Begin processing the 47901st record. Run 1, Event 10315111, LumiSection 103152 on stream 0 at 31-Jan-2020 18:38:29.044 CST
+Begin processing the 48001st record. Run 1, Event 10315202, LumiSection 103153 on stream 0 at 31-Jan-2020 18:38:41.965 CST
+Begin processing the 48101st record. Run 1, Event 10315315, LumiSection 103154 on stream 0 at 31-Jan-2020 18:38:55.133 CST
+Begin processing the 48201st record. Run 1, Event 10315417, LumiSection 103155 on stream 0 at 31-Jan-2020 18:39:08.023 CST
+Begin processing the 48301st record. Run 1, Event 10315516, LumiSection 103156 on stream 0 at 31-Jan-2020 18:39:20.833 CST
+Begin processing the 48401st record. Run 1, Event 10315618, LumiSection 103157 on stream 0 at 31-Jan-2020 18:39:33.816 CST
+Begin processing the 48501st record. Run 1, Event 10315708, LumiSection 103158 on stream 0 at 31-Jan-2020 18:39:46.816 CST
+Begin processing the 48601st record. Run 1, Event 10315812, LumiSection 103159 on stream 0 at 31-Jan-2020 18:39:59.912 CST
+Begin processing the 48701st record. Run 1, Event 10315902, LumiSection 103160 on stream 0 at 31-Jan-2020 18:40:14.958 CST
+Begin processing the 48801st record. Run 1, Event 10316013, LumiSection 103161 on stream 0 at 31-Jan-2020 18:40:27.547 CST
+Begin processing the 48901st record. Run 1, Event 10316114, LumiSection 103162 on stream 0 at 31-Jan-2020 18:40:39.019 CST
+Begin processing the 49001st record. Run 1, Event 10316204, LumiSection 103163 on stream 0 at 31-Jan-2020 18:40:50.560 CST
+Begin processing the 49101st record. Run 1, Event 10316314, LumiSection 103164 on stream 0 at 31-Jan-2020 18:41:02.854 CST
+Begin processing the 49201st record. Run 1, Event 10316602, LumiSection 103167 on stream 0 at 31-Jan-2020 18:41:14.729 CST
+Begin processing the 49301st record. Run 1, Event 10621505, LumiSection 106216 on stream 0 at 31-Jan-2020 18:41:26.005 CST
+Begin processing the 49401st record. Run 1, Event 10621602, LumiSection 106217 on stream 0 at 31-Jan-2020 18:41:37.164 CST
+Begin processing the 49501st record. Run 1, Event 10621705, LumiSection 106218 on stream 0 at 31-Jan-2020 18:41:48.853 CST
+Begin processing the 49601st record. Run 1, Event 10621803, LumiSection 106219 on stream 0 at 31-Jan-2020 18:42:03.322 CST
+Begin processing the 49701st record. Run 1, Event 10621914, LumiSection 106220 on stream 0 at 31-Jan-2020 18:42:14.898 CST
+Begin processing the 49801st record. Run 1, Event 1407912, LumiSection 14080 on stream 0 at 31-Jan-2020 18:42:26.329 CST
+Begin processing the 49901st record. Run 1, Event 1408003, LumiSection 14081 on stream 0 at 31-Jan-2020 18:42:37.049 CST
+Begin processing the 50001st record. Run 1, Event 1408108, LumiSection 14082 on stream 0 at 31-Jan-2020 18:42:48.507 CST
+Begin processing the 50101st record. Run 1, Event 1408201, LumiSection 14083 on stream 0 at 31-Jan-2020 18:43:00.345 CST
+Begin processing the 50201st record. Run 1, Event 1408305, LumiSection 14084 on stream 0 at 31-Jan-2020 18:43:12.378 CST
+Begin processing the 50301st record. Run 1, Event 1408403, LumiSection 14085 on stream 0 at 31-Jan-2020 18:43:24.164 CST
+Begin processing the 50401st record. Run 1, Event 1408512, LumiSection 14086 on stream 0 at 31-Jan-2020 18:43:37.143 CST
+Begin processing the 50501st record. Run 1, Event 1408621, LumiSection 14087 on stream 0 at 31-Jan-2020 18:43:49.822 CST
+Begin processing the 50601st record. Run 1, Event 1408709, LumiSection 14088 on stream 0 at 31-Jan-2020 18:44:00.058 CST
+Begin processing the 50701st record. Run 1, Event 1408809, LumiSection 14089 on stream 0 at 31-Jan-2020 18:44:12.012 CST
+Begin processing the 50801st record. Run 1, Event 1408901, LumiSection 14090 on stream 0 at 31-Jan-2020 18:44:24.785 CST
+Begin processing the 50901st record. Run 1, Event 1409008, LumiSection 14091 on stream 0 at 31-Jan-2020 18:44:36.650 CST
+Begin processing the 51001st record. Run 1, Event 1409105, LumiSection 14092 on stream 0 at 31-Jan-2020 18:44:48.233 CST
+Begin processing the 51101st record. Run 1, Event 1409216, LumiSection 14093 on stream 0 at 31-Jan-2020 18:44:58.738 CST
+Begin processing the 51201st record. Run 1, Event 1409301, LumiSection 14094 on stream 0 at 31-Jan-2020 18:45:11.035 CST
+Begin processing the 51301st record. Run 1, Event 1409414, LumiSection 14095 on stream 0 at 31-Jan-2020 18:45:22.696 CST
+Begin processing the 51401st record. Run 1, Event 1409507, LumiSection 14096 on stream 0 at 31-Jan-2020 18:45:36.033 CST
+Begin processing the 51501st record. Run 1, Event 1409611, LumiSection 14097 on stream 0 at 31-Jan-2020 18:45:47.449 CST
+Begin processing the 51601st record. Run 1, Event 1409717, LumiSection 14098 on stream 0 at 31-Jan-2020 18:45:58.491 CST
+Begin processing the 51701st record. Run 1, Event 1409812, LumiSection 14099 on stream 0 at 31-Jan-2020 18:46:10.028 CST
+Begin processing the 51801st record. Run 1, Event 1409909, LumiSection 14100 on stream 0 at 31-Jan-2020 18:46:21.775 CST
+Begin processing the 51901st record. Run 1, Event 1410012, LumiSection 14101 on stream 0 at 31-Jan-2020 18:46:34.160 CST
+Begin processing the 52001st record. Run 1, Event 1410103, LumiSection 14102 on stream 0 at 31-Jan-2020 18:46:46.061 CST
+Begin processing the 52101st record. Run 1, Event 1410210, LumiSection 14103 on stream 0 at 31-Jan-2020 18:46:57.980 CST
+Begin processing the 52201st record. Run 1, Event 1410302, LumiSection 14104 on stream 0 at 31-Jan-2020 18:47:10.093 CST
+Begin processing the 52301st record. Run 1, Event 1410410, LumiSection 14105 on stream 0 at 31-Jan-2020 18:47:24.466 CST
+Begin processing the 52401st record. Run 1, Event 1410516, LumiSection 14106 on stream 0 at 31-Jan-2020 18:47:36.396 CST
+Begin processing the 52501st record. Run 1, Event 1410603, LumiSection 14107 on stream 0 at 31-Jan-2020 18:47:48.063 CST
+Begin processing the 52601st record. Run 1, Event 1410706, LumiSection 14108 on stream 0 at 31-Jan-2020 18:47:58.753 CST
+Begin processing the 52701st record. Run 1, Event 1410803, LumiSection 14109 on stream 0 at 31-Jan-2020 18:48:10.132 CST
+Begin processing the 52801st record. Run 1, Event 1410912, LumiSection 14110 on stream 0 at 31-Jan-2020 18:48:21.914 CST
+Begin processing the 52901st record. Run 1, Event 1411010, LumiSection 14111 on stream 0 at 31-Jan-2020 18:48:33.990 CST
+Begin processing the 53001st record. Run 1, Event 1411105, LumiSection 14112 on stream 0 at 31-Jan-2020 18:48:45.754 CST
+Begin processing the 53101st record. Run 1, Event 1411213, LumiSection 14113 on stream 0 at 31-Jan-2020 18:48:58.214 CST
+Begin processing the 53201st record. Run 1, Event 1411306, LumiSection 14114 on stream 0 at 31-Jan-2020 18:49:13.032 CST
+Begin processing the 53301st record. Run 1, Event 1411409, LumiSection 14115 on stream 0 at 31-Jan-2020 18:49:25.013 CST
+Begin processing the 53401st record. Run 1, Event 1411508, LumiSection 14116 on stream 0 at 31-Jan-2020 18:49:37.081 CST
+Begin processing the 53501st record. Run 1, Event 1411601, LumiSection 14117 on stream 0 at 31-Jan-2020 18:49:48.490 CST
+Begin processing the 53601st record. Run 1, Event 1411712, LumiSection 14118 on stream 0 at 31-Jan-2020 18:50:00.333 CST
+Begin processing the 53701st record. Run 1, Event 1411811, LumiSection 14119 on stream 0 at 31-Jan-2020 18:50:12.488 CST
+Begin processing the 53801st record. Run 1, Event 1411914, LumiSection 14120 on stream 0 at 31-Jan-2020 18:50:24.329 CST
+Begin processing the 53901st record. Run 1, Event 1412023, LumiSection 14121 on stream 0 at 31-Jan-2020 18:50:36.055 CST
+Begin processing the 54001st record. Run 1, Event 1412112, LumiSection 14122 on stream 0 at 31-Jan-2020 18:50:47.916 CST
+Begin processing the 54101st record. Run 1, Event 1412212, LumiSection 14123 on stream 0 at 31-Jan-2020 18:51:02.182 CST
+Begin processing the 54201st record. Run 1, Event 1412314, LumiSection 14124 on stream 0 at 31-Jan-2020 18:51:14.199 CST
+Begin processing the 54301st record. Run 1, Event 1412419, LumiSection 14125 on stream 0 at 31-Jan-2020 18:51:25.383 CST
+Begin processing the 54401st record. Run 1, Event 1412513, LumiSection 14126 on stream 0 at 31-Jan-2020 18:51:36.846 CST
+Begin processing the 54501st record. Run 1, Event 1412613, LumiSection 14127 on stream 0 at 31-Jan-2020 18:51:47.579 CST
+Begin processing the 54601st record. Run 1, Event 1412711, LumiSection 14128 on stream 0 at 31-Jan-2020 18:51:58.741 CST
+Begin processing the 54701st record. Run 1, Event 1412804, LumiSection 14129 on stream 0 at 31-Jan-2020 18:52:10.450 CST
+Begin processing the 54801st record. Run 1, Event 1412903, LumiSection 14130 on stream 0 at 31-Jan-2020 18:52:22.193 CST
+Begin processing the 54901st record. Run 1, Event 2119720, LumiSection 21198 on stream 0 at 31-Jan-2020 18:52:35.229 CST
+Begin processing the 55001st record. Run 1, Event 2119819, LumiSection 21199 on stream 0 at 31-Jan-2020 18:52:48.246 CST
+Begin processing the 55101st record. Run 1, Event 2119916, LumiSection 21200 on stream 0 at 31-Jan-2020 18:52:59.490 CST
+Begin processing the 55201st record. Run 1, Event 2120013, LumiSection 21201 on stream 0 at 31-Jan-2020 18:53:11.153 CST
+Begin processing the 55301st record. Run 1, Event 2120107, LumiSection 21202 on stream 0 at 31-Jan-2020 18:53:22.686 CST
+Begin processing the 55401st record. Run 1, Event 2120214, LumiSection 21203 on stream 0 at 31-Jan-2020 18:53:33.952 CST
+Begin processing the 55501st record. Run 1, Event 2120302, LumiSection 21204 on stream 0 at 31-Jan-2020 18:53:45.649 CST
+Begin processing the 55601st record. Run 1, Event 2120411, LumiSection 21205 on stream 0 at 31-Jan-2020 18:53:57.283 CST
+Begin processing the 55701st record. Run 1, Event 2120501, LumiSection 21206 on stream 0 at 31-Jan-2020 18:54:09.443 CST
+Begin processing the 55801st record. Run 1, Event 2120619, LumiSection 21207 on stream 0 at 31-Jan-2020 18:54:22.337 CST
+Begin processing the 55901st record. Run 1, Event 2120707, LumiSection 21208 on stream 0 at 31-Jan-2020 18:54:35.952 CST
+Begin processing the 56001st record. Run 1, Event 2120813, LumiSection 21209 on stream 0 at 31-Jan-2020 18:54:47.365 CST
+Begin processing the 56101st record. Run 1, Event 2120905, LumiSection 21210 on stream 0 at 31-Jan-2020 18:54:58.605 CST
+Begin processing the 56201st record. Run 1, Event 2121007, LumiSection 21211 on stream 0 at 31-Jan-2020 18:55:09.916 CST
+Begin processing the 56301st record. Run 1, Event 2121110, LumiSection 21212 on stream 0 at 31-Jan-2020 18:55:21.104 CST
+Begin processing the 56401st record. Run 1, Event 2121207, LumiSection 21213 on stream 0 at 31-Jan-2020 18:55:32.739 CST
+Begin processing the 56501st record. Run 1, Event 2121306, LumiSection 21214 on stream 0 at 31-Jan-2020 18:55:44.612 CST
+Begin processing the 56601st record. Run 1, Event 2121417, LumiSection 21215 on stream 0 at 31-Jan-2020 18:55:56.390 CST
+Begin processing the 56701st record. Run 1, Event 2121509, LumiSection 21216 on stream 0 at 31-Jan-2020 18:56:08.300 CST
+Begin processing the 56801st record. Run 1, Event 2121615, LumiSection 21217 on stream 0 at 31-Jan-2020 18:56:22.128 CST
+Begin processing the 56901st record. Run 1, Event 2121702, LumiSection 21218 on stream 0 at 31-Jan-2020 18:56:33.539 CST
+Begin processing the 57001st record. Run 1, Event 2121820, LumiSection 21219 on stream 0 at 31-Jan-2020 18:56:44.211 CST
+Begin processing the 57101st record. Run 1, Event 13703404, LumiSection 137035 on stream 0 at 31-Jan-2020 18:56:55.217 CST
+Begin processing the 57201st record. Run 1, Event 13703512, LumiSection 137036 on stream 0 at 31-Jan-2020 18:57:06.422 CST
+Begin processing the 57301st record. Run 1, Event 13703619, LumiSection 137037 on stream 0 at 31-Jan-2020 18:57:17.749 CST
+Begin processing the 57401st record. Run 1, Event 13703714, LumiSection 137038 on stream 0 at 31-Jan-2020 18:57:28.475 CST
+Begin processing the 57501st record. Run 1, Event 13703808, LumiSection 137039 on stream 0 at 31-Jan-2020 18:57:40.328 CST
+Begin processing the 57601st record. Run 1, Event 13703910, LumiSection 137040 on stream 0 at 31-Jan-2020 18:57:53.060 CST
+Begin processing the 57701st record. Run 1, Event 18960911, LumiSection 189610 on stream 0 at 31-Jan-2020 18:58:07.533 CST
+Begin processing the 57801st record. Run 1, Event 18961018, LumiSection 189611 on stream 0 at 31-Jan-2020 18:58:18.974 CST
+Begin processing the 57901st record. Run 1, Event 18961112, LumiSection 189612 on stream 0 at 31-Jan-2020 18:58:30.535 CST
+Begin processing the 58001st record. Run 1, Event 2214305, LumiSection 22144 on stream 0 at 31-Jan-2020 18:58:41.871 CST
+Begin processing the 58101st record. Run 1, Event 2214411, LumiSection 22145 on stream 0 at 31-Jan-2020 18:58:53.060 CST
+Begin processing the 58201st record. Run 1, Event 2214505, LumiSection 22146 on stream 0 at 31-Jan-2020 18:59:05.608 CST
+Begin processing the 58301st record. Run 1, Event 2214606, LumiSection 22147 on stream 0 at 31-Jan-2020 18:59:17.371 CST
+Begin processing the 58401st record. Run 1, Event 2214716, LumiSection 22148 on stream 0 at 31-Jan-2020 18:59:29.406 CST
+Begin processing the 58501st record. Run 1, Event 2214817, LumiSection 22149 on stream 0 at 31-Jan-2020 18:59:42.112 CST
+Begin processing the 58601st record. Run 1, Event 2214904, LumiSection 22150 on stream 0 at 31-Jan-2020 18:59:55.707 CST
+Begin processing the 58701st record. Run 1, Event 2215013, LumiSection 22151 on stream 0 at 31-Jan-2020 19:00:07.218 CST
+Begin processing the 58801st record. Run 1, Event 2215113, LumiSection 22152 on stream 0 at 31-Jan-2020 19:00:18.528 CST
+Begin processing the 58901st record. Run 1, Event 2215209, LumiSection 22153 on stream 0 at 31-Jan-2020 19:00:29.521 CST
+Begin processing the 59001st record. Run 1, Event 2215303, LumiSection 22154 on stream 0 at 31-Jan-2020 19:00:40.991 CST
+Begin processing the 59101st record. Run 1, Event 2215403, LumiSection 22155 on stream 0 at 31-Jan-2020 19:00:52.629 CST
+Begin processing the 59201st record. Run 1, Event 2215508, LumiSection 22156 on stream 0 at 31-Jan-2020 19:01:04.936 CST
+Begin processing the 59301st record. Run 1, Event 2215609, LumiSection 22157 on stream 0 at 31-Jan-2020 19:01:16.767 CST
+Begin processing the 59401st record. Run 1, Event 4029704, LumiSection 40298 on stream 0 at 31-Jan-2020 19:01:29.174 CST
+Begin processing the 59501st record. Run 1, Event 4029814, LumiSection 40299 on stream 0 at 31-Jan-2020 19:01:42.987 CST
+Begin processing the 59601st record. Run 1, Event 4029907, LumiSection 40300 on stream 0 at 31-Jan-2020 19:01:55.072 CST
+Begin processing the 59701st record. Run 1, Event 4030004, LumiSection 40301 on stream 0 at 31-Jan-2020 19:02:07.092 CST
+Begin processing the 59801st record. Run 1, Event 4030106, LumiSection 40302 on stream 0 at 31-Jan-2020 19:02:18.019 CST
+Begin processing the 59901st record. Run 1, Event 4030210, LumiSection 40303 on stream 0 at 31-Jan-2020 19:02:28.571 CST
+Begin processing the 60001st record. Run 1, Event 4030303, LumiSection 40304 on stream 0 at 31-Jan-2020 19:02:39.501 CST
+Begin processing the 60101st record. Run 1, Event 4030405, LumiSection 40305 on stream 0 at 31-Jan-2020 19:02:50.790 CST
+Begin processing the 60201st record. Run 1, Event 4030509, LumiSection 40306 on stream 0 at 31-Jan-2020 19:03:02.721 CST
+Begin processing the 60301st record. Run 1, Event 4030603, LumiSection 40307 on stream 0 at 31-Jan-2020 19:03:14.749 CST
+Begin processing the 60401st record. Run 1, Event 4030709, LumiSection 40308 on stream 0 at 31-Jan-2020 19:03:28.968 CST
+Begin processing the 60501st record. Run 1, Event 4030813, LumiSection 40309 on stream 0 at 31-Jan-2020 19:03:41.302 CST
+Begin processing the 60601st record. Run 1, Event 4030905, LumiSection 40310 on stream 0 at 31-Jan-2020 19:03:53.234 CST
+Begin processing the 60701st record. Run 1, Event 4031001, LumiSection 40311 on stream 0 at 31-Jan-2020 19:04:04.893 CST
+Begin processing the 60801st record. Run 1, Event 4031112, LumiSection 40312 on stream 0 at 31-Jan-2020 19:04:16.387 CST
+Begin processing the 60901st record. Run 1, Event 4031214, LumiSection 40313 on stream 0 at 31-Jan-2020 19:04:28.244 CST
+Begin processing the 61001st record. Run 1, Event 4031310, LumiSection 40314 on stream 0 at 31-Jan-2020 19:04:39.755 CST
+Begin processing the 61101st record. Run 1, Event 4031415, LumiSection 40315 on stream 0 at 31-Jan-2020 19:04:51.548 CST
+Begin processing the 61201st record. Run 1, Event 4031501, LumiSection 40316 on stream 0 at 31-Jan-2020 19:05:03.578 CST
+Begin processing the 61301st record. Run 1, Event 4031616, LumiSection 40317 on stream 0 at 31-Jan-2020 19:05:17.508 CST
+Begin processing the 61401st record. Run 1, Event 4031709, LumiSection 40318 on stream 0 at 31-Jan-2020 19:05:29.128 CST
+Begin processing the 61501st record. Run 1, Event 4031807, LumiSection 40319 on stream 0 at 31-Jan-2020 19:05:40.951 CST
+Begin processing the 61601st record. Run 1, Event 4275810, LumiSection 42759 on stream 0 at 31-Jan-2020 19:05:52.720 CST
+Begin processing the 61701st record. Run 1, Event 4275902, LumiSection 42760 on stream 0 at 31-Jan-2020 19:06:04.307 CST
+Begin processing the 61801st record. Run 1, Event 4276005, LumiSection 42761 on stream 0 at 31-Jan-2020 19:06:15.249 CST
+Begin processing the 61901st record. Run 1, Event 4276102, LumiSection 42762 on stream 0 at 31-Jan-2020 19:06:26.267 CST
+Begin processing the 62001st record. Run 1, Event 4276203, LumiSection 42763 on stream 0 at 31-Jan-2020 19:06:37.247 CST
+Begin processing the 62101st record. Run 1, Event 4276302, LumiSection 42764 on stream 0 at 31-Jan-2020 19:06:50.103 CST
+Begin processing the 62201st record. Run 1, Event 4276408, LumiSection 42765 on stream 0 at 31-Jan-2020 19:07:03.887 CST
+Begin processing the 62301st record. Run 1, Event 4276503, LumiSection 42766 on stream 0 at 31-Jan-2020 19:07:15.417 CST
+Begin processing the 62401st record. Run 1, Event 4276607, LumiSection 42767 on stream 0 at 31-Jan-2020 19:07:26.520 CST
+Begin processing the 62501st record. Run 1, Event 4276714, LumiSection 42768 on stream 0 at 31-Jan-2020 19:07:37.823 CST
+Begin processing the 62601st record. Run 1, Event 4276820, LumiSection 42769 on stream 0 at 31-Jan-2020 19:07:48.779 CST
+Begin processing the 62701st record. Run 1, Event 4276917, LumiSection 42770 on stream 0 at 31-Jan-2020 19:08:00.663 CST
+Begin processing the 62801st record. Run 1, Event 12079214, LumiSection 120793 on stream 0 at 31-Jan-2020 19:08:11.873 CST
+Begin processing the 62901st record. Run 1, Event 12079304, LumiSection 120794 on stream 0 at 31-Jan-2020 19:08:23.171 CST
+Begin processing the 63001st record. Run 1, Event 12079410, LumiSection 120795 on stream 0 at 31-Jan-2020 19:08:35.434 CST
+Begin processing the 63101st record. Run 1, Event 12079501, LumiSection 120796 on stream 0 at 31-Jan-2020 19:08:49.184 CST
+Begin processing the 63201st record. Run 1, Event 12079607, LumiSection 120797 on stream 0 at 31-Jan-2020 19:08:59.776 CST
+Begin processing the 63301st record. Run 1, Event 12079707, LumiSection 120798 on stream 0 at 31-Jan-2020 19:09:13.203 CST
+Begin processing the 63401st record. Run 1, Event 12079813, LumiSection 120799 on stream 0 at 31-Jan-2020 19:09:24.979 CST
+Begin processing the 63501st record. Run 1, Event 12079903, LumiSection 120800 on stream 0 at 31-Jan-2020 19:09:35.898 CST
+Begin processing the 63601st record. Run 1, Event 12080003, LumiSection 120801 on stream 0 at 31-Jan-2020 19:09:48.032 CST
+Begin processing the 63701st record. Run 1, Event 12080101, LumiSection 120802 on stream 0 at 31-Jan-2020 19:10:00.302 CST
+Begin processing the 63801st record. Run 1, Event 12080206, LumiSection 120803 on stream 0 at 31-Jan-2020 19:10:12.302 CST
+Begin processing the 63901st record. Run 1, Event 12080301, LumiSection 120804 on stream 0 at 31-Jan-2020 19:10:29.665 CST
+Begin processing the 64001st record. Run 1, Event 12080415, LumiSection 120805 on stream 0 at 31-Jan-2020 19:10:44.144 CST
+Begin processing the 64101st record. Run 1, Event 12080510, LumiSection 120806 on stream 0 at 31-Jan-2020 19:10:55.686 CST
+Begin processing the 64201st record. Run 1, Event 12080618, LumiSection 120807 on stream 0 at 31-Jan-2020 19:11:07.625 CST
+Begin processing the 64301st record. Run 1, Event 12080708, LumiSection 120808 on stream 0 at 31-Jan-2020 19:11:19.694 CST
+Begin processing the 64401st record. Run 1, Event 12080809, LumiSection 120809 on stream 0 at 31-Jan-2020 19:11:31.117 CST
+Begin processing the 64501st record. Run 1, Event 12080907, LumiSection 120810 on stream 0 at 31-Jan-2020 19:11:42.234 CST
+Begin processing the 64601st record. Run 1, Event 12081009, LumiSection 120811 on stream 0 at 31-Jan-2020 19:11:54.056 CST
+Begin processing the 64701st record. Run 1, Event 12081101, LumiSection 120812 on stream 0 at 31-Jan-2020 19:12:05.806 CST
+Begin processing the 64801st record. Run 1, Event 14177413, LumiSection 141775 on stream 0 at 31-Jan-2020 19:12:18.695 CST
+Begin processing the 64901st record. Run 1, Event 14177507, LumiSection 141776 on stream 0 at 31-Jan-2020 19:12:32.668 CST
+Begin processing the 65001st record. Run 1, Event 14177603, LumiSection 141777 on stream 0 at 31-Jan-2020 19:12:44.313 CST
+Begin processing the 65101st record. Run 1, Event 14177704, LumiSection 141778 on stream 0 at 31-Jan-2020 19:12:55.384 CST
+Begin processing the 65201st record. Run 1, Event 14177802, LumiSection 141779 on stream 0 at 31-Jan-2020 19:13:06.787 CST
+Begin processing the 65301st record. Run 1, Event 14177901, LumiSection 141780 on stream 0 at 31-Jan-2020 19:13:18.179 CST
+Begin processing the 65401st record. Run 1, Event 19401310, LumiSection 194014 on stream 0 at 31-Jan-2020 19:13:28.898 CST
+Begin processing the 65501st record. Run 1, Event 19401405, LumiSection 194015 on stream 0 at 31-Jan-2020 19:13:39.922 CST
+Begin processing the 65601st record. Run 1, Event 4090306, LumiSection 40904 on stream 0 at 31-Jan-2020 19:13:51.226 CST
+Begin processing the 65701st record. Run 1, Event 4090415, LumiSection 40905 on stream 0 at 31-Jan-2020 19:14:03.507 CST
+Begin processing the 65801st record. Run 1, Event 4090515, LumiSection 40906 on stream 0 at 31-Jan-2020 19:14:18.024 CST
+Begin processing the 65901st record. Run 1, Event 4090619, LumiSection 40907 on stream 0 at 31-Jan-2020 19:14:29.990 CST
+Begin processing the 66001st record. Run 1, Event 4090706, LumiSection 40908 on stream 0 at 31-Jan-2020 19:14:41.933 CST
+Begin processing the 66101st record. Run 1, Event 4090801, LumiSection 40909 on stream 0 at 31-Jan-2020 19:14:53.692 CST
+Begin processing the 66201st record. Run 1, Event 4090909, LumiSection 40910 on stream 0 at 31-Jan-2020 19:15:05.494 CST
+Begin processing the 66301st record. Run 1, Event 4091014, LumiSection 40911 on stream 0 at 31-Jan-2020 19:15:17.700 CST
+Begin processing the 66401st record. Run 1, Event 4091109, LumiSection 40912 on stream 0 at 31-Jan-2020 19:15:29.615 CST
+Begin processing the 66501st record. Run 1, Event 4091208, LumiSection 40913 on stream 0 at 31-Jan-2020 19:15:40.846 CST
+Begin processing the 66601st record. Run 1, Event 4091317, LumiSection 40914 on stream 0 at 31-Jan-2020 19:15:55.396 CST
+Begin processing the 66701st record. Run 1, Event 4091411, LumiSection 40915 on stream 0 at 31-Jan-2020 19:16:09.366 CST
+Begin processing the 66801st record. Run 1, Event 4091509, LumiSection 40916 on stream 0 at 31-Jan-2020 19:16:20.447 CST
+Begin processing the 66901st record. Run 1, Event 4091609, LumiSection 40917 on stream 0 at 31-Jan-2020 19:16:32.169 CST
+Begin processing the 67001st record. Run 1, Event 4091708, LumiSection 40918 on stream 0 at 31-Jan-2020 19:16:44.380 CST
+Begin processing the 67101st record. Run 1, Event 4091802, LumiSection 40919 on stream 0 at 31-Jan-2020 19:16:55.369 CST
+Begin processing the 67201st record. Run 1, Event 4091911, LumiSection 40920 on stream 0 at 31-Jan-2020 19:17:06.968 CST
+Begin processing the 67301st record. Run 1, Event 4092013, LumiSection 40921 on stream 0 at 31-Jan-2020 19:17:18.132 CST
+Begin processing the 67401st record. Run 1, Event 4092118, LumiSection 40922 on stream 0 at 31-Jan-2020 19:17:29.534 CST
+Begin processing the 67501st record. Run 1, Event 4092208, LumiSection 40923 on stream 0 at 31-Jan-2020 19:17:41.785 CST
+Begin processing the 67601st record. Run 1, Event 4092304, LumiSection 40924 on stream 0 at 31-Jan-2020 19:17:55.989 CST
+Begin processing the 67701st record. Run 1, Event 4092405, LumiSection 40925 on stream 0 at 31-Jan-2020 19:18:08.527 CST
+Begin processing the 67801st record. Run 1, Event 4092507, LumiSection 40926 on stream 0 at 31-Jan-2020 19:18:20.318 CST
+Begin processing the 67901st record. Run 1, Event 4092601, LumiSection 40927 on stream 0 at 31-Jan-2020 19:18:32.021 CST
+Begin processing the 68001st record. Run 1, Event 4092707, LumiSection 40928 on stream 0 at 31-Jan-2020 19:18:43.781 CST
+Begin processing the 68101st record. Run 1, Event 4092808, LumiSection 40929 on stream 0 at 31-Jan-2020 19:18:54.841 CST
+Begin processing the 68201st record. Run 1, Event 4092913, LumiSection 40930 on stream 0 at 31-Jan-2020 19:19:06.688 CST
+Begin processing the 68301st record. Run 1, Event 4093010, LumiSection 40931 on stream 0 at 31-Jan-2020 19:19:19.059 CST
+Begin processing the 68401st record. Run 1, Event 4093116, LumiSection 40932 on stream 0 at 31-Jan-2020 19:19:31.107 CST
+Begin processing the 68501st record. Run 1, Event 4093213, LumiSection 40933 on stream 0 at 31-Jan-2020 19:19:45.062 CST
+Begin processing the 68601st record. Run 1, Event 4093307, LumiSection 40934 on stream 0 at 31-Jan-2020 19:19:56.331 CST
+Begin processing the 68701st record. Run 1, Event 4093414, LumiSection 40935 on stream 0 at 31-Jan-2020 19:20:07.499 CST
+Begin processing the 68801st record. Run 1, Event 6472407, LumiSection 64725 on stream 0 at 31-Jan-2020 19:20:18.502 CST
+Begin processing the 68901st record. Run 1, Event 6472516, LumiSection 64726 on stream 0 at 31-Jan-2020 19:20:29.949 CST
+Begin processing the 69001st record. Run 1, Event 6472604, LumiSection 64727 on stream 0 at 31-Jan-2020 19:20:40.724 CST
+Begin processing the 69101st record. Run 1, Event 6472715, LumiSection 64728 on stream 0 at 31-Jan-2020 19:20:52.059 CST
+Begin processing the 69201st record. Run 1, Event 6472810, LumiSection 64729 on stream 0 at 31-Jan-2020 19:21:03.660 CST
+Begin processing the 69301st record. Run 1, Event 6472906, LumiSection 64730 on stream 0 at 31-Jan-2020 19:21:15.069 CST
+Begin processing the 69401st record. Run 1, Event 6473003, LumiSection 64731 on stream 0 at 31-Jan-2020 19:21:29.264 CST
+Begin processing the 69501st record. Run 1, Event 6473107, LumiSection 64732 on stream 0 at 31-Jan-2020 19:21:40.940 CST
+Begin processing the 69601st record. Run 1, Event 6473208, LumiSection 64733 on stream 0 at 31-Jan-2020 19:21:53.013 CST
+Begin processing the 69701st record. Run 1, Event 6771103, LumiSection 67712 on stream 0 at 31-Jan-2020 19:22:05.097 CST
+Begin processing the 69801st record. Run 1, Event 6771209, LumiSection 67713 on stream 0 at 31-Jan-2020 19:22:16.909 CST
+Begin processing the 69901st record. Run 1, Event 6771305, LumiSection 67714 on stream 0 at 31-Jan-2020 19:22:29.178 CST
+Begin processing the 70001st record. Run 1, Event 6771417, LumiSection 67715 on stream 0 at 31-Jan-2020 19:22:40.981 CST
+Begin processing the 70101st record. Run 1, Event 6771507, LumiSection 67716 on stream 0 at 31-Jan-2020 19:22:53.667 CST
+Begin processing the 70201st record. Run 1, Event 6771614, LumiSection 67717 on stream 0 at 31-Jan-2020 19:23:06.078 CST
+Begin processing the 70301st record. Run 1, Event 6771705, LumiSection 67718 on stream 0 at 31-Jan-2020 19:23:20.400 CST
+Begin processing the 70401st record. Run 1, Event 6771819, LumiSection 67719 on stream 0 at 31-Jan-2020 19:23:31.163 CST
+Begin processing the 70501st record. Run 1, Event 6771920, LumiSection 67720 on stream 0 at 31-Jan-2020 19:23:43.078 CST
+Begin processing the 70601st record. Run 1, Event 6772009, LumiSection 67721 on stream 0 at 31-Jan-2020 19:23:53.849 CST
+Begin processing the 70701st record. Run 1, Event 6772116, LumiSection 67722 on stream 0 at 31-Jan-2020 19:24:05.072 CST
+Begin processing the 70801st record. Run 1, Event 6772215, LumiSection 67723 on stream 0 at 31-Jan-2020 19:24:16.206 CST
+Begin processing the 70901st record. Run 1, Event 6772306, LumiSection 67724 on stream 0 at 31-Jan-2020 19:24:27.888 CST
+Begin processing the 71001st record. Run 1, Event 6772415, LumiSection 67725 on stream 0 at 31-Jan-2020 19:24:39.290 CST
+Begin processing the 71101st record. Run 1, Event 6772507, LumiSection 67726 on stream 0 at 31-Jan-2020 19:24:54.399 CST
+Begin processing the 71201st record. Run 1, Event 6772618, LumiSection 67727 on stream 0 at 31-Jan-2020 19:25:08.124 CST
+Begin processing the 71301st record. Run 1, Event 6772712, LumiSection 67728 on stream 0 at 31-Jan-2020 19:25:19.649 CST
+Begin processing the 71401st record. Run 1, Event 6772816, LumiSection 67729 on stream 0 at 31-Jan-2020 19:25:30.553 CST
+Begin processing the 71501st record. Run 1, Event 6772914, LumiSection 67730 on stream 0 at 31-Jan-2020 19:25:41.489 CST
+Begin processing the 71601st record. Run 1, Event 6773007, LumiSection 67731 on stream 0 at 31-Jan-2020 19:25:52.894 CST
+Begin processing the 71701st record. Run 1, Event 6773111, LumiSection 67732 on stream 0 at 31-Jan-2020 19:26:04.656 CST
+Begin processing the 71801st record. Run 1, Event 6773207, LumiSection 67733 on stream 0 at 31-Jan-2020 19:26:16.669 CST
+Begin processing the 71901st record. Run 1, Event 6773310, LumiSection 67734 on stream 0 at 31-Jan-2020 19:26:28.730 CST
+Begin processing the 72001st record. Run 1, Event 6773406, LumiSection 67735 on stream 0 at 31-Jan-2020 19:26:41.626 CST
+Begin processing the 72101st record. Run 1, Event 6773514, LumiSection 67736 on stream 0 at 31-Jan-2020 19:26:55.093 CST
+Begin processing the 72201st record. Run 1, Event 6773606, LumiSection 67737 on stream 0 at 31-Jan-2020 19:27:07.087 CST
+Begin processing the 72301st record. Run 1, Event 6773706, LumiSection 67738 on stream 0 at 31-Jan-2020 19:27:18.622 CST
+Begin processing the 72401st record. Run 1, Event 6773811, LumiSection 67739 on stream 0 at 31-Jan-2020 19:27:29.894 CST
+Begin processing the 72501st record. Run 1, Event 6773922, LumiSection 67740 on stream 0 at 31-Jan-2020 19:27:41.632 CST
+Begin processing the 72601st record. Run 1, Event 6774014, LumiSection 67741 on stream 0 at 31-Jan-2020 19:27:53.305 CST
+Begin processing the 72701st record. Run 1, Event 6774114, LumiSection 67742 on stream 0 at 31-Jan-2020 19:28:05.097 CST
+Begin processing the 72801st record. Run 1, Event 6774213, LumiSection 67743 on stream 0 at 31-Jan-2020 19:28:15.806 CST
+Begin processing the 72901st record. Run 1, Event 6774301, LumiSection 67744 on stream 0 at 31-Jan-2020 19:28:31.678 CST
+Begin processing the 73001st record. Run 1, Event 6774417, LumiSection 67745 on stream 0 at 31-Jan-2020 19:28:45.045 CST
+Begin processing the 73101st record. Run 1, Event 6774501, LumiSection 67746 on stream 0 at 31-Jan-2020 19:28:56.763 CST
+Begin processing the 73201st record. Run 1, Event 6774612, LumiSection 67747 on stream 0 at 31-Jan-2020 19:29:08.216 CST
+Begin processing the 73301st record. Run 1, Event 6774719, LumiSection 67748 on stream 0 at 31-Jan-2020 19:29:20.153 CST
+Begin processing the 73401st record. Run 1, Event 6774810, LumiSection 67749 on stream 0 at 31-Jan-2020 19:29:31.429 CST
+Begin processing the 73501st record. Run 1, Event 6774917, LumiSection 67750 on stream 0 at 31-Jan-2020 19:29:43.465 CST
+Begin processing the 73601st record. Run 1, Event 6775003, LumiSection 67751 on stream 0 at 31-Jan-2020 19:29:55.030 CST
+Begin processing the 73701st record. Run 1, Event 6775114, LumiSection 67752 on stream 0 at 31-Jan-2020 19:30:07.161 CST
+Begin processing the 73801st record. Run 1, Event 6775212, LumiSection 67753 on stream 0 at 31-Jan-2020 19:30:19.194 CST
+Begin processing the 73901st record. Run 1, Event 6775317, LumiSection 67754 on stream 0 at 31-Jan-2020 19:30:33.554 CST
+Begin processing the 74001st record. Run 1, Event 6775403, LumiSection 67755 on stream 0 at 31-Jan-2020 19:30:44.951 CST
+Begin processing the 74101st record. Run 1, Event 6775518, LumiSection 67756 on stream 0 at 31-Jan-2020 19:30:55.873 CST
+Begin processing the 74201st record. Run 1, Event 6775618, LumiSection 67757 on stream 0 at 31-Jan-2020 19:31:07.047 CST
+Begin processing the 74301st record. Run 1, Event 6775705, LumiSection 67758 on stream 0 at 31-Jan-2020 19:31:19.166 CST
+Begin processing the 74401st record. Run 1, Event 15582208, LumiSection 155823 on stream 0 at 31-Jan-2020 19:31:31.320 CST
+Begin processing the 74501st record. Run 1, Event 15582312, LumiSection 155824 on stream 0 at 31-Jan-2020 19:31:43.237 CST
+Begin processing the 74601st record. Run 1, Event 15582401, LumiSection 155825 on stream 0 at 31-Jan-2020 19:31:54.191 CST
+Begin processing the 74701st record. Run 1, Event 15582512, LumiSection 155826 on stream 0 at 31-Jan-2020 19:32:05.951 CST
+Begin processing the 74801st record. Run 1, Event 7176510, LumiSection 71766 on stream 0 at 31-Jan-2020 19:32:19.282 CST
+Begin processing the 74901st record. Run 1, Event 7176608, LumiSection 71767 on stream 0 at 31-Jan-2020 19:32:31.030 CST
+Begin processing the 75001st record. Run 1, Event 7180714, LumiSection 71808 on stream 0 at 31-Jan-2020 19:32:41.572 CST
+Begin processing the 75101st record. Run 1, Event 7183908, LumiSection 71840 on stream 0 at 31-Jan-2020 19:32:52.633 CST
+Begin processing the 75201st record. Run 1, Event 7184111, LumiSection 71842 on stream 0 at 31-Jan-2020 19:33:03.864 CST
+Begin processing the 75301st record. Run 1, Event 7184204, LumiSection 71843 on stream 0 at 31-Jan-2020 19:33:14.803 CST
+Begin processing the 75401st record. Run 1, Event 7184301, LumiSection 71844 on stream 0 at 31-Jan-2020 19:33:27.164 CST
+Begin processing the 75501st record. Run 1, Event 7184407, LumiSection 71845 on stream 0 at 31-Jan-2020 19:33:39.024 CST
+Begin processing the 75601st record. Run 1, Event 7184513, LumiSection 71846 on stream 0 at 31-Jan-2020 19:33:50.694 CST
+Begin processing the 75701st record. Run 1, Event 7185003, LumiSection 71851 on stream 0 at 31-Jan-2020 19:34:04.795 CST
+Begin processing the 75801st record. Run 1, Event 7185111, LumiSection 71852 on stream 0 at 31-Jan-2020 19:34:16.188 CST
+Begin processing the 75901st record. Run 1, Event 7185305, LumiSection 71854 on stream 0 at 31-Jan-2020 19:34:27.871 CST
+Begin processing the 76001st record. Run 1, Event 7185416, LumiSection 71855 on stream 0 at 31-Jan-2020 19:34:39.835 CST
+Begin processing the 76101st record. Run 1, Event 7185503, LumiSection 71856 on stream 0 at 31-Jan-2020 19:34:52.453 CST
+Begin processing the 76201st record. Run 1, Event 7185606, LumiSection 71857 on stream 0 at 31-Jan-2020 19:35:04.518 CST
+Begin processing the 76301st record. Run 1, Event 7185718, LumiSection 71858 on stream 0 at 31-Jan-2020 19:35:16.439 CST
+Begin processing the 76401st record. Run 1, Event 7185902, LumiSection 71860 on stream 0 at 31-Jan-2020 19:35:28.366 CST
+Begin processing the 76501st record. Run 1, Event 7186004, LumiSection 71861 on stream 0 at 31-Jan-2020 19:35:46.698 CST
+Begin processing the 76601st record. Run 1, Event 7186105, LumiSection 71862 on stream 0 at 31-Jan-2020 19:36:00.515 CST
+Begin processing the 76701st record. Run 1, Event 7186216, LumiSection 71863 on stream 0 at 31-Jan-2020 19:36:12.724 CST
+Begin processing the 76801st record. Run 1, Event 7186312, LumiSection 71864 on stream 0 at 31-Jan-2020 19:36:25.294 CST
+Begin processing the 76901st record. Run 1, Event 7186510, LumiSection 71866 on stream 0 at 31-Jan-2020 19:36:37.607 CST
+Begin processing the 77001st record. Run 1, Event 7186620, LumiSection 71867 on stream 0 at 31-Jan-2020 19:36:50.243 CST
+Begin processing the 77101st record. Run 1, Event 7186710, LumiSection 71868 on stream 0 at 31-Jan-2020 19:37:01.963 CST
+Begin processing the 77201st record. Run 1, Event 7186807, LumiSection 71869 on stream 0 at 31-Jan-2020 19:37:13.650 CST
+Begin processing the 77301st record. Run 1, Event 7186909, LumiSection 71870 on stream 0 at 31-Jan-2020 19:37:25.423 CST
+Begin processing the 77401st record. Run 1, Event 7187117, LumiSection 71872 on stream 0 at 31-Jan-2020 19:37:37.871 CST
+Begin processing the 77501st record. Run 1, Event 7187203, LumiSection 71873 on stream 0 at 31-Jan-2020 19:37:52.256 CST
+Begin processing the 77601st record. Run 1, Event 7187312, LumiSection 71874 on stream 0 at 31-Jan-2020 19:38:04.289 CST
+Begin processing the 77701st record. Run 1, Event 7187413, LumiSection 71875 on stream 0 at 31-Jan-2020 19:38:15.535 CST
+Begin processing the 77801st record. Run 1, Event 7187501, LumiSection 71876 on stream 0 at 31-Jan-2020 19:38:26.870 CST
+Begin processing the 77901st record. Run 1, Event 7187711, LumiSection 71878 on stream 0 at 31-Jan-2020 19:38:38.201 CST
+Begin processing the 78001st record. Run 1, Event 7187801, LumiSection 71879 on stream 0 at 31-Jan-2020 19:38:50.010 CST
+Begin processing the 78101st record. Run 1, Event 7187908, LumiSection 71880 on stream 0 at 31-Jan-2020 19:39:00.966 CST
+Begin processing the 78201st record. Run 1, Event 7188006, LumiSection 71881 on stream 0 at 31-Jan-2020 19:39:12.766 CST
+Begin processing the 78301st record. Run 1, Event 7188101, LumiSection 71882 on stream 0 at 31-Jan-2020 19:39:23.467 CST
+Begin processing the 78401st record. Run 1, Event 7188412, LumiSection 71885 on stream 0 at 31-Jan-2020 19:39:36.739 CST
+Begin processing the 78501st record. Run 1, Event 7188516, LumiSection 71886 on stream 0 at 31-Jan-2020 19:39:48.666 CST
+Begin processing the 78601st record. Run 1, Event 7188614, LumiSection 71887 on stream 0 at 31-Jan-2020 19:39:59.373 CST
+Begin processing the 78701st record. Run 1, Event 7188711, LumiSection 71888 on stream 0 at 31-Jan-2020 19:40:10.626 CST
+Begin processing the 78801st record. Run 1, Event 7188816, LumiSection 71889 on stream 0 at 31-Jan-2020 19:40:22.217 CST
+Begin processing the 78901st record. Run 1, Event 7188902, LumiSection 71890 on stream 0 at 31-Jan-2020 19:40:33.169 CST
+Begin processing the 79001st record. Run 1, Event 7189001, LumiSection 71891 on stream 0 at 31-Jan-2020 19:40:44.207 CST
+Begin processing the 79101st record. Run 1, Event 7189103, LumiSection 71892 on stream 0 at 31-Jan-2020 19:40:55.145 CST
+Begin processing the 79201st record. Run 1, Event 7189211, LumiSection 71893 on stream 0 at 31-Jan-2020 19:41:07.681 CST
+Begin processing the 79301st record. Run 1, Event 7189309, LumiSection 71894 on stream 0 at 31-Jan-2020 19:41:21.637 CST
+Begin processing the 79401st record. Run 1, Event 7189519, LumiSection 71896 on stream 0 at 31-Jan-2020 19:41:33.949 CST
+Begin processing the 79501st record. Run 1, Event 7189605, LumiSection 71897 on stream 0 at 31-Jan-2020 19:41:45.588 CST
+Begin processing the 79601st record. Run 1, Event 9239313, LumiSection 92394 on stream 0 at 31-Jan-2020 19:41:56.572 CST
+Begin processing the 79701st record. Run 1, Event 9239407, LumiSection 92395 on stream 0 at 31-Jan-2020 19:42:08.503 CST
+Begin processing the 79801st record. Run 1, Event 9239512, LumiSection 92396 on stream 0 at 31-Jan-2020 19:42:19.774 CST
+Begin processing the 79901st record. Run 1, Event 9239602, LumiSection 92397 on stream 0 at 31-Jan-2020 19:42:32.064 CST
+Begin processing the 80001st record. Run 1, Event 9239706, LumiSection 92398 on stream 0 at 31-Jan-2020 19:42:44.028 CST
+Begin processing the 80101st record. Run 1, Event 16950114, LumiSection 169502 on stream 0 at 31-Jan-2020 19:42:56.932 CST
+Begin processing the 80201st record. Run 1, Event 16950204, LumiSection 169503 on stream 0 at 31-Jan-2020 19:43:10.959 CST
+Begin processing the 80301st record. Run 1, Event 16950305, LumiSection 169504 on stream 0 at 31-Jan-2020 19:43:22.572 CST
+Begin processing the 80401st record. Run 1, Event 16950419, LumiSection 169505 on stream 0 at 31-Jan-2020 19:43:34.189 CST
+Begin processing the 80501st record. Run 1, Event 16950501, LumiSection 169506 on stream 0 at 31-Jan-2020 19:43:46.282 CST
+Begin processing the 80601st record. Run 1, Event 16950612, LumiSection 169507 on stream 0 at 31-Jan-2020 19:43:57.956 CST
+Begin processing the 80701st record. Run 1, Event 16950709, LumiSection 169508 on stream 0 at 31-Jan-2020 19:44:09.801 CST
+Begin processing the 80801st record. Run 1, Event 16950805, LumiSection 169509 on stream 0 at 31-Jan-2020 19:44:21.863 CST
+Begin processing the 80901st record. Run 1, Event 16950918, LumiSection 169510 on stream 0 at 31-Jan-2020 19:44:32.856 CST
+Begin processing the 81001st record. Run 1, Event 16951009, LumiSection 169511 on stream 0 at 31-Jan-2020 19:44:45.028 CST
+Begin processing the 81101st record. Run 1, Event 16951109, LumiSection 169512 on stream 0 at 31-Jan-2020 19:44:58.694 CST
+Begin processing the 81201st record. Run 1, Event 16951219, LumiSection 169513 on stream 0 at 31-Jan-2020 19:45:09.950 CST
+Begin processing the 81301st record. Run 1, Event 16951302, LumiSection 169514 on stream 0 at 31-Jan-2020 19:45:20.810 CST
+Begin processing the 81401st record. Run 1, Event 16951402, LumiSection 169515 on stream 0 at 31-Jan-2020 19:45:32.565 CST
+Begin processing the 81501st record. Run 1, Event 16951506, LumiSection 169516 on stream 0 at 31-Jan-2020 19:45:44.615 CST
+Begin processing the 81601st record. Run 1, Event 16951606, LumiSection 169517 on stream 0 at 31-Jan-2020 19:45:56.577 CST
+Begin processing the 81701st record. Run 1, Event 16951706, LumiSection 169518 on stream 0 at 31-Jan-2020 19:46:08.366 CST
+Begin processing the 81801st record. Run 1, Event 16951819, LumiSection 169519 on stream 0 at 31-Jan-2020 19:46:19.421 CST
+Begin processing the 81901st record. Run 1, Event 16951901, LumiSection 169520 on stream 0 at 31-Jan-2020 19:46:31.797 CST
+Begin processing the 82001st record. Run 1, Event 16952008, LumiSection 169521 on stream 0 at 31-Jan-2020 19:46:46.177 CST
+Begin processing the 82101st record. Run 1, Event 16952102, LumiSection 169522 on stream 0 at 31-Jan-2020 19:46:57.803 CST
+Begin processing the 82201st record. Run 1, Event 16952202, LumiSection 169523 on stream 0 at 31-Jan-2020 19:47:09.736 CST
+Begin processing the 82301st record. Run 1, Event 16952307, LumiSection 169524 on stream 0 at 31-Jan-2020 19:47:21.159 CST
+Begin processing the 82401st record. Run 1, Event 16952409, LumiSection 169525 on stream 0 at 31-Jan-2020 19:47:32.417 CST
+Begin processing the 82501st record. Run 1, Event 16952510, LumiSection 169526 on stream 0 at 31-Jan-2020 19:47:44.490 CST
+Begin processing the 82601st record. Run 1, Event 16952612, LumiSection 169527 on stream 0 at 31-Jan-2020 19:47:55.671 CST
+Begin processing the 82701st record. Run 1, Event 16952701, LumiSection 169528 on stream 0 at 31-Jan-2020 19:48:07.601 CST
+Begin processing the 82801st record. Run 1, Event 16952810, LumiSection 169529 on stream 0 at 31-Jan-2020 19:48:20.087 CST
+Begin processing the 82901st record. Run 1, Event 16952915, LumiSection 169530 on stream 0 at 31-Jan-2020 19:48:34.211 CST
+Begin processing the 83001st record. Run 1, Event 16953001, LumiSection 169531 on stream 0 at 31-Jan-2020 19:48:45.966 CST
+Begin processing the 83101st record. Run 1, Event 16953117, LumiSection 169532 on stream 0 at 31-Jan-2020 19:48:57.318 CST
+Begin processing the 83201st record. Run 1, Event 16953205, LumiSection 169533 on stream 0 at 31-Jan-2020 19:49:08.534 CST
+Begin processing the 83301st record. Run 1, Event 16953314, LumiSection 169534 on stream 0 at 31-Jan-2020 19:49:19.980 CST
+Begin processing the 83401st record. Run 1, Event 16953403, LumiSection 169535 on stream 0 at 31-Jan-2020 19:49:31.846 CST
+Begin processing the 83501st record. Run 1, Event 16953516, LumiSection 169536 on stream 0 at 31-Jan-2020 19:49:43.761 CST
+Begin processing the 83601st record. Run 1, Event 16953616, LumiSection 169537 on stream 0 at 31-Jan-2020 19:49:55.533 CST
+Begin processing the 83701st record. Run 1, Event 16953713, LumiSection 169538 on stream 0 at 31-Jan-2020 19:50:08.081 CST
+Begin processing the 83801st record. Run 1, Event 16953807, LumiSection 169539 on stream 0 at 31-Jan-2020 19:50:21.810 CST
+Begin processing the 83901st record. Run 1, Event 16953904, LumiSection 169540 on stream 0 at 31-Jan-2020 19:50:32.996 CST
+Begin processing the 84001st record. Run 1, Event 16954023, LumiSection 169541 on stream 0 at 31-Jan-2020 19:50:44.320 CST
+Begin processing the 84101st record. Run 1, Event 16954104, LumiSection 169542 on stream 0 at 31-Jan-2020 19:50:54.994 CST
+Begin processing the 84201st record. Run 1, Event 16954201, LumiSection 169543 on stream 0 at 31-Jan-2020 19:51:06.053 CST
+Begin processing the 84301st record. Run 1, Event 16954322, LumiSection 169544 on stream 0 at 31-Jan-2020 19:51:17.546 CST
+Begin processing the 84401st record. Run 1, Event 16954419, LumiSection 169545 on stream 0 at 31-Jan-2020 19:51:28.778 CST
+Begin processing the 84501st record. Run 1, Event 16954510, LumiSection 169546 on stream 0 at 31-Jan-2020 19:51:40.768 CST
+Begin processing the 84601st record. Run 1, Event 16954606, LumiSection 169547 on stream 0 at 31-Jan-2020 19:51:53.090 CST
+Begin processing the 84701st record. Run 1, Event 16954708, LumiSection 169548 on stream 0 at 31-Jan-2020 19:52:06.173 CST
+Begin processing the 84801st record. Run 1, Event 16954807, LumiSection 169549 on stream 0 at 31-Jan-2020 19:52:17.504 CST
+31-Jan-2020 19:52:28 CST  Closed file root://cmsxrootd.fnal.gov//store/mc/RunIISummer19UL17MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/FlatPU0to70_106X_mc2017_realistic_v6-v3/40000/FFEE2656-43CF-4247-8A06-8B04E8FF00F5.root
+++++++++++++++++++++++++++++++++++++++++++++++++++
+ak4pfl1l2l3JetToRef(MatchRecToGen) SUMMARY:
+nMatched = 1556031
+nRec = 7462528 fRec = 20.8513 %
+nGen = 1565215 fGen = 99.4132 %
+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+ak4pfl1l2l3JetToUncorJet(MatchRecToGen) SUMMARY:
+nMatched = 7051071
+nRec = 7462528 fRec = 94.4864 %
+nGen = 7557895 fGen = 93.2941 %
+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+ak4pfchsl1l2l3JetToRef(MatchRecToGen) SUMMARY:
+nMatched = 1554663
+nRec = 6838730 fRec = 22.7332 %
+nGen = 1565215 fGen = 99.3258 %
+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+ak4pfchsl1l2l3JetToUncorJet(MatchRecToGen) SUMMARY:
+nMatched = 6489357
+nRec = 6838730 fRec = 94.8913 %
+nGen = 7281727 fGen = 89.1184 %
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+TrigReport ---------- Event  Summary ------------
+TrigReport Events total = 84900 passed = 84900 failed = 0
+
+TrigReport ---------- Path   Summary ------------
+TrigReport  Trig Bit#   Executed     Passed     Failed      Error Name
+TrigReport     1    0      84900      84900          0          0 ak4pfl1l2l3Path
+TrigReport     1    1      84900      84900          0          0 ak4pfchsl1l2l3Path
+
+TrigReport -------End-Path   Summary ------------
+TrigReport  Trig Bit#   Executed     Passed     Failed      Error Name
+
+TrigReport ---------- Modules in Path: ak4pfl1l2l3Path ------------
+TrigReport  Trig Bit#    Visited     Passed     Failed      Error Name
+TrigReport     1    0      84900      84900          0          0 particleFlow
+TrigReport     1    1      84900      84900          0          0 kt6PFJetsRhos
+TrigReport     1    2      84900      84900          0          0 genParticlesForJetsNoNu
+TrigReport     1    3      84900      84900          0          0 ak4PFJets
+TrigReport     1    4      84900      84900          0          0 kt6PFJets
+TrigReport     1    5      84900      84900          0          0 ak4PFJetsL1FastL2L3
+TrigReport     1    6      84900      84900          0          0 ak4GenJetsNoNu
+TrigReport     1    7      84900      84900          0          0 ak4pfGenPtEta
+TrigReport     1    8      84900      84900          0          0 ak4pfl1l2l3PtEta
+TrigReport     1    9      84900      84900          0          0 ak4pfl1l2l3PtEtaUncor
+TrigReport     1   10      84900      84900          0          0 ak4pfl1l2l3JetToRef
+TrigReport     1   11      84900      84900          0          0 ak4pfl1l2l3JetToUncorJet
+TrigReport     1   12      84900      84900          0          0 ak4pfl1l2l3
+
+TrigReport ---------- Modules in Path: ak4pfchsl1l2l3Path ------------
+TrigReport  Trig Bit#    Visited     Passed     Failed      Error Name
+TrigReport     1    0      84900      84900          0          0 pfCHS
+TrigReport     1    1      84900      84900          0          0 kt6PFchsJetsRhos
+TrigReport     1    2      84900      84900          0          0 genParticlesForJetsNoNu
+TrigReport     1    3      84900      84900          0          0 ak4PFCHSJets
+TrigReport     1    4      84900      84900          0          0 kt6PFJets
+TrigReport     1    5      84900      84900          0          0 ak4PFCHSJetsL1FastL2L3
+TrigReport     1    6      84900      84900          0          0 ak4GenJetsNoNu
+TrigReport     1    7      84900      84900          0          0 ak4pfchsGenPtEta
+TrigReport     1    8      84900      84900          0          0 ak4pfchsl1l2l3PtEta
+TrigReport     1    9      84900      84900          0          0 ak4pfchsl1l2l3PtEtaUncor
+TrigReport     1   10      84900      84900          0          0 ak4pfchsl1l2l3JetToRef
+TrigReport     1   11      84900      84900          0          0 ak4pfchsl1l2l3JetToUncorJet
+TrigReport     1   12      84900      84900          0          0 ak4pfchsl1l2l3
+
+TrigReport ---------- Module Summary ------------
+TrigReport    Visited   Executed     Passed     Failed      Error Name
+TrigReport      84900      84900      84900          0          0 TriggerResults
+TrigReport     169800      84900      84900          0          0 ak4GenJetsNoNu
+TrigReport      84900      84900      84900          0          0 ak4PFCHSJets
+TrigReport      84900      84900      84900          0          0 ak4PFCHSJetsL1FastL2L3
+TrigReport      84900      84900      84900          0          0 ak4PFCHSL1FastL2L3Corrector
+TrigReport      84900      84900      84900          0          0 ak4PFCHSL1FastjetCorrector
+TrigReport      84900      84900      84900          0          0 ak4PFCHSL2RelativeCorrector
+TrigReport      84900      84900      84900          0          0 ak4PFCHSL3AbsoluteCorrector
+TrigReport      84900      84900      84900          0          0 ak4PFJets
+TrigReport      84900      84900      84900          0          0 ak4PFJetsL1FastL2L3
+TrigReport      84900      84900      84900          0          0 ak4PFL1FastL2L3Corrector
+TrigReport      84900      84900      84900          0          0 ak4PFL1FastjetCorrector
+TrigReport      84900      84900      84900          0          0 ak4PFL2RelativeCorrector
+TrigReport      84900      84900      84900          0          0 ak4PFL3AbsoluteCorrector
+TrigReport      84900      84900      84900          0          0 ak4pfGenPtEta
+TrigReport      84900      84900      84900          0          0 ak4pfchsGenPtEta
+TrigReport      84900      84900      84900          0          0 ak4pfchsl1l2l3
+TrigReport      84900      84900      84900          0          0 ak4pfchsl1l2l3JetToRef
+TrigReport      84900      84900      84900          0          0 ak4pfchsl1l2l3JetToUncorJet
+TrigReport      84900      84900      84900          0          0 ak4pfchsl1l2l3Path
+TrigReport      84900      84900      84900          0          0 ak4pfchsl1l2l3PtEta
+TrigReport      84900      84900      84900          0          0 ak4pfchsl1l2l3PtEtaUncor
+TrigReport      84900      84900      84900          0          0 ak4pfl1l2l3
+TrigReport      84900      84900      84900          0          0 ak4pfl1l2l3JetToRef
+TrigReport      84900      84900      84900          0          0 ak4pfl1l2l3JetToUncorJet
+TrigReport      84900      84900      84900          0          0 ak4pfl1l2l3Path
+TrigReport      84900      84900      84900          0          0 ak4pfl1l2l3PtEta
+TrigReport      84900      84900      84900          0          0 ak4pfl1l2l3PtEtaUncor
+TrigReport     169800      84900      84900          0          0 genParticlesForJetsNoNu
+TrigReport     169800      84900      84900          0          0 kt6PFJets
+TrigReport      84900      84900      84900          0          0 kt6PFJetsRhos
+TrigReport      84900      84900      84900          0          0 kt6PFchsJetsRhos
+TrigReport      84900      84900      84900          0          0 particleFlow
+TrigReport      84900      84900      84900          0          0 pfCHS
+
+TimeReport ---------- Event  Summary ---[sec]----
+TimeReport       event loop CPU/event = 0.122502
+TimeReport      event loop Real/event = 0.123967
+TimeReport     sum Streams Real/event = 0.122352
+TimeReport efficiency CPU/Real/thread = 0.988187
+
+TimeReport ---------- Path   Summary ---[Real sec]----
+TimeReport  per event     per exec  Name
+TimeReport   0.122107     0.122107  ak4pfl1l2l3Path
+TimeReport   0.074514     0.074514  ak4pfchsl1l2l3Path
+TimeReport  per event     per exec  Name
+
+TimeReport -------End-Path   Summary ---[Real sec]----
+TimeReport  per event     per exec  Name
+TimeReport  per event     per exec  Name
+
+TimeReport ---------- Modules in Path: ak4pfl1l2l3Path ---[Real sec]----
+TimeReport  per event    per visit  Name
+TimeReport   0.000227     0.000227  particleFlow
+TimeReport   0.023790     0.023790  kt6PFJetsRhos
+TimeReport   0.000000     0.000000  genParticlesForJetsNoNu
+TimeReport   0.019399     0.019399  ak4PFJets
+TimeReport   0.000000     0.000000  kt6PFJets
+TimeReport   0.000697     0.000697  ak4PFJetsL1FastL2L3
+TimeReport   0.000000     0.000000  ak4GenJetsNoNu
+TimeReport   0.000027     0.000027  ak4pfGenPtEta
+TimeReport   0.000051     0.000051  ak4pfl1l2l3PtEta
+TimeReport   0.000058     0.000058  ak4pfl1l2l3PtEtaUncor
+TimeReport   0.000550     0.000550  ak4pfl1l2l3JetToRef
+TimeReport   0.002620     0.002620  ak4pfl1l2l3JetToUncorJet
+TimeReport   0.000242     0.000242  ak4pfl1l2l3
+
+TimeReport ---------- Modules in Path: ak4pfchsl1l2l3Path ---[Real sec]----
+TimeReport  per event    per visit  Name
+TimeReport   0.001881     0.001881  pfCHS
+TimeReport   0.021686     0.021686  kt6PFchsJetsRhos
+TimeReport   0.000398     0.000398  genParticlesForJetsNoNu
+TimeReport   0.017450     0.017450  ak4PFCHSJets
+TimeReport   0.023666     0.023666  kt6PFJets
+TimeReport   0.000612     0.000612  ak4PFCHSJetsL1FastL2L3
+TimeReport   0.000715     0.000715  ak4GenJetsNoNu
+TimeReport   0.000024     0.000024  ak4pfchsGenPtEta
+TimeReport   0.000043     0.000043  ak4pfchsl1l2l3PtEta
+TimeReport   0.000053     0.000053  ak4pfchsl1l2l3PtEtaUncor
+TimeReport   0.000519     0.000519  ak4pfchsl1l2l3JetToRef
+TimeReport   0.002368     0.002368  ak4pfchsl1l2l3JetToUncorJet
+TimeReport   0.000242     0.000242  ak4pfchsl1l2l3
+TimeReport  per event    per visit  Name
+
+TimeReport ---------- Module Summary ---[Real sec]----
+TimeReport  per event     per exec    per visit  Name
+TimeReport   0.000003     0.000003     0.000003  TriggerResults
+TimeReport   0.000715     0.000715     0.000358  ak4GenJetsNoNu
+TimeReport   0.017450     0.017450     0.017450  ak4PFCHSJets
+TimeReport   0.000612     0.000612     0.000612  ak4PFCHSJetsL1FastL2L3
+TimeReport   0.000003     0.000003     0.000003  ak4PFCHSL1FastL2L3Corrector
+TimeReport   0.000004     0.000004     0.000004  ak4PFCHSL1FastjetCorrector
+TimeReport   0.000002     0.000002     0.000002  ak4PFCHSL2RelativeCorrector
+TimeReport   0.000009     0.000009     0.000009  ak4PFCHSL3AbsoluteCorrector
+TimeReport   0.019399     0.019399     0.019399  ak4PFJets
+TimeReport   0.000697     0.000697     0.000697  ak4PFJetsL1FastL2L3
+TimeReport   0.000003     0.000003     0.000003  ak4PFL1FastL2L3Corrector
+TimeReport   0.000005     0.000005     0.000005  ak4PFL1FastjetCorrector
+TimeReport   0.000002     0.000002     0.000002  ak4PFL2RelativeCorrector
+TimeReport   0.000009     0.000009     0.000009  ak4PFL3AbsoluteCorrector
+TimeReport   0.000027     0.000027     0.000027  ak4pfGenPtEta
+TimeReport   0.000024     0.000024     0.000024  ak4pfchsGenPtEta
+TimeReport   0.000242     0.000242     0.000242  ak4pfchsl1l2l3
+TimeReport   0.000519     0.000519     0.000519  ak4pfchsl1l2l3JetToRef
+TimeReport   0.002368     0.002368     0.002368  ak4pfchsl1l2l3JetToUncorJet
+TimeReport   0.000003     0.000003     0.000003  ak4pfchsl1l2l3Path
+TimeReport   0.000043     0.000043     0.000043  ak4pfchsl1l2l3PtEta
+TimeReport   0.000053     0.000053     0.000053  ak4pfchsl1l2l3PtEtaUncor
+TimeReport   0.000242     0.000242     0.000242  ak4pfl1l2l3
+TimeReport   0.000550     0.000550     0.000550  ak4pfl1l2l3JetToRef
+TimeReport   0.002620     0.002620     0.002620  ak4pfl1l2l3JetToUncorJet
+TimeReport   0.000003     0.000003     0.000003  ak4pfl1l2l3Path
+TimeReport   0.000051     0.000051     0.000051  ak4pfl1l2l3PtEta
+TimeReport   0.000058     0.000058     0.000058  ak4pfl1l2l3PtEtaUncor
+TimeReport   0.000398     0.000398     0.000199  genParticlesForJetsNoNu
+TimeReport   0.023666     0.023666     0.011833  kt6PFJets
+TimeReport   0.023790     0.023790     0.023790  kt6PFJetsRhos
+TimeReport   0.021686     0.021686     0.021686  kt6PFchsJetsRhos
+TimeReport   0.000227     0.000227     0.000227  particleFlow
+TimeReport   0.001881     0.001881     0.001881  pfCHS
+TimeReport  per event     per exec    per visit  Name
+
+T---Report end!
+
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 Summary              -w MatchRecToGen:ak                       1        1
+    2 Summary              -w MatchRecToGen:ak                       1        1
+    3 Summary              -w MatchRecToGen:ak                       1        1
+    4 Summary              -w MatchRecToGen:ak                       1        1
+    5 XrdAdaptor           -w file_open                              1        1
+    6 XrdAdaptorInternal   -w file_open                              2        2
+    7 fileAction           -s file_close                             1        1
+    8 fileAction           -s file_open                              3        3
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 Summary              PostGlobalEndRun                  
+    2 Summary              PostGlobalEndRun                  
+    3 Summary              PostGlobalEndRun                  
+    4 Summary              PostGlobalEndRun                  
+    5 XrdAdaptor           pre-events                        
+    6 XrdAdaptorInternal   pre-events       pre-events       
+    7 fileAction           PostGlobalEndRun                  
+    8 fileAction           pre-events       pre-events       pre-events
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+Warning                 7                   7
+System                  4                   4
+
+dropped waiting message count 0

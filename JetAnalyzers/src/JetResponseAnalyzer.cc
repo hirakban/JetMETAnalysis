@@ -25,11 +25,11 @@ JetResponseAnalyzer::JetResponseAnalyzer(const edm::ParameterSet& iConfig)
   , srcRhoHLT_              (consumes<double>(iConfig.getParameter<edm::InputTag>                          ("srcRhoHLT")))
   , srcVtx_                 (consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>             ("srcVtx")))
   , srcGenInfo_             (consumes<GenEventInfoProduct>(edm::InputTag("generator"))                                   )
-  , srcPileupInfo_          (consumes<vector<PileupSummaryInfo> >(edm::InputTag("addPileupInfo"))                        )
+  , srcPileupInfo_          (consumes<vector<PileupSummaryInfo> >(edm::InputTag("slimmedAddPileupInfo"))                 )
   //, srcPFCandidates_      (consumes<vector<reco::PFCandidate> >(iConfig.getParameter<edm::InputTag>("srcPFCandidates")))
   , srcPFCandidates_        (consumes<PFCandidateView>(iConfig.getParameter<edm::InputTag>("srcPFCandidates")))
   , srcPFCandidatesAsFwdPtr_(consumes<std::vector<edm::FwdPtr<reco::PFCandidate> > >(iConfig.getParameter<edm::InputTag>("srcPFCandidates")))
-  , srcGenParticles_        (consumes<vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("srcGenParticles")))
+  , srcGenParticles_        (consumes<vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("srcGenParticles")))
   , jecLabel_      (iConfig.getParameter<std::string>                 ("jecLabel"))
   , doComposition_ (iConfig.getParameter<bool>                   ("doComposition"))
   , doFlavor_      (iConfig.getParameter<bool>                        ("doFlavor"))
@@ -55,7 +55,7 @@ JetResponseAnalyzer::JetResponseAnalyzer(const edm::ParameterSet& iConfig)
   }
   else
     throw cms::Exception("MissingParameter")<<"Set *either* deltaRMax (matching)"
-              <<" *or* deltaPhiMin (balancing)";
+					    <<" *or* deltaPhiMin (balancing)";
   
   if (doFlavor_&&iConfig.exists("srcRefToPartonMap")) {
      srcRefToPartonMap_=consumes<reco::JetMatchedPartonsCollection>(iConfig.getParameter<edm::InputTag>("srcRefToPartonMap"));
@@ -102,60 +102,18 @@ void JetResponseAnalyzer::beginJob()
 {
   edm::Service<TFileService> fs;
   if (!fs) throw edm::Exception(edm::errors::Configuration,
-        "TFileService missing from configuration!");
+				"TFileService missing from configuration!");
   
   // Configuration flags: Mapping in JRAEvent.h
   int flag_int = (saveCandidates_*pow(2,7)) + (isPFJet_*pow(2,6)) +
                  (isCaloJet_*pow(2,5)) + (doComposition_*pow(2,4)) +
                  (doBalancing_*pow(2,3)) + (doFlavor_*pow(2,2)) +
                  (doHLT_*pow(2,1)) + (1);
-
-  //cout << flag_int << endl;
   bitset<8> flags(flag_int);
   tree_=fs->make<TTree>("t","t");
   JRAEvt_ = new JRAEvent(tree_,flags);
 }
 
-//shamelessly taken from JetSpecific.cc
-//this method exists for pfjets (neutralMultiplicity()), but not for genjets
-void getMult( vector<reco::CandidatePtr> const & particles, int* nMult, int* chMult ) {
-
-  vector<reco::CandidatePtr>::const_iterator itParticle;
-  for (itParticle=particles.begin();itParticle!=particles.end();++itParticle){
-    const reco::Candidate* pfCand = itParticle->get();
-
-    switch (std::abs(pfCand->pdgId())) {
-
-      case 211: //PFCandidate::h:       // charged hadron
-        (*chMult)++;
-      break;
-
-      case 130: //PFCandidate::h0 :    // neutral hadron
-        (*nMult)++;
-      break;
-
-      case 22: //PFCandidate::gamma:   // photon
-        (*nMult)++;
-      break;
-
-      case 11: // PFCandidate::e:       // electron 
-        (*chMult)++;
-      break;
-
-      case 13: //PFCandidate::mu:      // muon
-        (*chMult)++;
-      break;
-
-      case 1: // PFCandidate::h_HF :      // hadron in HF
-        (*nMult)++;
-      break;
-
-      case 2: //PFCandidate::egamma_HF :      // electromagnetic in HF
-        (*nMult)++;
-      break;
-    }
-  }
-}
 
 //______________________________________________________________________________
 void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
@@ -176,7 +134,7 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
   edm::Handle<reco::VertexCollection>            vtx;
   edm::Handle<PFCandidateView>                   pfCandidates;
   edm::Handle<std::vector<edm::FwdPtr<reco::PFCandidate> > >  pfCandidatesAsFwdPtr;
-  edm::Handle<vector<reco::GenParticle> >        genParticles;
+  edm::Handle<vector<pat::PackedGenParticle> >        genParticles;
 
   // Jet CORRECTOR
   jetCorrector_ = (jecLabel_.empty()) ? 0 : JetCorrector::getJetCorrector(jecLabel_,iSetup);
@@ -231,8 +189,8 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
   JRAEvt_->refpvz = -1000.0;
   iEvent.getByToken(srcGenParticles_, genParticles);
   for (size_t i = 0; i < genParticles->size(); ++i) {
-     const reco::GenParticle & genIt = (*genParticles)[i];
-     if ( genIt.isHardProcess() ) {
+     const pat::PackedGenParticle & genIt = (*genParticles)[i];
+     if ( genIt.fromHardProcessFinalState() ) {
         JRAEvt_->refpvz = genIt.vz();
         break;
      }
@@ -478,18 +436,6 @@ void JetResponseAnalyzer::analyze(const edm::Event& iEvent,
            JRAEvt_->jtmuf ->push_back(pfJetRef->muonEnergyFraction()         *JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jthfhf->push_back(pfJetRef->HFHadronEnergyFraction()     *JRAEvt_->jtjec->at(JRAEvt_->nref));
            JRAEvt_->jthfef->push_back(pfJetRef->HFEMEnergyFraction()         *JRAEvt_->jtjec->at(JRAEvt_->nref));
-
-           int chMult=0, nMult=0;
-           getMult( ref.castTo<reco::GenJetRef>()->getJetConstituents(), &nMult, &chMult );
-           JRAEvt_->refnMult ->push_back( nMult );
-           JRAEvt_->refchMult->push_back( chMult );
-
-           //this method exists for pfjets (neutralMultiplicity()), but not for genjets
-           //original i thought since genjet didn't have it i should make this method
-           chMult=0; nMult=0;
-           getMult( jet.castTo<reco::PFJetRef>()->getJetConstituents(), &nMult, &chMult );
-           JRAEvt_->jtnMult ->push_back( nMult );
-           JRAEvt_->jtchMult->push_back( chMult );
         } 
      }
      JRAEvt_->nref++;

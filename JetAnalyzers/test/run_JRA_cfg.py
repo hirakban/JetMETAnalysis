@@ -5,7 +5,7 @@ import FWCore.ParameterSet.Config as cms
 #!
 # Conditions source options: GT, SQLite, DB
 conditionsSource = "SQLite"
-era = "Autumn18_V8_MC"
+era = "UL2017_V1_SimpleL1_MC"
 doProducer = False
 process = cms.Process("JRA")
 multithread = False
@@ -22,8 +22,8 @@ if doProducer:
 # Size options: integers 1-10
 # Jet type options: calo, pf, pfchs, puppi
 # Correction levels: '' (blank), l1, l2, l3, l2l3, l1l2l3
-algsizetype = {'ak':[4,8]}
-jettype = ['pf','pfchs','puppi']
+algsizetype = {'ak':[4]}
+jettype = ['pf','pfchs']
 corrs = ['l1l2l3']
 
 algorithms = []
@@ -48,17 +48,21 @@ for k, v in algsizetype.iteritems():
 #! CONDITIONS (DELIVERING JEC BY DEFAULT!)
 #!
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
-process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v16')
+process.GlobalTag.globaltag = cms.string('106X_mc2017_realistic_v6')
+#process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v16')
 
 if conditionsSource != "GT":
     if conditionsSource == "DB":
         conditionsConnect = cms.string("frontier://FrontierPrep/CMS_COND_PHYSICSTOOLS")
     elif conditionsSource == "SQLite":
-    	conditionsConnect = cms.string('sqlite_file:'+era+'.db')    
+     	conditionsConnect = cms.string('sqlite_file:'+era+'.db')    
 
-    from CondCore.DBCommon.CondDBSetup_cfi import *
-    process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
-			       connect = conditionsConnect,
+#cia    from CondCore.DBCommon.CondDBSetup_cfi import *
+###    from CondCore.CondDB.CondDB_cfi import *
+###    CondDBCommon = CondDB.clone()
+    from CondCore.CondDB.CondDB_cfi import CondDB
+    CondDBJECFile = CondDB.clone(connect = conditionsConnect )
+    process.jec = cms.ESSource("PoolDBESSource",CondDBJECFile,
 			       toGet =  cms.VPSet(jcr))
     process.es_prefer_jec = cms.ESPrefer("PoolDBESSource","jec")
 
@@ -66,14 +70,16 @@ if conditionsSource != "GT":
 #!
 #! INPUT
 #!
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 
 ##############################################
 # External Input File (most likely from DAS) #
 ##############################################
 
 inputFiles = cms.untracked.vstring(
-  '/store/mc/RunIIAutumn18DR/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/AODSIM/FlatPU0to70RAW_102X_upgrade2018_realistic_v15_ext2-v1/100000/009273D9-D9B4-5B4D-A330-33AF28CAAE2F.root'
+#  '/store/mc/RunIIAutumn18DR/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/AODSIM/FlatPU0to70RAW_102X_upgrade2018_realistic_v15_ext2-v1/100000/009273D9-D9B4-5B4D-A330-33AF28CAAE2F.root'
+#  '/store/mc/RunIISummer19UL17RECO/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/AODSIM/FlatPU0to70_106X_mc2017_realistic_v6_ext2-v3/40000/FB1050DC-8CD4-3D43-B7E9-6DBFB705468C.root'
+   '/store/mc/RunIISummer19UL17MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/FlatPU0to70_106X_mc2017_realistic_v6-v3/40000/FFEE2656-43CF-4247-8A06-8B04E8FF00F5.root'
 )
 
 process.source = cms.Source("PoolSource", fileNames = inputFiles)

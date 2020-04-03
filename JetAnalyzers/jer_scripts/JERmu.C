@@ -6,8 +6,8 @@ void getPars(map<int, map<int, map<int, float> > >& pars, string inFile);
 int getEtaIndex(float eta);
 double getRes(double p0, double p1, double p2, double p3, double pt);
 
-void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "Fall17_17Nov2017_V4_MC", string alg1="pfchs",
-           string era2 = "Fall17_17Nov2017_V4_MC", string alg2="puppi") {
+void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "UL2017_V1_SimpleL1_MC", string alg1="pfchs",
+           string era2 = "Fall17_V3_MC", string alg2="pfchs") {
   setStyle();
 
   map<string, tuple<string, Color_t, Style_t> > alg_style = { {"pf", {"PF", kBlue+1, 10} }, {"pfchs", {"PF+CHS", kRed+1, 1} }, {"puppi", {"PF+PUPPI", kGreen+2, 7} } };
@@ -39,7 +39,7 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
 //  h->GetXaxis()->SetTitle("#mu");
   h->GetXaxis()->SetTitle("Number of Pileup Interactions");
   h->GetXaxis()->SetNdivisions(7, 2, 0);
-  h->GetYaxis()->SetTitle("JER");
+  h->GetYaxis()->SetTitle("JERa");
   h->GetYaxis()->SetTitleOffset(1.3);
   h->GetYaxis()->SetRangeUser(0, 0.4);
   h->GetYaxis()->SetNdivisions(5, 5, 0);
@@ -68,12 +68,12 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
     g1->SetMarkerStyle(iPt+24);
     g1->SetMarkerColor( get<1>( alg_style[alg1] ) );
     g1->SetLineColor( get<1>( alg_style[alg1] ) );
-//    g1->SetLineStyle( get<2>( alg_style[alg1] ) );
+    g1->SetLineStyle( get<2>( alg_style[alg1] ) );
     g1->Draw("plsame");
 
     g2->SetMarkerStyle(iPt+24);
-    g2->SetMarkerColor( get<1>( alg_style[alg2] ) );
-    g2->SetLineColor( get<1>( alg_style[alg2] ) );
+    g2->SetMarkerColor( "kBlue" );
+    g2->SetLineColor( "kBlue" );
     g2->SetLineStyle( 7 ); //g2->SetLineStyle( get<2>( alg_style[alg2] ) );
     g2->Draw("plsame");
 
@@ -93,7 +93,7 @@ void JERmu(float eta=0, string str_pTs="30 50 100 200", int r=4, string era1 = "
   text.DrawLatex(0.2, 0.87, "Anti-k_{T}");
   text.DrawLatex(0.2, 0.82, Form("R=0.%i", r));
   text.DrawLatex(0.2, 0.77, "Response");
-  text.DrawLatex(0.2, 0.72, "Corrected");
+  text.DrawLatex(0.2, 0.72, "Correct");
 
   text.DrawLatex( 0.45, 0.87, Form("%2.1f#leq|#eta|<%2.1f", etabins[iEta], etabins[iEta+1]) );
   leg->Draw();
