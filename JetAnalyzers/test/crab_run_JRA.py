@@ -6,6 +6,7 @@ config.General.requestName = 'UL2017_V1_SimpleL1_MC'
 config.General.workArea = 'crab_projects'
 config.General.transferLogs = True
 
+
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'run_JRA_cfg.py'
