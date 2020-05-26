@@ -214,7 +214,8 @@ int main(int argc,char**argv)
   vector<TGraphErrors*> vatwo;
   vector<TGraphErrors*> vpone;
   vector<TGraphErrors*> vptwo;
-  
+  vector<TGraphErrors*> chi2ndf;  //newcommand
+
   //
   // open input file and loop over input directories (=algorithms)
   //
@@ -286,6 +287,7 @@ int main(int argc,char**argv)
       TGraphErrors* gatwo(0);
       TGraphErrors* gpone(0);
       TGraphErrors* gptwo(0);
+      TGraphErrors* gchi2(0);   //newcommand
 
       hlrsp.begin_loop();
       while ((hrsp=hlrsp.next_object(indices))) {
@@ -301,6 +303,8 @@ int main(int argc,char**argv)
       gpone = new TGraphErrors(0); vpone.push_back(gpone);
       gptwo = new TGraphErrors(0); vptwo.push_back(gptwo);
 
+      gchi2 = new TGraphErrors(0); chi2ndf.push_back(gchi2);   //newcommand
+
       // this is where the magic happens...
       string prefix = hlrsp.quantity().substr(0,3);
       string suffix;
@@ -313,10 +317,12 @@ int main(int argc,char**argv)
       //string gptwo_name="PtwoVs"+hlrsp.variable(hlrsp.nvariables()-1);
       string grsp_name=prefix+"RspVs"+xvar+suffix;
       string gres_name=prefix+"ResVs"+xvar+suffix;
+      string gchi2_name=prefix+"Chi2Vs"+xvar+suffix;     //newcommand
       string gaone_name="AoneVs"+xvar;
       string gatwo_name="AtwoVs"+xvar;
       string gpone_name="PoneVs"+xvar;
       string gptwo_name="PtwoVs"+xvar;
+
 
       if (hlrsp.nvariables()>1) {
         for (unsigned int i=0;i<hlrsp.nvariables()-1;i++) {
@@ -328,6 +334,8 @@ int main(int argc,char**argv)
           grsp_name += suffix.str();
           gres_name += suffix.str();
 
+          gchi2_name += suffix.str();      //newcommand
+
           gaone_name += suffix.str();
           gatwo_name += suffix.str();
           gpone_name += suffix.str();
@@ -336,6 +344,7 @@ int main(int argc,char**argv)
       }
       grsp->SetName(grsp_name.c_str());
       gres->SetName(gres_name.c_str());
+      gchi2->SetName(gchi2_name.c_str());   //newcommand
 
       gaone->SetName(gaone_name.c_str());
       gatwo->SetName(gatwo_name.c_str());
@@ -453,6 +462,10 @@ int main(int argc,char**argv)
     gres->SetPoint(n,x,e);
     gres->SetPointError(n,ex,ee);
 
+    double chi2perndof = (frsp==0 ? 1 : frsp->GetChisquare()/frsp->GetNDF());
+    gchi2->SetPoint(n,x,chi2perndof);          //newcommand
+    gchi2->SetPointError(n,0,0);
+
     if (isFDSCB) {
       n = gaone->GetN();
       gaone->SetPoint(n,x,aone);
@@ -518,7 +531,7 @@ int main(int argc,char**argv)
 
       if(hlrsp.quantity().find("EtaRsp")!=string::npos ||
          hlrsp.quantity().find("PhiRsp")!=string::npos) {
-         fnc = new TF1("fit",s_sigma_angle.c_str(),xmin,xmax);
+         fnc = new TF1("fit",s_sigma_angle1.c_str(),xmin,xmax);
          // fnc = new TF1("fit",s_sigma_angle.c_str(),xmin,xmax);
       }
       else if(alg.find("calo")!=string::npos) {
@@ -540,7 +553,7 @@ int main(int argc,char**argv)
       if(hlrsp.quantity().find("EtaRsp")!=string::npos ||
          hlrsp.quantity().find("PhiRsp")!=string::npos) {
          // fnc->SetParameters(0.005,0.05,150.0,0.02,150.0);
-         fnc->SetParameters(0.005,0.02,150.0);
+         fnc->SetParameters(0.005,0.02,150.0,0.05,10.0);
       }
       else if(alg.find("calo")!=string::npos) {
         fnc->SetParameters(+1,1,0.05,-0.8);
@@ -769,6 +782,9 @@ int main(int argc,char**argv)
     for (unsigned int igraph=0;igraph<vres.size();igraph++)
       vres[igraph]->Write();
 
+    for (unsigned int igraph=0;igraph<chi2ndf.size();igraph++)    //newcommand
+      chi2ndf[igraph]->Write();
+
     for (unsigned int igraph=0;igraph<vaone.size();igraph++)
       if (vaone[igraph]->GetN()>0) vaone[igraph]->Write();
     for (unsigned int igraph=0;igraph<vatwo.size();igraph++)
@@ -778,7 +794,7 @@ int main(int argc,char**argv)
     for (unsigned int igraph=0;igraph<vptwo.size();igraph++)
       if (vptwo[igraph]->GetN()>0) vptwo[igraph]->Write();
     
-    vrsp.clear(); vres.clear();
+    vrsp.clear(); vres.clear(); chi2ndf.clear();                  //newcommand
     vaone.clear();vatwo.clear();vpone.clear();vptwo.clear();
 
   }

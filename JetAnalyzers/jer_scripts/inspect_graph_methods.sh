@@ -18,6 +18,7 @@ compareAlgs() {
   labels="0.2:0.87:62:0.045:Anti-k_{T} 0.2:0.815:62:0.045:R=0."$R" "$eta" "$mu
 
   var=$prefix"ResVsJetPt_JetEta"$eta1"to"$eta2"_Mu"$mu1"to"$mu2
+  var1=$prefix"Chi2VsJetPt_JetEta"$eta1"to"$eta2"_Mu"$mu1"to"$mu2     #newcommand
 
   if [ "$prefix" = "Rel" ] ; then
 
@@ -49,8 +50,13 @@ compareAlgs() {
   fi
 
   jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $file -algs $algs -logx true -batch true \
+  -variables $var1 -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
+  -xmin 15 -xmax 4000 -ymin 0 -ymax 1000 -ytitle "Chi^{2}/ndof" -tdrlabels $labels    
+
+
+  jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $file -algs $algs -logx true -batch true \
   -variables $var -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
-  -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle "$title" -tdrlabels $labels
+  -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle "$title" -tdrlabels $labels    
 }
 
 inspectAlg() {
@@ -65,7 +71,8 @@ inspectAlg() {
   legend="0#leq#mu<10 10#leq#mu<20 20#leq#mu<30 30#leq#mu<40 40#leq#mu<50 50#leq#mu<60 60#leq#mu<70"
   eta="0.41:0.87:62:0.045:"$eta1"#leq#eta<"$eta2
 
-  var=$prefix"ResVsJetPt_JetEta"$eta1"to"$eta2":Mu"
+  var=$prefix"ResVsJetPt_JetEta"$eta1"to"$eta2":Mu"  
+  var1=$prefix"Chi2VsJetPt_JetEta"$eta1"to"$eta2":Mu"  #newcommand
 
   if [ "$alg" = "pf" ] ; then
 
@@ -112,6 +119,12 @@ inspectAlg() {
       range=0.1
     fi
   fi
+
+  jet_inspect_graphs_x -opath $opath -inputs $file -algs $algs -logx true -batch true \
+  -variables $var1 -leglabels $legend -legx 0.67 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
+  -xmin 15 -xmax 4000 -ymin 0 -ymax 1000 -ytitle "Chi^{2}/ndof" -tdrlabels $labels
+
+
 
   jet_inspect_graphs_x -opath $opath -inputs $file -algs $algs -logx true -batch true \
   -variables $var -leglabels $legend -legx 0.67 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
