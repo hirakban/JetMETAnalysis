@@ -63,6 +63,13 @@ for rad in "${rads[@]}" ; do
     compareAlgs $rad $v ${eta1s[ieta]} ${eta2s[ieta]} ${mus[2]} ${mus[3]} $out
     compareAlgs $rad $v ${eta1s[ieta]} ${eta2s[ieta]} ${mus[5]} ${mus[6]} $out
 
+#    versions=$out"/versions"
+#    mkdir $versions
+
+#    compareVersions $rad $v ${eta1s[ieta]} ${eta2s[ieta]} ${mus[2]} ${mus[3]} $versions
+#    compareVersions $rad $v ${eta1s[ieta]} ${eta2s[ieta]} ${mus[5]} ${mus[6]} $versions
+
+
     for a in "${algos[@]}" ; do
       out2=$out"/"$a
       mkdir $out2

@@ -537,6 +537,7 @@ void adjust_fitrange(TH1* h,double& min,double& max)
 {
   int imin=1; while (h->GetBinLowEdge(imin)<min) imin++;
   int imax=1; while (h->GetBinLowEdge(imax)<max) imax++;
+  imin--; imax--; // this makes imin the bin where min falls and same for max
   while ((imax-imin)<8) {
     if (imin>1) {imin--; min = h->GetBinCenter(imin); }
     if (imax<h->GetNbinsX()-1) { imax++; max=h->GetBinCenter(imax); }

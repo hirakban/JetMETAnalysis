@@ -10,15 +10,19 @@ compareAlgs() {
   mu2=$6
   opath=$7
 
-  algs="ak"$R"pfl1l2l3 ak"$R"pfchsl1l2l3 ak"$R"puppil1l2l3"
-  legend="PF PF+CHS PF+PUPPI"
+#  algs="ak"$R"pfl1l2l3 ak"$R"pfchsl1l2l3 ak"$R"puppil1l2l3"
+  algs="ak"$R"pfchsl1l2l3 ak"$R"pfchsl1l2l3"
+
+#   legend="PF PF+CHS PF+PUPPI"
+   legend="PF+CHS PF+CHS"
+
 
   eta="0.41:0.87:62:0.045:"$eta1"#leq#eta<"$eta2
   mu="0.41:0.815:62:0.045:"$mu1"#leq#mu<"$mu2
   labels="0.2:0.87:62:0.045:Anti-k_{T} 0.2:0.815:62:0.045:R=0."$R" "$eta" "$mu
 
   var=$prefix"ResVsJetPt_JetEta"$eta1"to"$eta2"_Mu"$mu1"to"$mu2
-  var1=$prefix"Chi2VsJetPt_JetEta"$eta1"to"$eta2"_Mu"$mu1"to"$mu2     #newcommand
+  var1=$prefix"Chi2VsJetPt_JetEta"$eta1"to"$eta2"_Mu"$mu1"to"$mu2    
 
   if [ "$prefix" = "Rel" ] ; then
 
@@ -49,15 +53,79 @@ compareAlgs() {
     fi
   fi
 
-  jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $file -algs $algs -logx true -batch true \
-  -variables $var1 -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
-  -xmin 15 -xmax 4000 -ymin 0 -ymax 1000 -ytitle "Chi^{2}/ndof" -tdrlabels $labels    
-
 
   jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $file -algs $algs -logx true -batch true \
   -variables $var -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
   -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle "$title" -tdrlabels $labels    
+
+
+  jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $file -algs $algs -logx true -logy true -batch true \
+  -variables $var1 -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
+  -xmin 15 -xmax 4000 -ymin 0.1 -ymax 1000 -ytitle -ytitle "Chi^{2}/ndof ($title)" -tdrlabels $labels
+
 }
+
+
+compareVersions() {
+  
+  R=$1
+  prefix=$2
+  eta1=$3
+  eta2=$4
+  mu1=$5
+  mu2=$6
+  opath=$7
+      
+  algs="ak"$R"pfchsl1l2l3"
+    
+  legend="Standard FinerBins adjustFix"   
+    
+  eta="0.41:0.87:62:0.045:"$eta1"#leq#eta<"$eta2
+  mu="0.41:0.815:62:0.045:"$mu1"#leq#mu<"$mu2
+  labels="0.2:0.87:62:0.045:Anti-k_{T} 0.2:0.815:62:0.045:R=0."$R" "$eta" "$mu
+
+  var=$prefix"ResVsJetPt_JetEta"$eta1"to"$eta2"_Mu"$mu1"to"$mu2
+  var1=$prefix"Chi2VsJetPt_JetEta"$eta1"to"$eta2"_Mu"$mu1"to"$mu2     
+    
+  if [ "$prefix" = "Rel" ] ; then
+    
+    files="relrsp1.root relrsp2.root relrsp3.root"
+    title="JER"
+    if [ $R -eq 8 ] ; then
+      range=0.8
+    else
+      range=0.5
+    fi
+  elif [ "$prefix" = "Eta" ] ; then
+
+    files="etarsp1.root etarsp2.root etarsp3.root"
+    title="#eta Resolution"
+    if [ $R -eq 8 ] ; then
+      range=0.2
+    else
+      range=0.1
+    fi
+  elif [ "$prefix" = "Phi" ] ; then
+  
+    files="phirsp1.root phirsp2.root phirsp3.root"
+    title="#phi Resolution"
+    if [ $R -eq 8 ] ; then
+      range=0.2
+    else
+      range=0.1
+    fi
+  fi
+
+  jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $files -algs $algs -logx true -batch true \
+  -variables $var -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
+  -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle "$title" -tdrlabels $labels
+
+  jet_inspect_graphs_x -sizes "1 1 1" -opath $opath -inputs $files -algs $algs -logx true -logy true -batch true \
+  -variables $var1 -leglabels $legend -legx 0.62 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
+  -xmin 15 -xmax 4000 -ymin 0.1 -ymax 1000 -ytitle "Chi^{2}/ndof ($title)" -tdrlabels $labels
+
+}
+
 
 inspectAlg() {
 
@@ -72,7 +140,7 @@ inspectAlg() {
   eta="0.41:0.87:62:0.045:"$eta1"#leq#eta<"$eta2
 
   var=$prefix"ResVsJetPt_JetEta"$eta1"to"$eta2":Mu"  
-  var1=$prefix"Chi2VsJetPt_JetEta"$eta1"to"$eta2":Mu"  #newcommand
+  var1=$prefix"Chi2VsJetPt_JetEta"$eta1"to"$eta2":Mu"  
 
   if [ "$alg" = "pf" ] ; then
 
@@ -121,12 +189,12 @@ inspectAlg() {
   fi
 
   jet_inspect_graphs_x -opath $opath -inputs $file -algs $algs -logx true -batch true \
-  -variables $var1 -leglabels $legend -legx 0.67 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
-  -xmin 15 -xmax 4000 -ymin 0 -ymax 1000 -ytitle "Chi^{2}/ndof" -tdrlabels $labels
-
-
-
-  jet_inspect_graphs_x -opath $opath -inputs $file -algs $algs -logx true -batch true \
   -variables $var -leglabels $legend -legx 0.67 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
   -xmin 15 -xmax 4000 -ymin 0 -ymax $range -ytitle "$title" -tdrlabels $labels
+
+  jet_inspect_graphs_x -opath $opath -inputs $file -algs $algs -logx true  -logy true -batch true \
+  -variables $var1 -leglabels $legend -legx 0.67 -legy 0.91 -drawrange false -xtitle "p_{T}^{Jet} [GeV]" -tdr true \
+  -xmin 15 -xmax 4000 -ymin 0.1 -ymax 1000 -ytitle "Chi^{2}/ndof ($title)" -tdrlabels $labels
+
+
 }
