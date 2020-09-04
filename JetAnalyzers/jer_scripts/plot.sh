@@ -12,18 +12,19 @@ fi
 
 v=${args[0]}
 
-filersp="jra_f.root" #use jra.root to not draw fits
+filersp="jra_f.root" #use jra.root to not draw fits, use jra_f.root to draw fits 
 #rads=(4 8)
 rads=(4)
 #algos=("pf" "pfchs" "puppi")
-algos=("pf" "pfchs")
+algos=("pfchs")
 
-#eta1s=(0   1.1 1.9 2.1 2.3 3.2)
-#eta2s=(0.5 1.3 2.1 2.3 2.5 4.7)
+# Make sure the histograms with specified eta values as strings in their name exist (in input root file jra_f.root).
 
-eta1s=(0   0.5 0.8 1.1 2.1 3.2)
-eta2s=(0.5 0.8 1.1 1.3 2.3 4.7)
+#eta1s=(0   0.5 0.8 1.1 2.1 3.2)
+#eta2s=(0.5 0.8 1.1 1.3 2.3 4.7)
 
+eta1s=(0   0.5 0.8 1.1 1.3 1.7 1.9 2.1 2.3 2.5 2.8 3   3.2)     #input eta = 3 as integer. 
+eta2s=(0.5 0.8 1.1 1.3 1.7 1.9 2.1 2.3 2.5 2.8 3   3.2 4.7)
 
 #pt1s=(15 20 27 30 45 90  750)
 #pt2s=(17 23 30 35 57 120 1000)
@@ -39,9 +40,9 @@ mus=(0 10 20 30 40 50 60 70)
 
 #Use these parameters for JERmu script#
 pTs="30 50 100 200"
-era1="UL2017_V1_SimpleL1_MC"
+era1="Summer19UL18_V2_MC"
 alg1="pfchs"
-era2="UL2017_V1_SimpleL1_MC"
+era2="Summer19UL17_V5_MC"
 alg2="pfchs"
 ##
 

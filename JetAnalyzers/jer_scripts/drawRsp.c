@@ -12,11 +12,13 @@ void drawRsp( TString fname="jra.root", int r=4, TString var="Rel", float eta1=0
 
   TString name;
   if (mu2!=0) {
-    if (eta1==0) name = var + Form("Rsp_JetEta%ito%.1f_Mu%ito%i_RefPt%ito%i", int(eta1), eta2, mu1, mu2, pt1, pt2);
+    if (eta1==0 || eta1==3.0) name = var + Form("Rsp_JetEta%ito%.1f_Mu%ito%i_RefPt%ito%i", int(eta1), eta2, mu1, mu2, pt1, pt2);
+    else if (eta2==3.0) name = var + Form("Rsp_JetEta%.1fto%i_Mu%ito%i_RefPt%ito%i", eta1, int(eta2), mu1, mu2, pt1, pt2);
     else         name = var + Form("Rsp_JetEta%.1fto%.1f_Mu%ito%i_RefPt%ito%i", eta1, eta2, mu1, mu2, pt1, pt2);
   }
   else {
-    if (eta1==0) name = var + Form("Rsp_JetEta%ito%.1f_RefPt%ito%i", int(eta1), eta2, pt1, pt2);
+    if (eta1==0 || eta1==3.0) name = var + Form("Rsp_JetEta%ito%.1f_RefPt%ito%i", int(eta1), eta2, pt1, pt2);
+    else if (eta2==3.0) name = var + Form("Rsp_JetEta%.1fto%i_RefPt%ito%i", eta1, int(eta2), pt1, pt2);
     else         name = var + Form("Rsp_JetEta%.1fto%.1f_RefPt%ito%i", eta1, eta2, pt1, pt2);
   }
 

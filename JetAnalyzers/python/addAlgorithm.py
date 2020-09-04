@@ -20,7 +20,7 @@ from JetMETAnalysis.JetAnalyzers.JPTReconstruction_cff import *
 from JetMETAnalysis.JetAnalyzers.JetCorrection_cff     import *
 from RecoTauTag.TauTagTools.tauDecayModes_cfi          import *
 from CommonTools.PileupAlgos.Puppi_cff import *
-
+from CommonTools.PileupAlgos.customizePuppiTune_cff import *
 genParticlesForJetsNoNu.src = cms.InputTag("packedGenParticles")
 
 stdClusteringAlgorithms = ['ak'] #Options: {ak,kt}
@@ -335,7 +335,7 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
             process.kt6PFJets.doRhoFastjet = True
             process.kt6PFJets.Ghost_EtaMax = Defaults.kt6PFJetParameters.Ghost_EtaMax.value()
             process.kt6PFJets.Rho_EtaMax   = Defaults.kt6PFJetParameters.Rho_EtaMax
-            sequence = cms.Sequence(process.kt6PFJets * sequence)
+            #sequence = cms.Sequence(process.kt6PFJets * sequence)   #since CMSSW_10_6_13
         elif type == 'PFHLT':
             process.kt6PFJets = kt6PFJets
             process.kt6PFJets.doRhoFastjet = True
@@ -387,9 +387,9 @@ def addAlgorithm(process, alg_size_type_corr, Defaults, reco, doProducer):
             process.load('CommonTools.PileupAlgos.Puppi_cff')
             #puppi.candName = cms.InputTag("particleFlow")
             #80x change
-            puppiCentral[0].applyLowPUCorr = cms.bool(False)
-            puppiForward[0].applyLowPUCorr = cms.bool(False)
+
             puppi.vertexName = "offlineSlimmedPrimaryVertices"
+            UpdatePuppiTuneV14(process)
             sequence = cms.Sequence(puppi * sequence)
         if type == 'Track':
             process.load('JetMETAnalysis.JetAnalyzers.TrackJetReconstruction_cff')
