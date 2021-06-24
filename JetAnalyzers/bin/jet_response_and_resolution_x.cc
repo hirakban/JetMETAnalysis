@@ -560,9 +560,13 @@ int main(int argc,char**argv)
       }
       else if(alg.find("pf")!=string::npos) {
         fnc->SetParameters(3.5,0.5,0.03,-1);
+        fnc->SetParLimits(1,0.,50.);
+        fnc->SetParLimits(2,0.,50.);
       }
       else if(alg.find("puppi")!=string::npos) {
         fnc->SetParameters(3.5,0.5,0.03,-1);
+        fnc->SetParLimits(1,0.,50.);
+        fnc->SetParLimits(2,0.,50.);
       }
       else{
         fnc->SetParameters(-1,1,0.05,-0.8);
